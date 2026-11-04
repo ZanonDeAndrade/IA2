@@ -3,7 +3,7 @@
   "lance_jogado": "Nxd5",
   "melhor_lance": "Na5",
   "classe": "erro",
-  "queda": 23.3,
+  "queda": 23.4,
   "tema": "peca_pendurada",
   "tema_label": "Peça pendurada",
   "texto": "Ao recapturar com o cavalo em d5, o ponto f7 ficou defendido apenas pelo rei, e o cavalo em d5 fica sem proteção. As brancas jogam Nxf7 e, após Kxf7, Qf3+ ataca o cavalo e o rei ao mesmo tempo. O melhor era 5...Na5, atacando o bispo de c4 e ganhando tempo para consolidar. Lição: antes de recapturar, confira se a peça recapturada fica defendida.",
