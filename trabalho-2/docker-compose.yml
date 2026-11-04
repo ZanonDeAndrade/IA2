@@ -1,0 +1,51 @@
+# Lance a Lance – esqueleto do Docker Compose (em construção)
+#
+# Sobe tudo com um comando:   docker compose up
+# As variáveis vêm do arquivo .env (copie de .env.example).
+# Os Dockerfiles de cada serviço ainda serão criados.
+
+services:
+  # Servidor de ferramentas MCP (Stockfish, python-chess, Chess.com, puzzles, RAG)
+  mcp_server:
+    build:
+      context: .
+      dockerfile: mcp_server/Dockerfile   # a criar
+    env_file: .env
+    # O binário do Stockfish deve estar na imagem (ou montado via volume) no
+    # caminho definido em STOCKFISH_PATH.
+    # volumes:
+    #   - ./data:/app/data                   # recorte da base de puzzles (SQLite)
+    #   - ./knowledge_base:/app/knowledge_base
+    #   - chroma_data:/app/chroma            # índice do ChromaDB
+    # ports:
+    #   - "8001:8001"                        # se usar transporte HTTP/SSE em vez de stdio
+
+  # API FastAPI + agente LangGraph
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile       # a criar
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mcp_server
+    # volumes:
+    #   - sqlite_data:/app/db                # cache de análises e explicações (SQLite)
+    # command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+
+  # Interface React + Vite
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile                # a criar
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    # environment:
+    #   - VITE_API_URL=http://localhost:8000
+
+# volumes:
+#   chroma_data:
+#   sqlite_data:
