@@ -1,0 +1,27 @@
+{
+  "usuario": "jogador_exemplo",
+  "partidas_analisadas": 10,
+  "rating_estimado": 1250,
+  "temas_fracos": [
+    { "tema": "hangingPiece", "tema_label": "Peça pendurada", "erros": 7 },
+    { "tema": "fork", "tema_label": "Garfo", "erros": 5 },
+    { "tema": "pin", "tema_label": "Cravada", "erros": 3 },
+    { "tema": "discoveredAttack", "tema_label": "Ataque descoberto", "erros": 2 }
+  ],
+  "evolucao": [
+    { "partida_id": "x1", "data": "2026-10-20", "precisao": 71.0, "erros_graves": 3 },
+    { "partida_id": "x2", "data": "2026-10-25", "precisao": 76.5, "erros_graves": 2 },
+    { "partida_id": "a1b2c3", "data": "2026-11-02", "precisao": 82.5, "erros_graves": 0 }
+  ],
+  "puzzles_recomendados": [
+    {
+      "id": "00sHx",
+      "fen": "q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17",
+      "solucao": ["e8d7", "a2e6", "d7d8", "f7f8"],
+      "rating": 1760,
+      "temas": ["mate", "mateIn2", "middlegame", "short"],
+      "temas_label": ["Mate", "Mate em 2"],
+      "url": "https://lichess.org/training/00sHx"
+    }
+  ]
+}

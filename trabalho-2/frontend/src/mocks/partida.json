@@ -1,0 +1,66 @@
+{
+  "id": "a1b2c3",
+  "usuario": "jogador_exemplo",
+  "cor_do_jogador": "black",
+  "adversario": "oponente_exemplo",
+  "resultado": "0-1",
+  "abertura": "Italian Game: Two Knights Defense",
+  "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nxd5 6. Nxf7 Kxf7 7. Qf3+ Ke6 8. Nc3 Ncb4 *",
+  "resumo": {
+    "imprecisoes": 2,
+    "erros": 1,
+    "erros_graves": 0,
+    "precisao": 82.5
+  },
+  "lances": [
+    {
+      "numero": 4,
+      "cor": "black",
+      "san": "d5",
+      "fen_antes": "r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R b KQkq - 5 4",
+      "fen_depois": "r1bqkb1r/ppp2ppp/2n2n2/3pp1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq d6 0 5",
+      "cp_antes": 25,
+      "cp_depois": 20,
+      "chance_vitoria_antes": 52.3,
+      "chance_vitoria_depois": 51.8,
+      "queda": 0.5,
+      "classe": "aceitavel",
+      "melhor_lance": "d5",
+      "explicacao": null
+    },
+    {
+      "numero": 5,
+      "cor": "black",
+      "san": "Nxd5",
+      "fen_antes": "r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5",
+      "fen_depois": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6",
+      "cp_antes": 20,
+      "cp_depois": -250,
+      "chance_vitoria_antes": 51.8,
+      "chance_vitoria_depois": 28.5,
+      "queda": 23.3,
+      "classe": "erro",
+      "melhor_lance": "Na5",
+      "linha_motor": ["Na5", "Bb5+", "c6", "dxc6", "bxc6", "Bd3"],
+      "explicacao": {
+        "tema": "peca_pendurada",
+        "tema_label": "Peça pendurada",
+        "texto": "Ao recapturar com o cavalo em d5, o ponto f7 ficou defendido apenas pelo rei, e o cavalo em d5 fica sem proteção. As brancas jogam Nxf7 e, após Kxf7, Qf3+ ataca o cavalo e o rei ao mesmo tempo. O melhor era 5...Na5, atacando o bispo de c4 e ganhando tempo para consolidar. Lição: antes de recapturar, confira se a peça recapturada fica defendida.",
+        "ficha": {
+          "id": "peca_pendurada",
+          "titulo": "Peça pendurada",
+          "arquivo": "knowledge_base/peca_pendurada.md"
+        },
+        "ferramentas_usadas": ["descrever_posicao", "buscar_conceitos", "validar_lances"],
+        "validada": true
+      }
+    }
+  ],
+  "curva_avaliacao": [
+    { "lance": 1, "cp": 30 },
+    { "lance": 2, "cp": 25 },
+    { "lance": 3, "cp": 30 },
+    { "lance": 4, "cp": 20 },
+    { "lance": 5, "cp": -250 }
+  ]
+}
