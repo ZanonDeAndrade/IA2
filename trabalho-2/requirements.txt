@@ -1,0 +1,43 @@
+# Dependências do Trabalho 2 – Lance a Lance
+# Sem versões fixas ainda: fixar (pip freeze) antes da entrega.
+
+# Regras do jogo, PGN/FEN e comunicação com o Stockfish via UCI
+chess
+
+# Servidor de ferramentas MCP
+fastmcp
+
+# Agente
+langgraph
+langchain-core
+langchain-mcp-adapters
+
+# Provedor de LLM: escolher UM e descomentar, conforme LLM_PROVIDER no .env
+# langchain-anthropic
+# langchain-openai
+# langchain-google-genai
+# langchain-ollama
+
+# RAG (base vetorial e embeddings multilíngues)
+chromadb
+sentence-transformers
+
+# API
+fastapi
+uvicorn[standard]
+pydantic
+
+# Cache e dados (SQLite é da biblioteca padrão)
+pandas
+zstandard
+
+# Utilidades
+httpx
+python-dotenv
+
+# Avaliação
+ragas
+matplotlib
+
+# Testes
+pytest
