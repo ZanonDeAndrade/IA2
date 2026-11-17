@@ -1,3 +1,6 @@
+Alunos: Arthur Zanon, Marcelo Telles, Milton Roberto
+
+
 # Assistente Inteligente de Receitas
 
 ## Executar a aplicação completa (Ubuntu)
