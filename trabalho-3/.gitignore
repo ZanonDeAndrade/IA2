@@ -1,0 +1,6 @@
+/data/raw/*
+!/data/raw/.gitkeep
+/data/normalized/
+/data/sources/manifest.json
+/tests/evidence/rag-evaluation.json
+/data/chroma/
