@@ -1,6 +1,11 @@
 /data/raw/*
 !/data/raw/.gitkeep
-/data/normalized/
+# corpus Wikilivros (CC BY-SA 4.0, com atribuição em recipes.json) é versionado para reprodutibilidade
+!/data/raw/wikibooks/
+/data/normalized/*
+!/data/normalized/recipes.json
 /data/sources/manifest.json
 /tests/evidence/rag-evaluation.json
 /data/chroma/
+data/chroma_wikibooks/
+ollama.log

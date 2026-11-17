@@ -1,0 +1,2692 @@
+{
+ "_fonte": "Wikilivros, Livro de receitas (pt.wikibooks.org), CC BY-SA 4.0. Créditos: histórico de cada página (revision_url). Adaptação: texto limpo de marcação wiki; uma receita por variante.",
+ "recipes": [
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v1",
+   "document_id": "wb-10930",
+   "variant_index": 1,
+   "title": "Pão de queijo mineiro (Receita 1)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "polvilho",
+     "name_normalized": "polvilho",
+     "quantity_text": "1 kg",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fubá canjica",
+     "name_normalized": "fuba canjica",
+     "quantity_text": "200 gramas",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "200 gramas",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1/2 litro",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "gordura",
+     "name_normalized": "gordura",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Põe-se o leite e a gordura para ferver",
+    "Enquanto isso, sova-se o polvilho com a salmoura e o fubá",
+    "Escalde com o leite e gordura ferventes",
+    "Depois põe os ovos e amolece com leite até o ponto de enrolar",
+    "Enrole os pães de queijo, fazendo bolinhas, passando-se óleo nas mãos",
+    "Coloque em fôrma untada e asse em forno quente, preaquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v2",
+   "document_id": "wb-10930",
+   "variant_index": 2,
+   "title": "Pão de queijo mineiro (Receita 2)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "2 copo (americano)",
+     "required": true,
+     "notes": "pelo vinco",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água",
+     "name_normalized": "agua",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": "pelo vinco",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": "pelo vinco",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "polvilho doce",
+     "name_normalized": "polvilho doce",
+     "quantity_text": "4 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": "(mais ou menos), dependendo do tamanho deles",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 e 1/2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Coloque o óleo, a água e leite para ferverem juntos",
+    "Em seguida, escaldar o polvilho doce",
+    "Quando estiver morno, quase frio, ir colocando os ovos, mais ou menos, sovar bastante",
+    "E, por último, colocar o queijo ralado",
+    "Tornar a sovar muito",
+    "Enrolar com as mãos untadas em óleo e colocá-los em fôrma untada",
+    "Assar em forno quente, previamente aquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v3",
+   "document_id": "wb-10930",
+   "variant_index": 3,
+   "title": "Pão de queijo mineiro (Receita 3)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "polvilho",
+     "name_normalized": "polvilho",
+     "quantity_text": "6 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de milho",
+     "name_normalized": "farinha de milho",
+     "quantity_text": "3 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": "a 3 ovos",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água morna",
+     "name_normalized": "agua morna",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo quente",
+     "name_normalized": "oleo quente",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Sove o polvilho com o copo de água morna, escalde com óleo quente e sove assim que ficar morno",
+    "Colocam-se num prato: Os ovos, a farinha de milho e termina de encher o prato com leite, misturando tudo e acrescentando ao polvilho já sovado",
+    "Coloque o queijo ralado e sove mais um pouco. Se for necessário amoleça com água morna",
+    "Enrolar as bolinhas com as mãos untadas em óleo e colocá-las em fôrma untada",
+    "Assar em forno quente, previamente aquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v4",
+   "document_id": "wb-10930",
+   "variant_index": 4,
+   "title": "Pão de queijo mineiro (Receita 4)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "polvilho",
+     "name_normalized": "polvilho",
+     "quantity_text": "1 prato fundo",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 prato fundo",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "banha",
+     "name_normalized": "banha",
+     "quantity_text": "1 e 1/2 conchas",
+     "required": true,
+     "notes": "(a banha deve estar quente para escaldar o polvilho)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água com sal",
+     "name_normalized": "agua com sal",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Após escaldar o polvilho, amasse tudo e sove muito bem",
+    "Para formar as bolas passe um pouco de gordura nas mãos",
+    "Coloque em fôrma unta e leve ao forno quente"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v5",
+   "document_id": "wb-10930",
+   "variant_index": 5,
+   "title": "Pão de queijo mineiro (Receita 5)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "polvilho",
+     "name_normalized": "polvilho",
+     "quantity_text": "2 litros",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 prato cheio",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "6",
+     "required": true,
+     "notes": "a 7 ovos (conforme o tamanho)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 litro",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "gordura",
+     "name_normalized": "gordura",
+     "quantity_text": "1 prato",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água",
+     "name_normalized": "agua",
+     "quantity_text": "1 prato",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Sal",
+     "name_normalized": "sal",
+     "quantity_text": "a vontade",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Ponha a água para ferver com a gordura e escalde o polvilho. Deixe esfriar e sove",
+    "Depois de sovado, junte os ovos, a gordura, o sal e o leite, e, por último, o queijo ralado",
+    "Amasse bem",
+    "Unte as mãos e enrole os pãezinhos",
+    "Coloque em fôrma untada",
+    "Asse no forno em temperatura regular, previamente aquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-10930-pao-de-queijo-mineiro-v6",
+   "document_id": "wb-10930",
+   "variant_index": 6,
+   "title": "Pão de queijo mineiro (Receita 6)",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "polvilho azedo",
+     "name_normalized": "polvilho azedo",
+     "quantity_text": "1 kg",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "8",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo parmesão",
+     "name_normalized": "queijo parmesao",
+     "quantity_text": "800 gramas",
+     "required": true,
+     "notes": "ou Minas",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "4 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água quente",
+     "name_normalized": "agua quente",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Escaldar o polvilho e sovar",
+    "Colocar os ovos e amassar bem",
+    "Depois, coloque o queijo ralado e misturar bem",
+    "Unte a mão e faça as bolinhas de pão de queijo",
+    "Coloque-as na fôrma untada e asse"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_queijo_mineiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=461003",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:55Z"
+  },
+  {
+   "recipe_id": "wb-12129-panqueca-simples-v1",
+   "document_id": "wb-12129",
+   "variant_index": 1,
+   "title": "Panqueca simples (Receita 1)",
+   "topic_key": "massas",
+   "topic_label": "Massas e panquecas",
+   "ingredients": [
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 e 1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga derretida",
+     "name_normalized": "manteiga derretida",
+     "quantity_text": "5 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "caramelo",
+     "name_normalized": "caramelo",
+     "quantity_text": "1 frasco",
+     "required": true,
+     "notes": "ou de outro sabor para depois rechear a panqueca",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata os ovos, claras e gemas separadamente",
+    "Acrescente os outros ingredientes e bata mais um pouco",
+    "Faça as panquecas com a frigideira untada com azeite ou margarina derretida",
+    "Ponha uma concha de massa, segure a frigideira pelo cabo e estenda bem",
+    "Quando ficar corado a parte debaixo vire a panqueca e espere que esse lado também fique corado",
+    "A Panqueca está pronta. Repita o processo dependendo do número de panquecas que deseja"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Panqueca_simples",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=486482",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-12129-panqueca-simples-v2",
+   "document_id": "wb-12129",
+   "variant_index": 2,
+   "title": "Panqueca simples (Receita 2)",
+   "topic_key": "massas",
+   "topic_label": "Massas e panquecas",
+   "ingredients": [
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 xícara de chá",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "amido de milho",
+     "name_normalized": "amido de milho",
+     "quantity_text": "3 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Misturar tudo e bater no liquidificador",
+    "Recheio à vontade e gosto",
+    "Quando a parte debaixo ficar corada,vire a panqueca"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Panqueca_simples",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=486482",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v1",
+   "document_id": "wb-1675",
+   "variant_index": 1,
+   "title": "Bolo de cenoura (Receita 1)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "óleo de soja",
+     "name_normalized": "oleo de soja",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": "girassol ou canola (como preferir)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": "(branco ou mascavo)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "3 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "3 colheres (chá)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "cenouras",
+     "name_normalized": "cenoura",
+     "quantity_text": "2",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Primeiramente bata as cenouras com o mínimo de leite até que tome consistência de um creme poroso",
+    "Misture bem o açúcar e o óleo. Em seguida adicione os ovos e bata com a maior velocidade da batedeira até que a massa clareie",
+    "Adicione alternadamente porções da farinha somada ao fermento e do creme de cenoura, misturando preferencialmente com uma espátula, para o bolo ficar mais macio",
+    "Despeje a massa em uma forma untada e leve ao forno médio por cerca de 40 minutos - dependendo do forno"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v2",
+   "document_id": "wb-1675",
+   "variant_index": 2,
+   "title": "Bolo de cenoura (Receita 2)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenoura",
+     "name_normalized": "cenoura",
+     "quantity_text": "250 gramas",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": "grandes ou 4 pequenos",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "cravo",
+     "name_normalized": "cravo",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "erva-doce",
+     "name_normalized": "erva doce",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "3 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "achocolatado",
+     "name_normalized": "achocolatado",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "5 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater no liquidificador e depois acrescentar farinha de trigo e o fermento em pó",
+    "Levar todos os ingredientes da cobertura ao fogo e mexer, até virar uma massa homogênea"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v3",
+   "document_id": "wb-1675",
+   "variant_index": 3,
+   "title": "Bolo de cenoura (Receita 3)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenouras",
+     "name_normalized": "cenoura",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "4 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "4 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater as cenouras no liquidificador com 1 copo de leite, depois, as gemas, o açúcar, a farinha de trigo e o óleo; depois as claras e o fermento em pó",
+    "Coloque em fôrma untada e leve ao forno pré aquecido para assar"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v4",
+   "document_id": "wb-1675",
+   "variant_index": 4,
+   "title": "Bolo de cenoura (Receita 4)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenouras",
+     "name_normalized": "cenoura",
+     "quantity_text": "4",
+     "required": true,
+     "notes": "médias",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em fermento em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "6 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata no liquidificador as cenouras, os ovos e o óleo, depois mistura-se o resto dos ingredientes",
+    "Assar em forno quente (pré aquecido), em fôrma untada com manteiga",
+    "Coloque numa panela e leve ao fogo até engrossar",
+    "Retire do fogo e coloque por cima do bolo após assado"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v5",
+   "document_id": "wb-1675",
+   "variant_index": 5,
+   "title": "Bolo de cenoura (Receita 5)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenouras",
+     "name_normalized": "cenoura",
+     "quantity_text": "2",
+     "required": true,
+     "notes": "médias",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Oatbran Ferla",
+     "name_normalized": "oatbran ferla",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": "(ou farinha de trigo)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Raspas de 01 limão",
+     "name_normalized": "raspas de 01 limao",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar de confeiteiro",
+     "name_normalized": "acucar de confeiteiro",
+     "quantity_text": "1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "6 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "3 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Raspe as cenouras e corte-as em rodelas finas",
+    "Bata-as no liquidificador junto com o óleo até obter uma massa uniforme",
+    "Sem parar de bater, adicione os ovos um a um",
+    "Despeje a mistura numa vasilha e adicione o Oatbran Ferla, o açúcar, o sal, o fermento e as raspas de limão, misturando bem com uma colher para não formar grumos",
+    "Despeje a massa numa fôrma pequena (18 x 25 cm) untada com margarina e polvilhada com Oatbran Ferla ou farinha de trigo",
+    "Asse em forno moderado (180 graus), preaquecido, por 30 minutos, ou até que, espetando um palito no centro da massa, este saia limpo",
+    "Enquanto o bolo está assando, prepare a cobertura:",
+    "Coloque todos os ingredientes numa panela pequena e leve ao fogo, misturando bem até ligar todos os ingredientes",
+    "Retire o bolo do forno quando assado e, despeje sobre ele a cobertura de chocolate",
+    "Sirva o bolo depois de frio, cortado em quadradinhos"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v6",
+   "document_id": "wb-1675",
+   "variant_index": 6,
+   "title": "Bolo de cenoura (Receita 6)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenouras raladas",
+     "name_normalized": "cenouras raladas",
+     "quantity_text": "3",
+     "required": true,
+     "notes": "ou picadas pequenas",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "3/4 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 e 1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em fermento em pó",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata no liquidificador a cenoura, o óleo e as gemas",
+    "Retire do liquidificador e acrescente o açúcar, a farinha de trigo e o fermento e, por último, as claras batidas em neve",
+    "Asse em uma fôrma untada e leve ao forno preaquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1675-bolo-de-cenoura-v7",
+   "document_id": "wb-1675",
+   "variant_index": 7,
+   "title": "Bolo de cenoura (Receita 7)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "cenouras médias raspadas e picadas",
+     "name_normalized": "cenouras medias raspadas e picadas",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": "( )",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água",
+     "name_normalized": "agua",
+     "quantity_text": "1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "6 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata tudo no liquidificador todos os ingredientes",
+    "Acrescente a farinha de trigo aos poucos e bata mais um pouquinho até formar bolhas",
+    "Unte a forma e asse em forno",
+    "Depois de assado e ainda quente, jogue a seguinte cobertura de chocolate:",
+    "Leve ao forno e deixe ferver para engrossar",
+    "Jogue sobre o bolo"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_cenoura",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=436698",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:53Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v1",
+   "document_id": "wb-1676",
+   "variant_index": 1,
+   "title": "Brigadeiro (Receita 1)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "4 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1/2 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate granulado",
+     "name_normalized": "chocolate granulado",
+     "quantity_text": null,
+     "required": true,
+     "notes": "para enfeitar",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Derreta a manteiga em uma panela, despeje o leite condensado e o chocolate em pó. Misture sempre em fogo médio a baixo até obter fervura, engrossar e soltar do fundo",
+    "Retire do fogo e deixe amornar",
+    "Unte as mãos com manteiga e vá enrolando a mistura (mais ou menos uma colher de sopa) em bolinhas",
+    "Passe as bolinhas pelo chocolate granulado",
+    "Se desejar, coloque-as em forminhas de papel"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v2",
+   "document_id": "wb-1676",
+   "variant_index": 2,
+   "title": "Brigadeiro (Receita 2)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite de vaca",
+     "name_normalized": "leite",
+     "quantity_text": "1 lata (medir na lata acima)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Coloque numa panela, leve ao fogo e vá mexendo até o ponto de puxar, nem muito mole e nem muito duro",
+    "Faça as bolinhas, passe-as no chocolate granulado e coloque-as em forminhas",
+    "Observação: Não precisa de açúcar!"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v3",
+   "document_id": "wb-1676",
+   "variant_index": 3,
+   "title": "Brigadeiro (Receita 3)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 copo (tipo americano)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "água",
+     "name_normalized": "agua",
+     "quantity_text": "1/2 copo (tipo americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 copo (tipo americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater tudo no liquidificador, levar ao fogo brando, adicionando os ingredientes abaixo:",
+    "Duas colheres (sopa) de manteiga",
+    "Duas colheres (sopa) de achocolatado em pó",
+    "O ponto é quando desgrudar do fundo da panela"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v4",
+   "document_id": "wb-1676",
+   "variant_index": 4,
+   "title": "Brigadeiro (Receita 4)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "achocolatado",
+     "name_normalized": "achocolatado",
+     "quantity_text": "4 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Coloque numa panela, leve ao fogo brando e vá mexendo até o ponto de puxar, nem muito mole e nem muito duro",
+    "O ponto é quando desgrudar do fundo da panela",
+    "Recheie-os com passas embebidas em rum"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v5",
+   "document_id": "wb-1676",
+   "variant_index": 5,
+   "title": "Brigadeiro (Receita 5)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "3 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Tudo frio, mexa tudo; depois ligue o fogo e por 10 minutos (mais ou menos) vá mexendo até desgrudar do fundo",
+    "Observação: No micro-ondas são 3 minutos na potência máxima, e mexer a cada minuto; dê pausa no micro-ondas quando for mexer"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v6",
+   "document_id": "wb-1676",
+   "variant_index": 6,
+   "title": "Brigadeiro (Receita 6)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "(sopa) achocolatado em pó",
+     "name_normalized": "sopa achocolatado em po",
+     "quantity_text": "2 colheres",
+     "required": true,
+     "notes": "(sopa) achocolatado em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "bolacha maria",
+     "name_normalized": "bolacha maria",
+     "quantity_text": "200 gramas",
+     "required": true,
+     "notes": "ou maisena",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Leve tudo ao fogo (exceto as bolachas) e mexa até desgrudar da panela",
+    "Tire do fogo e misture as bolachas, picadinhas",
+    "Despeje numa fôrma, pique e passe-os no açúcar refinado"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v7",
+   "document_id": "wb-1676",
+   "variant_index": 7,
+   "title": "Brigadeiro (Receita 7)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "gemas",
+     "name_normalized": "gema de ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Leve ao fogo brando e mexa até desprender dos lados da panela",
+    "Despeje em um prato untado com manteiga e deixa esfriar",
+    "Enrole depois de frio e com as mãos untadas com manteiga",
+    "Passe os brigadeiros em chocolate granulado"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v8",
+   "document_id": "wb-1676",
+   "variant_index": 8,
+   "title": "Brigadeiro (Receita 8)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "chocolate",
+     "name_normalized": "chocolate",
+     "quantity_text": "3 colheres",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": "ou margarina",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "maisena",
+     "name_normalized": "maisena",
+     "quantity_text": "1/2 colher",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 xícaras",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "granulado",
+     "name_normalized": "granulado",
+     "quantity_text": "1 pacote",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Misture o leite condensado e a manteiga em uma panela pequena e coloque ao fogo alto",
+    "Coloque o açúcar e a maisena na panela e coloque as colheres de chocolate",
+    "Mexa sem parar para não engrossar e quando começar a ferver deixe por 30 segundos",
+    "Desligue o fogo e despeje num recipiente grande",
+    "Coloque na geladeira por 5 minutos",
+    "Quando tirar, despeje o granulado"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-1676-brigadeiro-v9",
+   "document_id": "wb-1676",
+   "variant_index": 9,
+   "title": "Brigadeiro (Receita 9)",
+   "topic_key": "sobremesas",
+   "topic_label": "Sobremesas",
+   "ingredients": [
+    {
+     "name_original": "leite condensado",
+     "name_normalized": "leite condensado",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher de sopa",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "achocolatado",
+     "name_normalized": "achocolatado",
+     "quantity_text": "2 colheres de sopa",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "nutella",
+     "name_normalized": "nutella",
+     "quantity_text": "1 colher de sopa",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "1 granulado",
+     "name_normalized": "1 granulado",
+     "quantity_text": "a gosto",
+     "required": false,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Coloque a manteiga até derreter",
+    "Acrescente o leite condensado na panela, a nutella e o achocolatado em pó",
+    "Mexa bem até desgrudar do fundo da panela",
+    "Deixe esfriar e depois enrole",
+    "Passe no granulado e esta pronto"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Brigadeiro",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=464096",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:50Z"
+  },
+  {
+   "recipe_id": "wb-8478-bolinhos-de-queijo-v1",
+   "document_id": "wb-8478",
+   "variant_index": 1,
+   "title": "Bolinhos de queijo",
+   "topic_key": "salgados",
+   "topic_label": "Salgados",
+   "ingredients": [
+    {
+     "name_original": "queijo parmesão",
+     "name_normalized": "queijo parmesao",
+     "quantity_text": "1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo branco",
+     "name_normalized": "queijo branco",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": "ou prato",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "pimenta-do-reino",
+     "name_normalized": "pimenta do reino",
+     "quantity_text": "1/3 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "creme de leite",
+     "name_normalized": "creme de leite",
+     "quantity_text": "1 lata",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo amarelo ralado",
+     "name_normalized": "queijo amarelo ralado",
+     "quantity_text": "500 gramas",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo branco ralado",
+     "name_normalized": "queijo branco ralado",
+     "quantity_text": "500 gramas",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos batidos",
+     "name_normalized": "ovos batidos",
+     "quantity_text": "6",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "amido de milho",
+     "name_normalized": "amido de milho",
+     "quantity_text": "5 colheres (sopa)",
+     "required": true,
+     "notes": "(maisena)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": null,
+     "required": true,
+     "notes": "para fritar",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Em uma panela, colocar todos os ingredientes da massa. Misturar bem, levar ao fogo e mexer sempre até soltar da panela e estar cozido",
+    "Colocar numa travessa untada com manteiga ou óleo e esfriar",
+    "Fazer as bolinhas recheando-as com queijo",
+    "Passá-las em claras de ovos sem bater, escorrer bem, tirando o excesso e passar na farinha de rosca",
+    "Fritar em gordura quente",
+    "Dica: Você também pode colocar fatias de presunto junto com o queijo",
+    "=Receita 3=",
+    "Misture (ou passe no liquidificador) os queijos ralados, os ovos, a pimenta e o creme de leite",
+    "Despeje numa tigela e misture a farinha de trigo peneirada com o fermento",
+    "Com o auxílio de duas colheres pequenas, dê a forma de bolinhas e frite em gordura quente",
+    "=Receita 4=",
+    "Misture os queijos, acrescente os ovos e o amido de milho, mexendo sempre até obter uma massa homogênea",
+    "Forme bolinhas e frite-as em óleo bem quente, até que fiquem douradas",
+    "Sirva-as quentíssimas",
+    "Se quiser, salpique queijo parmesão ralado por cima"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolinhos_de_queijo",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=228145",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:54Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v1",
+   "document_id": "wb-8911",
+   "variant_index": 1,
+   "title": "Bolo de fubá (Receita 1)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "fubá",
+     "name_normalized": "fuba",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 e 1/2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "3 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "4 colheres (chá)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovo",
+     "name_normalized": "ovo",
+     "quantity_text": "1",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "erva-doce",
+     "name_normalized": "erva doce",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata a clara em neve, junte a gema, o leite, o óleo e os ingredientes secos. Por fim, ponha uma pitada de erva-doce",
+    "Coloque numa fôrma untada com óleo e leve ao forno para assar"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v2",
+   "document_id": "wb-8911",
+   "variant_index": 2,
+   "title": "Bolo de fubá (Receita 2)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "chávena",
+     "name_normalized": "chavena",
+     "quantity_text": "1",
+     "required": true,
+     "notes": "( = xícara de chá) de fubá",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chávena de farinha de trigo",
+     "name_normalized": "chavena de farinha de trigo",
+     "quantity_text": "1",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chávena de açúcar",
+     "name_normalized": "chavena de acucar",
+     "quantity_text": "1",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "chávena de leite",
+     "name_normalized": "chavena de leite",
+     "quantity_text": "1",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "4 colheres (sopa)",
+     "required": true,
+     "notes": "ou banha",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 e 1/2 colheres (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1/2 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "2",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 xícara (chávena)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Canela",
+     "name_normalized": "canela",
+     "quantity_text": "a gosto",
+     "required": false,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Erva doce",
+     "name_normalized": "erva doce",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Esquentar o forno. Peneirar juntos os ingredientes secos",
+    "Misturar em outra vasilha os ingredientes líquidos (ovos ligeiramente batidos, leite e manteiga ou banha derretida). Juntar aos poucos o líquido nos secos, até a massa ficar homogênea",
+    "Assar em forno quente",
+    "Depois que retirar do forno, passar a canela em pó com açúcar refinado por cima",
+    "Desenforme depois de frio",
+    "E se quiser pode-se sempre acrescentar erva doce por cima do bolo depois de retirá-lo do forno"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v3",
+   "document_id": "wb-8911",
+   "variant_index": 3,
+   "title": "Bolo de fubá (Receita 3)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "fubá",
+     "name_normalized": "fuba",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar cristal",
+     "name_normalized": "acucar cristal",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo",
+     "name_normalized": "queijo",
+     "quantity_text": "4 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo",
+     "name_normalized": "oleo",
+     "quantity_text": "1 xícara (café)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "manteiga",
+     "name_normalized": "manteiga",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Faz-se o angu (com leite, açúcar, óleo e manteiga)",
+    "Depois de frio, acrescenta-se os ovos e depois o fermento em pó",
+    "Depois de assado, colocar açúcar refinado por cima"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v4",
+   "document_id": "wb-8911",
+   "variant_index": 4,
+   "title": "Bolo de fubá (Receita 4)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "ovos inteiro",
+     "name_normalized": "ovos inteiro",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "gordura",
+     "name_normalized": "gordura",
+     "quantity_text": "1/2 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "1 tablete",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Sal",
+     "name_normalized": "sal",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "coalhada",
+     "name_normalized": "coalhada",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fubá",
+     "name_normalized": "fuba",
+     "quantity_text": "2 xícaras (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sobremesa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "canela",
+     "name_normalized": "canela",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "cravos índia",
+     "name_normalized": "cravos india",
+     "quantity_text": "2",
+     "required": true,
+     "notes": "socados",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 xícara (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater todos os ingredientes no liquidificador, menos o fubá, o queijo, a canela e o cravo",
+    "Depois de batido, misturar com o fubá e o restante citado acima que devem estar numa tigela",
+    "Acabar de amolecer a massa com leite, pois a mesma deve ser bem mole",
+    "Levar para assar em tabuleiro, em forno preaquecido"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v5",
+   "document_id": "wb-8911",
+   "variant_index": 5,
+   "title": "Bolo de fubá (Receita 5)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "açúcar refinado",
+     "name_normalized": "acucar refinado",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fubá mimoso",
+     "name_normalized": "fuba mimoso",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite de coco",
+     "name_normalized": "leite de coco",
+     "quantity_text": "1 vidro",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 pitada",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Canela",
+     "name_normalized": "canela",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater a manteiga com o açúcar, adicionando os ovos um a um, queijo, fubá, leite de coco, sal, canela e por último, o leite com o fermento em pó",
+    "Levar ao forno em uma assadeira untada",
+    "Depois de assado, polvilhar açúcar refinado",
+    "Cortar em pedaços e servir"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v6",
+   "document_id": "wb-8911",
+   "variant_index": 6,
+   "title": "Bolo de fubá (Receita 6)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "fubá de moinho",
+     "name_normalized": "fuba de moinho",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar refinado",
+     "name_normalized": "acucar refinado",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo mineiro ralado",
+     "name_normalized": "queijo mineiro ralado",
+     "quantity_text": "1 copo (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "3 e 1/2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "4",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": "ou manteiga",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "sal",
+     "name_normalized": "sal",
+     "quantity_text": "1 colher (chá)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater as gemas com a margarina ou manteiga, e o açúcar",
+    "Em seguida, ir colocando o fubá aos poucos, a farinha de trigo, o leite, e o fermento em pó dissolvido em um pouco do leite, o queijo e, por último, as 4 claras em neve",
+    "Colocar em uma assadeira de tamanho médio e de formato retangular",
+    "Levar ao forno preaquecido e assar em grau temperado",
+    "Depois de assado, cortar na própria assadeira em pequenos quadrados"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v7",
+   "document_id": "wb-8911",
+   "variant_index": 7,
+   "title": "Bolo de fubá (Receita 7)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "fubá",
+     "name_normalized": "fuba",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": "(peneirado 2 vezes)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar refinado",
+     "name_normalized": "acucar refinado",
+     "quantity_text": "2 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "(americano), até no friso, de manteiga ou margarina derretida",
+     "name_normalized": "americano ate no friso de manteiga ou margarina derretida",
+     "quantity_text": "1 copo",
+     "required": true,
+     "notes": "(americano), até no friso, de manteiga ou margarina derretida",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "2 copos(americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "3 copos (americano)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "5",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Canela",
+     "name_normalized": "canela",
+     "quantity_text": null,
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Pitada de sal",
+     "name_normalized": "pitada de sal",
+     "quantity_text": null,
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Colocar todos os ingredientes na batedeira e ir colocando o leite aos poucos",
+    "Por último, colocar o fermento em pó",
+    "Untar uma fôrma com manteiga e polvilhar com farinha de trigo",
+    "Colocar a massa e levar para assar em forno moderado, mais ou menos 45 minutos"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v8",
+   "document_id": "wb-8911",
+   "variant_index": 8,
+   "title": "Bolo de fubá (Receita 8)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "fubá de milho",
+     "name_normalized": "fuba de milho",
+     "quantity_text": "1 copo (daqueles de requeijão)",
+     "required": true,
+     "notes": "(de moinho, fubá normal)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "1 copo (desses de requeijão)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "1 copo (dos de requeijão)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "óleo de cozinha",
+     "name_normalized": "oleo de cozinha",
+     "quantity_text": "1/2 copo (desse de requeijão)",
+     "required": true,
+     "notes": "(se quiser, pode diminuir um pouco)",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher(sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "Queijo",
+     "name_normalized": "queijo",
+     "quantity_text": "à vontade",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bater tudo junto no liquidificador, ficando bem mole a massa",
+    "Depois pões para assar",
+    "Depois de pronto, pode por canela em pó, por cima",
+    "Nota: 1 copo de requeijão equivale a 250 ml"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  },
+  {
+   "recipe_id": "wb-8911-bolo-de-fuba-v9",
+   "document_id": "wb-8911",
+   "variant_index": 9,
+   "title": "Bolo de fubá (Receita 9)",
+   "topic_key": "bolos",
+   "topic_label": "Bolos",
+   "ingredients": [
+    {
+     "name_original": "açúcar",
+     "name_normalized": "acucar",
+     "quantity_text": "3 xícaras",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "ovos",
+     "name_normalized": "ovo",
+     "quantity_text": "3",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "margarina",
+     "name_normalized": "margarina",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "farinha de trigo",
+     "name_normalized": "farinha de trigo",
+     "quantity_text": "2 colheres (sopa)",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fubá",
+     "name_normalized": "fuba",
+     "quantity_text": "1 e 1/2 xícara",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "queijo ralado",
+     "name_normalized": "queijo ralado",
+     "quantity_text": "1 xícara",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "leite",
+     "name_normalized": "leite",
+     "quantity_text": "4 xícaras",
+     "required": true,
+     "notes": null,
+     "alternatives_documented": []
+    },
+    {
+     "name_original": "fermento",
+     "name_normalized": "fermento",
+     "quantity_text": "1 colher (sopa)",
+     "required": true,
+     "notes": "em pó",
+     "alternatives_documented": []
+    }
+   ],
+   "instructions": [
+    "Bata bem todos os ingredientes no liquidificador, menos o fermento",
+    "Acrescente o fermento e misture bem",
+    "Despeje numa assadeira de 32,5 cm x 24 cm e leve ao forno pré-aquecido moderadamente (180 graus) por 45 minutos",
+    "Após assado, retire do forno, deixe esfriar e corte em quadrados",
+    "Nota: Este bolo fica bem cremoso"
+   ],
+   "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Bolo_de_fub%C3%A1",
+   "revision_url": "https://pt.wikibooks.org/w/index.php?oldid=231143",
+   "license": "CC BY-SA 4.0 (Wikilivros)",
+   "retrieved_at": "2026-11-17T01:37:56Z"
+  }
+ ]
+}

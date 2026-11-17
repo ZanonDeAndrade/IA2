@@ -1,4 +1,45 @@
-# Assistente Inteligente de Receitas · RAG
+# Assistente Inteligente de Receitas
+
+## Executar a aplicação completa (Ubuntu)
+
+Fluxo real: **frontend React → FastAPI → guardrails → LLM (Ollama, function calling) ⇄ cliente MCP → servidor
+MCP (stdio) → RAG (ChromaDB + embeddings MiniLM 384d) → guardrail de saída → cards com fontes**.
+
+Pré-requisitos já usados nesta máquina: Python 3.12 + `uv`, Node 24, Ollama 0.40 (instalado sem sudo em
+`~/.local/ollama`; com sudo use `curl -fsSL https://ollama.com/install.sh | sh`).
+
+```sh
+cd trabalho-3
+# 1) dependências (uma vez)
+(cd backend && uv venv .venv --python 3.12 && uv pip install --python .venv/bin/python -e ".[test]")
+(cd mcp-server && uv venv .venv --python 3.12 && uv pip install --python .venv/bin/python -e ".[test]" \
+   && uv pip install --python .venv/bin/python torch --index-url https://download.pytorch.org/whl/cpu \
+   && uv pip install --python .venv/bin/python -e ../rag)
+(cd frontend && npm install)
+ollama pull qwen3:1.7b
+
+# 2) corpus real (Wikilivros, CC BY-SA 4.0) -> data/normalized/recipes.json + Chroma em data/chroma_wikibooks/
+mcp-server/.venv/bin/python -m rag.wikibooks collect   # só se data/raw/wikibooks/ estiver vazio
+mcp-server/.venv/bin/python -m rag.wikibooks build
+
+# 3) subir tudo (Ollama, backend :8000 com MCP, frontend :5173)
+scripts/start.sh
+```
+
+Abra http://localhost:5173, informe ingredientes (pergunta opcional) e clique em **Buscar receitas**. Em CPU,
+cada consulta leva de 1 a 4 minutos.
+
+Testes reais (com a aplicação no ar): `backend/.venv/bin/python scripts/real_e2e.py`. Evidências em `tests/evidence/`.
+
+| Variável (definida em `scripts/start.sh`) | Valor | Motivo |
+|---|---|---|
+| `OLLAMA_MODEL` | `qwen3:1.7b` | tool calling e cabe em ~6 GB de RAM livre, só CPU (`qwen3:4b` era lento demais) |
+| `RAG_RETRIEVER` | `rag.wikibooks:retrieve` | retriever do corpus estruturado usado pelo MCP |
+| `HF_HUB_OFFLINE` | `1` | modelo de embeddings já em cache após o `build` |
+
+---
+
+# RAG de PDFs (trabalho anterior, mantido)
 
 O RAG usa os PDFs da pasta [data/raw/](data/raw/), embeddings MiniLM multilíngues e um índice ChromaDB local. Cada resultado cita o arquivo e a página física do PDF.
 
