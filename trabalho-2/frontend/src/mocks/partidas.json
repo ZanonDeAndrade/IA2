@@ -1,0 +1,31 @@
+{
+  "usuario": "jogador_exemplo",
+  "partidas": [
+    {
+      "id": "a1b2c3",
+      "url": "https://www.chess.com/game/live/000000001",
+      "data": "2026-11-02",
+      "ritmo": "rapid",
+      "cor_do_jogador": "black",
+      "adversario": "oponente_exemplo",
+      "resultado": "0-1",
+      "abertura": "Italian Game: Two Knights Defense",
+      "total_lances": 38,
+      "erros_graves": 1,
+      "status_analise": "concluida"
+    },
+    {
+      "id": "d4e5f6",
+      "url": "https://www.chess.com/game/live/000000002",
+      "data": "2026-11-01",
+      "ritmo": "blitz",
+      "cor_do_jogador": "white",
+      "adversario": "outro_oponente",
+      "resultado": "1-0",
+      "abertura": "Queen's Gambit Declined",
+      "total_lances": 51,
+      "erros_graves": 0,
+      "status_analise": "pendente"
+    }
+  ]
+}

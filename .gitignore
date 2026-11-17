@@ -1,0 +1,42 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# ---------- Node ----------
+node_modules/
+dist/
+
+# ---------- Segredos ----------
+.env
+.env.*
+!.env.example
+
+# ---------- Bancos de dados ----------
+*.db
+*.sqlite
+*.sqlite3
+
+# ---------- Base de puzzles (nunca versionar) ----------
+**/data/**/*.csv
+**/data/**/*.zst
+
+# ---------- ChromaDB ----------
+chroma/
+chroma_db/
+.chroma/
+chroma_data/
+
+# ---------- Stockfish (binários) ----------
+stockfish
+stockfish-*
+stockfish_*
+*.nnue
+
+# ---------- Editores e sistema ----------
+.vscode/
+.idea/
+.DS_Store

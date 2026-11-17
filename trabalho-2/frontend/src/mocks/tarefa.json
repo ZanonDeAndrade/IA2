@@ -1,0 +1,12 @@
+{
+  "id": "tarefa-123",
+  "partida_id": "a1b2c3",
+  "status": "em_andamento",
+  "progresso": {
+    "lance_atual": 12,
+    "total_lances": 38,
+    "percentual": 31.6
+  },
+  "iniciada_em": "2026-11-04T15:00:00-03:00",
+  "erro": null
+}

@@ -4,6 +4,7 @@ name: Teste de Segurança DAST (OWASP ZAP)
 on:
   push:
     branches: [ "main" ]
+    paths: [ 'trabalho-1/**' ]
 
 permissions:
   issues: write
@@ -12,6 +13,11 @@ permissions:
 jobs:
   analise_dast:
     runs-on: ubuntu-latest
+
+    # Todos os passos "run" executam dentro de trabalho-1/, onde está o main.py
+    defaults:
+      run:
+        working-directory: trabalho-1
 
     steps:
       # 1. Baixa o código do repositório
@@ -50,4 +56,4 @@ jobs:
         if: always()
         with:
           name: relatorio-dast-html
-          path: report_html.html
+          path: trabalho-1/report_html.html

@@ -1,0 +1,11 @@
+{
+  "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6",
+  "pergunta": "Por que o cavalo em d5 está em perigo?",
+  "resposta": "O cavalo em d5 está defendido apenas pela dama em d8. Depois de 6.Nxf7 Kxf7 7.Qf3+, a dama branca ataca o cavalo e dá xeque ao mesmo tempo, então as pretas não conseguem salvar as duas coisas.",
+  "ferramentas_usadas": [
+    { "nome": "descrever_posicao", "argumentos": { "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6" } },
+    { "nome": "analisar_posicao", "argumentos": { "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6", "profundidade": 18, "multipv": 3 } },
+    { "nome": "validar_lances", "argumentos": { "lances": ["Nxf7", "Kxf7", "Qf3+"] } }
+  ],
+  "validada": true
+}
