@@ -1,10 +1,12 @@
 import os
 import re
+from unicodedata import normalize
 
 import pytest
 
 from rag.chunk import CHUNK_OVERLAP, CHUNK_SIZE, build_chunks, split_text, token_count
 from rag.embed import DIMENSION, Embedder
+from rag.extract import read_pdf
 from rag.ingest import load_pages
 
 
@@ -21,6 +23,19 @@ def test_pdfs_keep_physical_page_numbers_and_ignore_html(pdf_corpus):
     assert [page["page"] for page in pages] == [1, 3, 1]
     assert pages[1]["source_url"] == "data/raw/Massas%20e%20bolos.PDF#page=3"
     assert "Bolo de cenoura" in pages[1]["text"]
+
+
+def test_pdf_id_survives_unicode_filename_normalization(pdf_corpus, tmp_path):
+    pdf = (pdf_corpus / "raw" / "Ovos.pdf").read_bytes()
+    sources = []
+    for form in ("NFC", "NFD"):
+        directory = tmp_path / form
+        directory.mkdir()
+        path = directory / normalize(form, "Receitas da Vovó.pdf")
+        path.write_bytes(pdf)
+        source, _ = read_pdf(path)
+        sources.append(source)
+    assert sources[0]["document_id"] == sources[1]["document_id"]
 
 
 def test_pdf_chunks_use_real_tokenizer_and_carry_page_provenance(embedder, pdf_corpus):

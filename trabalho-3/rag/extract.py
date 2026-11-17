@@ -2,6 +2,7 @@
 from hashlib import sha256
 from pathlib import Path
 from subprocess import run
+from unicodedata import normalize
 from urllib.parse import quote
 
 from .ingredients import normalize_text
@@ -14,7 +15,8 @@ def pdf_url(filename: str, page: int) -> str:
 def read_pdf(path: Path) -> tuple[dict, list[dict]]:
     raw = path.read_bytes()
     digest = sha256(raw).hexdigest()
-    identity = sha256(path.name.encode())
+    # Git e o sistema de arquivos podem representar o mesmo nome com acentos diferentes.
+    identity = sha256(normalize("NFD", path.name).encode())
     identity.update(raw)
     document_id = f"pdf-{identity.hexdigest()[:16]}"
     title = " ".join(path.stem.replace("_", " ").split())
