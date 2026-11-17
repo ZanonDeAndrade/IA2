@@ -1,0 +1,8 @@
+[
+  {"id":"P01","query":"Como fazer bacalhau ao forno?","expected_recipe_ids":["pdf-d4cc78647a8e0926-p9","pdf-d4cc78647a8e0926-p10"]},
+  {"id":"P02","query":"Como preparar biscoitinhos de banana e aveia?","expected_recipe_ids":["pdf-5afaf08b61122277-p20"]},
+  {"id":"P03","query":"Quais os ingredientes de rosbife ao molho de aspargo?","expected_recipe_ids":["pdf-2946c7ff32fd9e9c-p12"]},
+  {"id":"P04","query":"Bolo de banana com canela","expected_recipe_ids":["pdf-11924c7e086904bd-p22"]},
+  {"id":"P05","query":"Sopa de batata com bacon","topic_key":"volta-mundo-120-receitas-vol2","expected_recipe_ids":["pdf-fb011d84a498493a-p14"]},
+  {"id":"N01","query":"Como consertar um motor de foguete?","expected_recipe_ids":[]}
+]
