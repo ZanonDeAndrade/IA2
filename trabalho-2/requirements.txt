@@ -1,11 +1,12 @@
 # Dependências do Trabalho 2 – Lance a Lance
-# Sem versões fixas ainda: fixar (pip freeze) antes da entrega.
+# Versões fixas nas dependências do MCP, da API e dos testes; as do agente,
+# RAG e avaliação ainda precisam ser fixadas (pip freeze) antes da entrega.
 
 # Regras do jogo, PGN/FEN e comunicação com o Stockfish via UCI
-chess
+chess==1.11.2
 
 # Servidor de ferramentas MCP
-fastmcp
+fastmcp==4.2.2
 
 # Agente
 langgraph
@@ -23,21 +24,22 @@ chromadb
 sentence-transformers
 
 # API
-fastapi
-uvicorn[standard]
-pydantic
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+pydantic==2.14.3
 
 # Cache e dados (SQLite é da biblioteca padrão)
 pandas
-zstandard
+zstandard==0.25.0
 
 # Utilidades
-httpx
-python-dotenv
+httpx==0.28.1
+python-dotenv==1.2.4
 
 # Avaliação
 ragas
 matplotlib
 
 # Testes
-pytest
+pytest==9.2.0
+pytest-asyncio==1.5.0
