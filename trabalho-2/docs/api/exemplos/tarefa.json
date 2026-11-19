@@ -1,0 +1,14 @@
+{
+  "id": "tarefa-ff8f98e707",
+  "tarefa_id": "tarefa-ff8f98e707",
+  "partida_id": "chesscom-1062172898",
+  "status": "concluida",
+  "etapa": null,
+  "progresso": {
+    "lance_atual": 83,
+    "total_lances": 83,
+    "percentual": 100.0
+  },
+  "iniciada_em": "2026-11-18T20:49:53-03:00",
+  "erro": null
+}

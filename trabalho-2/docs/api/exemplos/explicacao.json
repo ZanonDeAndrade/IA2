@@ -1,0 +1,19 @@
+{
+  "fen": "5rk1/2p1q1r1/1p1p4/3P3p/PQP1p1pN/3b2P1/3R1P1P/R5K1 w - - 0 39",
+  "lance_jogado": "a5",
+  "melhor_lance": "Qc3",
+  "classe": "erro_grave",
+  "queda": 38.96,
+  "tema": "outro",
+  "tema_label": "Outro",
+  "texto": "a5 foi um erro grave: sua chance de vitória caiu de 49% para 10%. A melhor resposta do adversário é e3. O motor recomendava Re1 (linha: Re1 Qf6 Ng2 Qd4).",
+  "ficha": null,
+  "ferramentas_usadas": [
+    "analisar_partida",
+    "descrever_posicao"
+  ],
+  "tentativas": 0,
+  "validada": true,
+  "origem": "motor",
+  "cache": true
+}

@@ -1,0 +1,2403 @@
+{
+  "id": "chesscom-1062172898",
+  "usuario": "erik",
+  "cor_do_jogador": "white",
+  "adversario": "Nixkram",
+  "resultado": "0-1",
+  "resultado_do_jogador": "derrota",
+  "abertura": "Owens Defense",
+  "data": "2026-11-15",
+  "ritmo": "daily",
+  "url": "https://www.chess.com/game/daily/1062172898",
+  "pgn": "[Event \"Let's Play!\"]\n[Site \"Chess.com\"]\n[Date \"2026.11.11\"]\n[Round \"-\"]\n[White \"erik\"]\n[Black \"Nixkram\"]\n[Result \"0-1\"]\n[CurrentPosition \"5rk1/2p3r1/1p1p4/P2P3p/1QP1q1pN/3R2P1/5p1P/R4K2 w - - 2 42\"]\n[Timezone \"UTC\"]\n[ECO \"B00\"]\n[ECOUrl \"https://www.chess.com/openings/Owens-Defense-2.d4-Bb7-3.Bd3-g6\"]\n[UTCDate \"2026.11.11\"]\n[UTCTime \"22:30:08\"]\n[WhiteElo \"1510\"]\n[BlackElo \"2290\"]\n[TimeControl \"1/86400\"]\n[Termination \"Nixkram won by resignation\"]\n[StartTime \"22:30:08\"]\n[EndDate \"2026.11.15\"]\n[EndTime \"14:16:49\"]\n[Link \"https://www.chess.com/game/daily/1062172898\"]\n\n1. e4 {[%clk 0:00:00.3]} 1... b6 {[%clk 0:00:06.3]} 2. d4 {[%clk 0:07:55.3]} 2... Bb7 {[%clk 0:03:23.9]} 3. Bd3 {[%clk 0:03:14.8]} 3... g6 {[%clk 0:01:57.1]} 4. Ne2 {[%clk 0:01:00]} 4... Bg7 {[%clk 0:01:53.5]} 5. O-O {[%clk 0:00:19]} 5... d6 {[%clk 0:00:05.4]} 6. Bf4 {[%clk 0:00:22.6]} 6... e6 {[%clk 0:00:10.6]} 7. c3 {[%clk 0:00:00.7]} 7... Ne7 {[%clk 0:07:37.2]} 8. Qd2 {[%clk 0:08:57.5]} 8... h6 {[%clk 0:02:02.3]} 9. Ng3 {[%clk 0:01:31.5]} 9... Nd7 {[%clk 0:46:32]} 10. Na3 {[%clk 0:00:42.8]} 10... a6 {[%clk 0:03:32.4]} 11. Nc2 {[%clk 0:17:22.2]} 11... g5 {[%clk 0:01:47.2]} 12. Be3 {[%clk 0:12:25.6]} 12... e5 {[%clk 0:00:58.3]} 13. Nh5 {[%clk 0:06:25.1]} 13... Rg8 {[%clk 0:00:37.7]} 14. Nxg7+ {[%clk 0:07:41.9]} 14... Rxg7 {[%clk 0:00:00]} 15. Qe2 {[%clk 0:00:01.5]} 15... Ng6 {[%clk 0:01:10.4]} 16. g3 {[%clk 0:02:01.6]} 16... Nf4 {[%clk 0:00:10]} 17. Qd1 {[%clk 0:11:08.3]} 17... Qe7 {[%clk 0:03:14.2]} 18. Re1 {[%clk 0:09:20.3]} 18... Nxd3 {[%clk 0:00:30.4]} 19. Qxd3 {[%clk 0:06:49.5]} 19... h5 {[%clk 0:00:21.6]} 20. Nb4 {[%clk 0:04:56.7]} 20... Nf6 {[%clk 0:00:11.9]} 21. d5 {[%clk 0:03:59.4]} 21... g4 {[%clk 0:28:00.8]} 22. Bh6 {[%clk 0:18:08.5]} 22... Rg6 {[%clk 0:01:22.2]} 23. Qd2 {[%clk 0:02:12.7]} 23... Nh7 {[%clk 0:01:46]} 24. Nc2 {[%clk 0:00:15.5]} 24... Ng5 {[%clk 0:00:33.4]} 25. Bxg5 {[%clk 0:25:47.5]} 25... Rxg5 {[%clk 0:07:16.4]} 26. Ne3 {[%clk 0:08:32]} 26... Bc8 {[%clk 0:02:22.7]} 27. Ng2 {[%clk 0:03:42.9]} 27... Bd7 {[%clk 0:00:43.4]} 28. a4 {[%clk 0:03:57.4]} 28... a5 {[%clk 0:03:00.7]} 29. b3 {[%clk 0:00:12]} 29... Kf8 {[%clk 0:03:26.1]} 30. c4 {[%clk 0:03:28.9]} 30... Kg8 {[%clk 0:00:31.5]} 31. Rad1 {[%clk 0:08:34.4]} 31... Rf8 {[%clk 0:00:05.8]} 32. Nh4 {[%clk 0:00:17.9]} 32... f5 {[%clk 0:01:14]} 33. Ra1 {[%clk 0:02:07.1]} 33... Rg7 {[%clk 0:14:48.4]} 34. b4 {[%clk 0:05:58.7]} 34... axb4 {[%clk 0:22:35.8]} 35. Qxb4 {[%clk 0:33:32.4]} 35... fxe4 {[%clk 0:05:11]} 36. Rxe4 {[%clk 0:02:09.8]} 36... Bf5 {[%clk 0:01:00.5]} 37. Re2 {[%clk 0:02:50]} 37... Bd3 {[%clk 0:25:51.3]} 38. Rd2 {[%clk 0:08:08.9]} 38... e4 {[%clk 0:03:31.1]} 39. a5 {[%clk 0:21:10.7]} 39... e3 {[%clk 1:00:47.7]} 40. Rxd3 {[%clk 0:07:35.7]} 40... exf2+ {[%clk 0:00:03.9]} 41. Kf1 {[%clk 0:00:04.2]} 41... Qe4 {[%clk 0:00:33.6]} 0-1\n",
+  "status_analise": "concluida",
+  "tarefa_id": null,
+  "resumo": {
+    "imprecisoes": 3,
+    "erros": 0,
+    "erros_graves": 1,
+    "precisao": 87.3
+  },
+  "lances": [
+    {
+      "indice": 1,
+      "numero": 1,
+      "cor": "white",
+      "san": "e4",
+      "uci": "e2e4",
+      "fen_antes": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "fen_depois": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+      "cp_antes": 27,
+      "cp_depois": 20,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 52.48,
+      "chance_vitoria_depois": 51.84,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "e4",
+      "melhor_lance_uci": "e2e4",
+      "linha_motor": [
+        "e4",
+        "c5",
+        "Nf3",
+        "d6",
+        "d4",
+        "cxd4",
+        "Nxd4",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 3,
+      "numero": 2,
+      "cor": "white",
+      "san": "d4",
+      "uci": "d2d4",
+      "fen_antes": "rnbqkbnr/p1pppppp/1p6/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "fen_depois": "rnbqkbnr/p1pppppp/1p6/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2",
+      "cp_antes": 89,
+      "cp_depois": 84,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 58.12,
+      "chance_vitoria_depois": 57.67,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "d4",
+      "melhor_lance_uci": "d2d4",
+      "linha_motor": [
+        "d4",
+        "Bb7",
+        "Bd3",
+        "Nf6",
+        "Qe2",
+        "Nc6",
+        "c3",
+        "e5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 5,
+      "numero": 3,
+      "cor": "white",
+      "san": "Bd3",
+      "uci": "f1d3",
+      "fen_antes": "rn1qkbnr/pbpppppp/1p6/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 1 3",
+      "fen_depois": "rn1qkbnr/pbpppppp/1p6/8/3PP3/3B4/PPP2PPP/RNBQK1NR b KQkq - 2 3",
+      "cp_antes": 93,
+      "cp_depois": 91,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 58.48,
+      "chance_vitoria_depois": 58.3,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Bd3",
+      "melhor_lance_uci": "f1d3",
+      "linha_motor": [
+        "Bd3",
+        "e6",
+        "Nf3",
+        "c5",
+        "c3",
+        "Be7",
+        "O-O",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 7,
+      "numero": 4,
+      "cor": "white",
+      "san": "Ne2",
+      "uci": "g1e2",
+      "fen_antes": "rn1qkbnr/pbpppp1p/1p4p1/8/3PP3/3B4/PPP2PPP/RNBQK1NR w KQkq - 0 4",
+      "fen_depois": "rn1qkbnr/pbpppp1p/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQK2R b KQkq - 1 4",
+      "cp_antes": 99,
+      "cp_depois": 57,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 59.01,
+      "chance_vitoria_depois": 55.23,
+      "queda": 3.78,
+      "classe": "aceitavel",
+      "melhor_lance": "Nf3",
+      "melhor_lance_uci": "g1f3",
+      "linha_motor": [
+        "Nf3",
+        "Bg7",
+        "h4",
+        "h5",
+        "Qe2",
+        "d6",
+        "O-O",
+        "Nh6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 9,
+      "numero": 5,
+      "cor": "white",
+      "san": "O-O",
+      "uci": "e1g1",
+      "fen_antes": "rn1qk1nr/pbppppbp/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQK2R w KQkq - 2 5",
+      "fen_depois": "rn1qk1nr/pbppppbp/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQ1RK1 b kq - 3 5",
+      "cp_antes": 69,
+      "cp_depois": 72,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 56.32,
+      "chance_vitoria_depois": 56.59,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "O-O",
+      "melhor_lance_uci": "e1g1",
+      "linha_motor": [
+        "O-O",
+        "d6",
+        "c4",
+        "Nd7",
+        "Nbc3",
+        "Ngf6",
+        "Bg5",
+        "e5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 11,
+      "numero": 6,
+      "cor": "white",
+      "san": "Bf4",
+      "uci": "c1f4",
+      "fen_antes": "rn1qk1nr/pbp1ppbp/1p1p2p1/8/3PP3/3B4/PPP1NPPP/RNBQ1RK1 w kq - 0 6",
+      "fen_depois": "rn1qk1nr/pbp1ppbp/1p1p2p1/8/3PPB2/3B4/PPP1NPPP/RN1Q1RK1 b kq - 1 6",
+      "cp_antes": 68,
+      "cp_depois": -1,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 56.23,
+      "chance_vitoria_depois": 49.91,
+      "queda": 6.32,
+      "classe": "aceitavel",
+      "melhor_lance": "c4",
+      "melhor_lance_uci": "c2c4",
+      "linha_motor": [
+        "c4",
+        "e5",
+        "d5",
+        "Nd7",
+        "Bc2",
+        "a5",
+        "Nbc3",
+        "Ba6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 13,
+      "numero": 7,
+      "cor": "white",
+      "san": "c3",
+      "uci": "c2c3",
+      "fen_antes": "rn1qk1nr/pbp2pbp/1p1pp1p1/8/3PPB2/3B4/PPP1NPPP/RN1Q1RK1 w kq - 0 7",
+      "fen_depois": "rn1qk1nr/pbp2pbp/1p1pp1p1/8/3PPB2/2PB4/PP2NPPP/RN1Q1RK1 b kq - 0 7",
+      "cp_antes": 41,
+      "cp_depois": 36,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 53.77,
+      "chance_vitoria_depois": 53.31,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "c3",
+      "melhor_lance_uci": "c2c3",
+      "linha_motor": [
+        "c3",
+        "Nf6",
+        "f3",
+        "Nbd7",
+        "c4",
+        "O-O",
+        "Nbc3",
+        "e5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 15,
+      "numero": 8,
+      "cor": "white",
+      "san": "Qd2",
+      "uci": "d1d2",
+      "fen_antes": "rn1qk2r/pbp1npbp/1p1pp1p1/8/3PPB2/2PB4/PP2NPPP/RN1Q1RK1 w kq - 1 8",
+      "fen_depois": "rn1qk2r/pbp1npbp/1p1pp1p1/8/3PPB2/2PB4/PP1QNPPP/RN3RK1 b kq - 2 8",
+      "cp_antes": 67,
+      "cp_depois": 62,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 56.14,
+      "chance_vitoria_depois": 55.68,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Qd2",
+      "melhor_lance_uci": "d1d2",
+      "linha_motor": [
+        "Qd2",
+        "O-O",
+        "Bh6",
+        "Nd7"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 17,
+      "numero": 9,
+      "cor": "white",
+      "san": "Ng3",
+      "uci": "e2g3",
+      "fen_antes": "rn1qk2r/pbp1npb1/1p1pp1pp/8/3PPB2/2PB4/PP1QNPPP/RN3RK1 w kq - 0 9",
+      "fen_depois": "rn1qk2r/pbp1npb1/1p1pp1pp/8/3PPB2/2PB2N1/PP1Q1PPP/RN3RK1 b kq - 1 9",
+      "cp_antes": 98,
+      "cp_depois": 57,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 58.92,
+      "chance_vitoria_depois": 55.23,
+      "queda": 3.69,
+      "classe": "aceitavel",
+      "melhor_lance": "Na3",
+      "melhor_lance_uci": "b1a3",
+      "linha_motor": [
+        "Na3",
+        "Qd7",
+        "f3",
+        "Nbc6",
+        "Nc2",
+        "f5",
+        "Be3",
+        "g5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 19,
+      "numero": 10,
+      "cor": "white",
+      "san": "Na3",
+      "uci": "b1a3",
+      "fen_antes": "r2qk2r/pbpnnpb1/1p1pp1pp/8/3PPB2/2PB2N1/PP1Q1PPP/RN3RK1 w kq - 2 10",
+      "fen_depois": "r2qk2r/pbpnnpb1/1p1pp1pp/8/3PPB2/N1PB2N1/PP1Q1PPP/R4RK1 b kq - 3 10",
+      "cp_antes": 77,
+      "cp_depois": 72,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 57.04,
+      "chance_vitoria_depois": 56.59,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Na3",
+      "melhor_lance_uci": "b1a3",
+      "linha_motor": [
+        "Na3",
+        "h5",
+        "f3",
+        "h4",
+        "Nh1",
+        "h3",
+        "g3",
+        "e5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 21,
+      "numero": 11,
+      "cor": "white",
+      "san": "Nc2",
+      "uci": "a3c2",
+      "fen_antes": "r2qk2r/1bpnnpb1/pp1pp1pp/8/3PPB2/N1PB2N1/PP1Q1PPP/R4RK1 w kq - 0 11",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp1pp/8/3PPB2/2PB2N1/PPNQ1PPP/R4RK1 b kq - 1 11",
+      "cp_antes": 96,
+      "cp_depois": 70,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 58.75,
+      "chance_vitoria_depois": 56.41,
+      "queda": 2.34,
+      "classe": "aceitavel",
+      "melhor_lance": "Rad1",
+      "melhor_lance_uci": "a1d1",
+      "linha_motor": [
+        "Rad1",
+        "h5",
+        "h3",
+        "b5",
+        "Ne2",
+        "O-O",
+        "c4",
+        "e5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 23,
+      "numero": 12,
+      "cor": "white",
+      "san": "Be3",
+      "uci": "f4e3",
+      "fen_antes": "r2qk2r/1bpnnpb1/pp1pp2p/6p1/3PPB2/2PB2N1/PPNQ1PPP/R4RK1 w kq - 0 12",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp2p/6p1/3PP3/2PBB1N1/PPNQ1PPP/R4RK1 b kq - 1 12",
+      "cp_antes": 188,
+      "cp_depois": 194,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 66.65,
+      "chance_vitoria_depois": 67.14,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Be3",
+      "melhor_lance_uci": "f4e3",
+      "linha_motor": [
+        "Be3",
+        "Nf6",
+        "f4",
+        "gxf4",
+        "Rxf4",
+        "Ng6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 25,
+      "numero": 13,
+      "cor": "white",
+      "san": "Nh5",
+      "uci": "g3h5",
+      "fen_antes": "r2qk2r/1bpnnpb1/pp1p3p/4p1p1/3PP3/2PBB1N1/PPNQ1PPP/R4RK1 w kq - 0 13",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1p3p/4p1pN/3PP3/2PBB3/PPNQ1PPP/R4RK1 b kq - 1 13",
+      "cp_antes": 211,
+      "cp_depois": 164,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 68.5,
+      "chance_vitoria_depois": 64.65,
+      "queda": 3.85,
+      "classe": "aceitavel",
+      "melhor_lance": "f3",
+      "melhor_lance_uci": "f2f3",
+      "linha_motor": [
+        "f3",
+        "O-O"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 27,
+      "numero": 14,
+      "cor": "white",
+      "san": "Nxg7+",
+      "uci": "h5g7",
+      "fen_antes": "r2qk1r1/1bpnnpb1/pp1p3p/4p1pN/3PP3/2PBB3/PPNQ1PPP/R4RK1 w q - 2 14",
+      "fen_depois": "r2qk1r1/1bpnnpN1/pp1p3p/4p1p1/3PP3/2PBB3/PPNQ1PPP/R4RK1 b q - 0 14",
+      "cp_antes": 239,
+      "cp_depois": 193,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 70.68,
+      "chance_vitoria_depois": 67.05,
+      "queda": 3.63,
+      "classe": "aceitavel",
+      "melhor_lance": "Ng3",
+      "melhor_lance_uci": "h5g3",
+      "linha_motor": [
+        "Ng3",
+        "Ng6",
+        "a4",
+        "Nf4",
+        "Nf5",
+        "Nxd3",
+        "Qxd3",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 29,
+      "numero": 15,
+      "cor": "white",
+      "san": "Qe2",
+      "uci": "d2e2",
+      "fen_antes": "r2qk3/1bpnnpr1/pp1p3p/4p1p1/3PP3/2PBB3/PPNQ1PPP/R4RK1 w q - 0 15",
+      "fen_depois": "r2qk3/1bpnnpr1/pp1p3p/4p1p1/3PP3/2PBB3/PPN1QPPP/R4RK1 b q - 1 15",
+      "cp_antes": 196,
+      "cp_depois": 62,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 67.3,
+      "chance_vitoria_depois": 55.68,
+      "queda": 11.62,
+      "classe": "imprecisao",
+      "melhor_lance": "f3",
+      "melhor_lance_uci": "f2f3",
+      "linha_motor": [
+        "f3",
+        "Ng6",
+        "Bf2",
+        "Nf4",
+        "Ne3",
+        "h5",
+        "a4",
+        "Rg8"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 31,
+      "numero": 16,
+      "cor": "white",
+      "san": "g3",
+      "uci": "g2g3",
+      "fen_antes": "r2qk3/1bpn1pr1/pp1p2np/4p1p1/3PP3/2PBB3/PPN1QPPP/R4RK1 w q - 2 16",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p2np/4p1p1/3PP3/2PBB1P1/PPN1QP1P/R4RK1 b q - 0 16",
+      "cp_antes": 51,
+      "cp_depois": 53,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 54.68,
+      "chance_vitoria_depois": 54.86,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "f3",
+      "melhor_lance_uci": "f2f3",
+      "linha_motor": [
+        "f3",
+        "Nf4",
+        "Qd2",
+        "Qe7",
+        "Rae1",
+        "h5",
+        "Nb4",
+        "Nxd3"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 33,
+      "numero": 17,
+      "cor": "white",
+      "san": "Qd1",
+      "uci": "e2d1",
+      "fen_antes": "r2qk3/1bpn1pr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN1QP1P/R4RK1 w q - 1 17",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2Q1RK1 b q - 2 17",
+      "cp_antes": 48,
+      "cp_depois": -21,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 54.41,
+      "chance_vitoria_depois": 48.07,
+      "queda": 6.34,
+      "classe": "aceitavel",
+      "melhor_lance": "gxf4",
+      "melhor_lance_uci": "g3f4",
+      "linha_motor": [
+        "gxf4",
+        "gxf4+",
+        "Kh1",
+        "fxe3",
+        "Nxe3",
+        "Qf6",
+        "f4",
+        "exf4"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 35,
+      "numero": 18,
+      "cor": "white",
+      "san": "Re1",
+      "uci": "f1e1",
+      "fen_antes": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2Q1RK1 w q - 3 18",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2QR1K1 b q - 4 18",
+      "cp_antes": 4,
+      "cp_depois": -38,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 50.37,
+      "chance_vitoria_depois": 46.51,
+      "queda": 3.86,
+      "classe": "aceitavel",
+      "melhor_lance": "f3",
+      "melhor_lance_uci": "f2f3",
+      "linha_motor": [
+        "f3",
+        "Nxd3",
+        "Qxd3",
+        "f5",
+        "exf5",
+        "e4",
+        "Qc4",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 37,
+      "numero": 19,
+      "cor": "white",
+      "san": "Qxd3",
+      "uci": "d1d3",
+      "fen_antes": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PP3/2PnB1P1/PPN2P1P/R2QR1K1 w q - 0 19",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PP3/2PQB1P1/PPN2P1P/R3R1K1 b q - 0 19",
+      "cp_antes": -32,
+      "cp_depois": -19,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 47.06,
+      "chance_vitoria_depois": 48.25,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Qxd3",
+      "melhor_lance_uci": "d1d3",
+      "linha_motor": [
+        "Qxd3",
+        "O-O-O",
+        "d5",
+        "f5",
+        "exf5",
+        "e4",
+        "Qd1",
+        "Ne5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 39,
+      "numero": 20,
+      "cor": "white",
+      "san": "Nb4",
+      "uci": "c2b4",
+      "fen_antes": "r3k3/1bpnqpr1/pp1p4/4p1pp/3PP3/2PQB1P1/PPN2P1P/R3R1K1 w q - 0 20",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p4/4p1pp/1N1PP3/2PQB1P1/PP3P1P/R3R1K1 b q - 1 20",
+      "cp_antes": -17,
+      "cp_depois": -39,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 48.44,
+      "chance_vitoria_depois": 46.42,
+      "queda": 2.02,
+      "classe": "aceitavel",
+      "melhor_lance": "Bd2",
+      "melhor_lance_uci": "e3d2",
+      "linha_motor": [
+        "Bd2",
+        "f5",
+        "exf5",
+        "Qf7",
+        "Ne3",
+        "O-O-O",
+        "d5",
+        "Nc5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 41,
+      "numero": 21,
+      "cor": "white",
+      "san": "d5",
+      "uci": "d4d5",
+      "fen_antes": "r3k3/1bp1qpr1/pp1p1n2/4p1pp/1N1PP3/2PQB1P1/PP3P1P/R3R1K1 w q - 2 21",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n2/3Pp1pp/1N2P3/2PQB1P1/PP3P1P/R3R1K1 b q - 0 21",
+      "cp_antes": 18,
+      "cp_depois": -97,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 51.66,
+      "chance_vitoria_depois": 41.16,
+      "queda": 10.5,
+      "classe": "imprecisao",
+      "melhor_lance": "dxe5",
+      "melhor_lance_uci": "d4e5",
+      "linha_motor": [
+        "dxe5",
+        "dxe5",
+        "Rad1",
+        "Bxe4",
+        "Qc4",
+        "Kf8",
+        "Nc6",
+        "Bxc6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 43,
+      "numero": 22,
+      "cor": "white",
+      "san": "Bh6",
+      "uci": "e3h6",
+      "fen_antes": "r3k3/1bp1qpr1/pp1p1n2/3Pp2p/1N2P1p1/2PQB1P1/PP3P1P/R3R1K1 w q - 0 22",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n1B/3Pp2p/1N2P1p1/2PQ2P1/PP3P1P/R3R1K1 b q - 1 22",
+      "cp_antes": 8,
+      "cp_depois": -33,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 50.74,
+      "chance_vitoria_depois": 46.97,
+      "queda": 3.77,
+      "classe": "aceitavel",
+      "melhor_lance": "a4",
+      "melhor_lance_uci": "a2a4",
+      "linha_motor": [
+        "a4",
+        "a5",
+        "Nc2",
+        "Nh7",
+        "b4",
+        "h4",
+        "Reb1",
+        "Ng5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 45,
+      "numero": 23,
+      "cor": "white",
+      "san": "Qd2",
+      "uci": "d3d2",
+      "fen_antes": "r3k3/1bp1qp2/pp1p1nrB/3Pp2p/1N2P1p1/2PQ2P1/PP3P1P/R3R1K1 w q - 2 23",
+      "fen_depois": "r3k3/1bp1qp2/pp1p1nrB/3Pp2p/1N2P1p1/2P3P1/PP1Q1P1P/R3R1K1 b q - 3 23",
+      "cp_antes": -17,
+      "cp_depois": -143,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 48.44,
+      "chance_vitoria_depois": 37.13,
+      "queda": 11.31,
+      "classe": "imprecisao",
+      "melhor_lance": "Bd2",
+      "melhor_lance_uci": "h6d2",
+      "linha_motor": [
+        "Bd2",
+        "Nh7",
+        "Rf1",
+        "a5",
+        "Nc2",
+        "Bc8",
+        "Ne1",
+        "f5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 47,
+      "numero": 24,
+      "cor": "white",
+      "san": "Nc2",
+      "uci": "b4c2",
+      "fen_antes": "r3k3/1bp1qp1n/pp1p2rB/3Pp2p/1N2P1p1/2P3P1/PP1Q1P1P/R3R1K1 w q - 4 24",
+      "fen_depois": "r3k3/1bp1qp1n/pp1p2rB/3Pp2p/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 b q - 5 24",
+      "cp_antes": -137,
+      "cp_depois": -231,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 37.65,
+      "chance_vitoria_depois": 29.93,
+      "queda": 7.72,
+      "classe": "aceitavel",
+      "melhor_lance": "Nd3",
+      "melhor_lance_uci": "b4d3",
+      "linha_motor": [
+        "Nd3",
+        "Qf6",
+        "Be3",
+        "Qf3",
+        "c4",
+        "h4",
+        "gxh4",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 49,
+      "numero": 25,
+      "cor": "white",
+      "san": "Bxg5",
+      "uci": "h6g5",
+      "fen_antes": "r3k3/1bp1qp2/pp1p2rB/3Pp1np/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 w q - 6 25",
+      "fen_depois": "r3k3/1bp1qp2/pp1p2r1/3Pp1Bp/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 b q - 0 25",
+      "cp_antes": -5,
+      "cp_depois": 0,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 49.54,
+      "chance_vitoria_depois": 50.0,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Bxg5",
+      "melhor_lance_uci": "h6g5",
+      "linha_motor": [
+        "Bxg5",
+        "Qxg5",
+        "Qxg5",
+        "Rxg5",
+        "Ne3",
+        "Bc8",
+        "Rf1",
+        "h4"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 51,
+      "numero": 26,
+      "cor": "white",
+      "san": "Ne3",
+      "uci": "c2e3",
+      "fen_antes": "r3k3/1bp1qp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 w q - 0 26",
+      "fen_depois": "r3k3/1bp1qp2/pp1p4/3Pp1rp/4P1p1/2P1N1P1/PP1Q1P1P/R3R1K1 b q - 1 26",
+      "cp_antes": 74,
+      "cp_depois": 108,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 56.77,
+      "chance_vitoria_depois": 59.81,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Ne3",
+      "melhor_lance_uci": "c2e3",
+      "linha_motor": [
+        "Ne3",
+        "f6",
+        "Qd3",
+        "Bc8",
+        "b4",
+        "a5",
+        "a3",
+        "Qh7"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 53,
+      "numero": 27,
+      "cor": "white",
+      "san": "Ng2",
+      "uci": "e3g2",
+      "fen_antes": "r1b1k3/2p1qp2/pp1p4/3Pp1rp/4P1p1/2P1N1P1/PP1Q1P1P/R3R1K1 w q - 2 27",
+      "fen_depois": "r1b1k3/2p1qp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PP1Q1PNP/R3R1K1 b q - 3 27",
+      "cp_antes": 113,
+      "cp_depois": 60,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 60.25,
+      "chance_vitoria_depois": 55.5,
+      "queda": 4.75,
+      "classe": "aceitavel",
+      "melhor_lance": "b4",
+      "melhor_lance_uci": "b2b4",
+      "linha_motor": [
+        "b4",
+        "a5",
+        "a3",
+        "h4",
+        "c4",
+        "Bd7",
+        "Rec1",
+        "Rg6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 55,
+      "numero": 28,
+      "cor": "white",
+      "san": "a4",
+      "uci": "a2a4",
+      "fen_antes": "r3k3/2pbqp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PP1Q1PNP/R3R1K1 w q - 4 28",
+      "fen_depois": "r3k3/2pbqp2/pp1p4/3Pp1rp/P3P1p1/2P3P1/1P1Q1PNP/R3R1K1 b q - 0 28",
+      "cp_antes": 44,
+      "cp_depois": 11,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 54.04,
+      "chance_vitoria_depois": 51.01,
+      "queda": 3.03,
+      "classe": "aceitavel",
+      "melhor_lance": "b4",
+      "melhor_lance_uci": "b2b4",
+      "linha_motor": [
+        "b4",
+        "f5",
+        "c4",
+        "fxe4",
+        "c5",
+        "Rg7",
+        "Qe3",
+        "Rb8"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 57,
+      "numero": 29,
+      "cor": "white",
+      "san": "b3",
+      "uci": "b2b3",
+      "fen_antes": "r3k3/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/2P3P1/1P1Q1PNP/R3R1K1 w q - 0 29",
+      "fen_depois": "r3k3/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/1PP3P1/3Q1PNP/R3R1K1 b q - 0 29",
+      "cp_antes": 14,
+      "cp_depois": -17,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 51.29,
+      "chance_vitoria_depois": 48.44,
+      "queda": 2.85,
+      "classe": "aceitavel",
+      "melhor_lance": "Nh4",
+      "melhor_lance_uci": "g2h4",
+      "linha_motor": [
+        "Nh4",
+        "f5",
+        "exf5",
+        "Bxf5",
+        "c4",
+        "Bd7"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 59,
+      "numero": 30,
+      "cor": "white",
+      "san": "c4",
+      "uci": "c3c4",
+      "fen_antes": "r4k2/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/1PP3P1/3Q1PNP/R3R1K1 w - - 1 30",
+      "fen_depois": "r4k2/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/R3R1K1 b - - 0 30",
+      "cp_antes": 14,
+      "cp_depois": -14,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 51.29,
+      "chance_vitoria_depois": 48.71,
+      "queda": 2.58,
+      "classe": "aceitavel",
+      "melhor_lance": "Re3",
+      "melhor_lance_uci": "e1e3",
+      "linha_motor": [
+        "Re3",
+        "Rg7",
+        "Rf1",
+        "Qg5",
+        "Qe2",
+        "Kg8",
+        "Qc4",
+        "Rc8"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 61,
+      "numero": 31,
+      "cor": "white",
+      "san": "Rad1",
+      "uci": "a1d1",
+      "fen_antes": "r5k1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/R3R1K1 w - - 1 31",
+      "fen_depois": "r5k1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/3RR1K1 b - - 2 31",
+      "cp_antes": -6,
+      "cp_depois": -27,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 49.45,
+      "chance_vitoria_depois": 47.52,
+      "queda": 1.93,
+      "classe": "aceitavel",
+      "melhor_lance": "Nh4",
+      "melhor_lance_uci": "g2h4",
+      "linha_motor": [
+        "Nh4",
+        "Rg7",
+        "Rf1",
+        "Qg5",
+        "Qxg5",
+        "Rxg5",
+        "Kg2",
+        "f5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 63,
+      "numero": 32,
+      "cor": "white",
+      "san": "Nh4",
+      "uci": "g2h4",
+      "fen_antes": "5rk1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/3RR1K1 w - - 3 32",
+      "fen_depois": "5rk1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1pN/1P4P1/3Q1P1P/3RR1K1 b - - 4 32",
+      "cp_antes": 42,
+      "cp_depois": -2,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 53.86,
+      "chance_vitoria_depois": 49.82,
+      "queda": 4.04,
+      "classe": "aceitavel",
+      "melhor_lance": "c5",
+      "melhor_lance_uci": "c4c5",
+      "linha_motor": [
+        "c5",
+        "dxc5",
+        "d6",
+        "cxd6",
+        "Qxd6",
+        "Qxd6",
+        "Rxd6",
+        "Be6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 65,
+      "numero": 33,
+      "cor": "white",
+      "san": "Ra1",
+      "uci": "d1a1",
+      "fen_antes": "5rk1/2pbq3/1p1p4/p2Ppprp/P1P1P1pN/1P4P1/3Q1P1P/3RR1K1 w - - 0 33",
+      "fen_depois": "5rk1/2pbq3/1p1p4/p2Ppprp/P1P1P1pN/1P4P1/3Q1P1P/R3R1K1 b - - 1 33",
+      "cp_antes": 31,
+      "cp_depois": -4,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 52.85,
+      "chance_vitoria_depois": 49.63,
+      "queda": 3.22,
+      "classe": "aceitavel",
+      "melhor_lance": "c5",
+      "melhor_lance_uci": "c4c5",
+      "linha_motor": [
+        "c5",
+        "fxe4",
+        "cxb6",
+        "cxb6",
+        "Rc1",
+        "Rg7",
+        "Rc7",
+        "Qd8"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 67,
+      "numero": 34,
+      "cor": "white",
+      "san": "b4",
+      "uci": "b3b4",
+      "fen_antes": "5rk1/2pbq1r1/1p1p4/p2Ppp1p/P1P1P1pN/1P4P1/3Q1P1P/R3R1K1 w - - 2 34",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/p2Ppp1p/PPP1P1pN/6P1/3Q1P1P/R3R1K1 b - - 0 34",
+      "cp_antes": -2,
+      "cp_depois": -5,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 49.82,
+      "chance_vitoria_depois": 49.54,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "b4",
+      "melhor_lance_uci": "b3b4",
+      "linha_motor": [
+        "b4",
+        "axb4",
+        "Qxb4",
+        "fxe4",
+        "Qd2",
+        "Qf6",
+        "a5",
+        "bxa5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 69,
+      "numero": 35,
+      "cor": "white",
+      "san": "Qxb4",
+      "uci": "d2b4",
+      "fen_antes": "5rk1/2pbq1r1/1p1p4/3Ppp1p/PpP1P1pN/6P1/3Q1P1P/R3R1K1 w - - 0 35",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Ppp1p/PQP1P1pN/6P1/5P1P/R3R1K1 b - - 0 35",
+      "cp_antes": 0,
+      "cp_depois": -5,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 50.0,
+      "chance_vitoria_depois": 49.54,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Qxb4",
+      "melhor_lance_uci": "d2b4",
+      "linha_motor": [
+        "Qxb4",
+        "fxe4",
+        "Qd2",
+        "Qg5",
+        "Qxg5",
+        "Rxg5",
+        "a5",
+        "bxa5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 71,
+      "numero": 36,
+      "cor": "white",
+      "san": "Rxe4",
+      "uci": "e1e4",
+      "fen_antes": "5rk1/2pbq1r1/1p1p4/3Pp2p/PQP1p1pN/6P1/5P1P/R3R1K1 w - - 0 36",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Pp2p/PQP1R1pN/6P1/5P1P/R5K1 b - - 0 36",
+      "cp_antes": -4,
+      "cp_depois": -9,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 49.63,
+      "chance_vitoria_depois": 49.17,
+      "queda": 0.46,
+      "classe": "aceitavel",
+      "melhor_lance": "Qd2",
+      "melhor_lance_uci": "b4d2",
+      "linha_motor": [
+        "Qd2",
+        "Qg5",
+        "Qxg5",
+        "Rxg5",
+        "a5",
+        "bxa5",
+        "Rxa5",
+        "Rg7"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 73,
+      "numero": 37,
+      "cor": "white",
+      "san": "Re2",
+      "uci": "e4e2",
+      "fen_antes": "5rk1/2p1q1r1/1p1p4/3Ppb1p/PQP1R1pN/6P1/5P1P/R5K1 w - - 1 37",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Ppb1p/PQP3pN/6P1/4RP1P/R5K1 b - - 2 37",
+      "cp_antes": 1,
+      "cp_depois": -27,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 50.09,
+      "chance_vitoria_depois": 47.52,
+      "queda": 2.57,
+      "classe": "aceitavel",
+      "melhor_lance": "Nxf5",
+      "melhor_lance_uci": "h4f5",
+      "linha_motor": [
+        "Nxf5",
+        "Rxf5",
+        "a5",
+        "bxa5",
+        "Rxa5",
+        "Rgf7",
+        "Ra2",
+        "Qg5"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 75,
+      "numero": 38,
+      "cor": "white",
+      "san": "Rd2",
+      "uci": "e2d2",
+      "fen_antes": "5rk1/2p1q1r1/1p1p4/3Pp2p/PQP3pN/3b2P1/4RP1P/R5K1 w - - 3 38",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Pp2p/PQP3pN/3b2P1/3R1P1P/R5K1 b - - 4 38",
+      "cp_antes": -18,
+      "cp_depois": -20,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 48.34,
+      "chance_vitoria_depois": 48.16,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Rd2",
+      "melhor_lance_uci": "e2d2",
+      "linha_motor": [
+        "Rd2",
+        "e4",
+        "Re1",
+        "Qf6",
+        "Ng2",
+        "Re7",
+        "Nf4",
+        "h4"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 77,
+      "numero": 39,
+      "cor": "white",
+      "san": "a5",
+      "uci": "a4a5",
+      "fen_antes": "5rk1/2p1q1r1/1p1p4/3P3p/PQP1p1pN/3b2P1/3R1P1P/R5K1 w - - 0 39",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP1p1pN/3b2P1/3R1P1P/R5K1 b - - 0 39",
+      "cp_antes": -16,
+      "cp_depois": -586,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 48.53,
+      "chance_vitoria_depois": 10.36,
+      "queda": 38.17,
+      "classe": "erro_grave",
+      "melhor_lance": "Re1",
+      "melhor_lance_uci": "a1e1",
+      "linha_motor": [
+        "Re1",
+        "Qf6",
+        "Ng2",
+        "Qd4",
+        "Nf4",
+        "Rxf4",
+        "gxf4",
+        "Qf6"
+      ],
+      "explicacao": {
+        "tema": "outro",
+        "tema_label": "Outro",
+        "texto": "a5 foi um erro grave: sua chance de vitória caiu de 49% para 10%. A melhor resposta do adversário é e3. O motor recomendava Re1 (linha: Re1 Qf6 Ng2 Qd4).",
+        "ficha": null,
+        "ferramentas_usadas": [
+          "analisar_partida",
+          "descrever_posicao"
+        ],
+        "tentativas": 0,
+        "validada": true,
+        "origem": "motor"
+      }
+    },
+    {
+      "indice": 79,
+      "numero": 40,
+      "cor": "white",
+      "san": "Rxd3",
+      "uci": "d2d3",
+      "fen_antes": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3bp1P1/3R1P1P/R5K1 w - - 0 40",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3Rp1P1/5P1P/R5K1 b - - 0 40",
+      "cp_antes": -590,
+      "cp_depois": -798,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 10.23,
+      "chance_vitoria_depois": 5.03,
+      "queda": 5.2,
+      "classe": "aceitavel",
+      "melhor_lance": "axb6",
+      "melhor_lance_uci": "a5b6",
+      "linha_motor": [
+        "axb6",
+        "Qf6",
+        "Raa2",
+        "exd2",
+        "Qxd2",
+        "Bb1",
+        "Rb2",
+        "Bh7"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 81,
+      "numero": 41,
+      "cor": "white",
+      "san": "Kf1",
+      "uci": "g1f1",
+      "fen_antes": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3R2P1/5p1P/R5K1 w - - 0 41",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3R2P1/5p1P/R4K2 b - - 1 41",
+      "cp_antes": -861,
+      "cp_depois": -866,
+      "mate_antes": null,
+      "mate_depois": null,
+      "chance_vitoria_antes": 4.03,
+      "chance_vitoria_depois": 3.96,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Kf1",
+      "melhor_lance_uci": "g1f1",
+      "linha_motor": [
+        "Kf1",
+        "Qe4",
+        "Rf3",
+        "gxf3",
+        "Qd2",
+        "Qe2+",
+        "Qxe2",
+        "fxe2+"
+      ],
+      "explicacao": null
+    }
+  ],
+  "todos_lances": [
+    {
+      "indice": 1,
+      "numero": 1,
+      "cor": "white",
+      "san": "e4",
+      "uci": "e2e4",
+      "fen_depois": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 2,
+      "numero": 1,
+      "cor": "black",
+      "san": "b6",
+      "uci": "b7b6",
+      "fen_depois": "rnbqkbnr/p1pppppp/1p6/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 3,
+      "numero": 2,
+      "cor": "white",
+      "san": "d4",
+      "uci": "d2d4",
+      "fen_depois": "rnbqkbnr/p1pppppp/1p6/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 4,
+      "numero": 2,
+      "cor": "black",
+      "san": "Bb7",
+      "uci": "c8b7",
+      "fen_depois": "rn1qkbnr/pbpppppp/1p6/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 1 3",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 5,
+      "numero": 3,
+      "cor": "white",
+      "san": "Bd3",
+      "uci": "f1d3",
+      "fen_depois": "rn1qkbnr/pbpppppp/1p6/8/3PP3/3B4/PPP2PPP/RNBQK1NR b KQkq - 2 3",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 6,
+      "numero": 3,
+      "cor": "black",
+      "san": "g6",
+      "uci": "g7g6",
+      "fen_depois": "rn1qkbnr/pbpppp1p/1p4p1/8/3PP3/3B4/PPP2PPP/RNBQK1NR w KQkq - 0 4",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 7,
+      "numero": 4,
+      "cor": "white",
+      "san": "Ne2",
+      "uci": "g1e2",
+      "fen_depois": "rn1qkbnr/pbpppp1p/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQK2R b KQkq - 1 4",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 8,
+      "numero": 4,
+      "cor": "black",
+      "san": "Bg7",
+      "uci": "f8g7",
+      "fen_depois": "rn1qk1nr/pbppppbp/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQK2R w KQkq - 2 5",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 9,
+      "numero": 5,
+      "cor": "white",
+      "san": "O-O",
+      "uci": "e1g1",
+      "fen_depois": "rn1qk1nr/pbppppbp/1p4p1/8/3PP3/3B4/PPP1NPPP/RNBQ1RK1 b kq - 3 5",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 10,
+      "numero": 5,
+      "cor": "black",
+      "san": "d6",
+      "uci": "d7d6",
+      "fen_depois": "rn1qk1nr/pbp1ppbp/1p1p2p1/8/3PP3/3B4/PPP1NPPP/RNBQ1RK1 w kq - 0 6",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 11,
+      "numero": 6,
+      "cor": "white",
+      "san": "Bf4",
+      "uci": "c1f4",
+      "fen_depois": "rn1qk1nr/pbp1ppbp/1p1p2p1/8/3PPB2/3B4/PPP1NPPP/RN1Q1RK1 b kq - 1 6",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 12,
+      "numero": 6,
+      "cor": "black",
+      "san": "e6",
+      "uci": "e7e6",
+      "fen_depois": "rn1qk1nr/pbp2pbp/1p1pp1p1/8/3PPB2/3B4/PPP1NPPP/RN1Q1RK1 w kq - 0 7",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 13,
+      "numero": 7,
+      "cor": "white",
+      "san": "c3",
+      "uci": "c2c3",
+      "fen_depois": "rn1qk1nr/pbp2pbp/1p1pp1p1/8/3PPB2/2PB4/PP2NPPP/RN1Q1RK1 b kq - 0 7",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 14,
+      "numero": 7,
+      "cor": "black",
+      "san": "Ne7",
+      "uci": "g8e7",
+      "fen_depois": "rn1qk2r/pbp1npbp/1p1pp1p1/8/3PPB2/2PB4/PP2NPPP/RN1Q1RK1 w kq - 1 8",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 15,
+      "numero": 8,
+      "cor": "white",
+      "san": "Qd2",
+      "uci": "d1d2",
+      "fen_depois": "rn1qk2r/pbp1npbp/1p1pp1p1/8/3PPB2/2PB4/PP1QNPPP/RN3RK1 b kq - 2 8",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 16,
+      "numero": 8,
+      "cor": "black",
+      "san": "h6",
+      "uci": "h7h6",
+      "fen_depois": "rn1qk2r/pbp1npb1/1p1pp1pp/8/3PPB2/2PB4/PP1QNPPP/RN3RK1 w kq - 0 9",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 17,
+      "numero": 9,
+      "cor": "white",
+      "san": "Ng3",
+      "uci": "e2g3",
+      "fen_depois": "rn1qk2r/pbp1npb1/1p1pp1pp/8/3PPB2/2PB2N1/PP1Q1PPP/RN3RK1 b kq - 1 9",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 18,
+      "numero": 9,
+      "cor": "black",
+      "san": "Nd7",
+      "uci": "b8d7",
+      "fen_depois": "r2qk2r/pbpnnpb1/1p1pp1pp/8/3PPB2/2PB2N1/PP1Q1PPP/RN3RK1 w kq - 2 10",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 19,
+      "numero": 10,
+      "cor": "white",
+      "san": "Na3",
+      "uci": "b1a3",
+      "fen_depois": "r2qk2r/pbpnnpb1/1p1pp1pp/8/3PPB2/N1PB2N1/PP1Q1PPP/R4RK1 b kq - 3 10",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 20,
+      "numero": 10,
+      "cor": "black",
+      "san": "a6",
+      "uci": "a7a6",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp1pp/8/3PPB2/N1PB2N1/PP1Q1PPP/R4RK1 w kq - 0 11",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 21,
+      "numero": 11,
+      "cor": "white",
+      "san": "Nc2",
+      "uci": "a3c2",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp1pp/8/3PPB2/2PB2N1/PPNQ1PPP/R4RK1 b kq - 1 11",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 22,
+      "numero": 11,
+      "cor": "black",
+      "san": "g5",
+      "uci": "g6g5",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp2p/6p1/3PPB2/2PB2N1/PPNQ1PPP/R4RK1 w kq - 0 12",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 23,
+      "numero": 12,
+      "cor": "white",
+      "san": "Be3",
+      "uci": "f4e3",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1pp2p/6p1/3PP3/2PBB1N1/PPNQ1PPP/R4RK1 b kq - 1 12",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 24,
+      "numero": 12,
+      "cor": "black",
+      "san": "e5",
+      "uci": "e6e5",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1p3p/4p1p1/3PP3/2PBB1N1/PPNQ1PPP/R4RK1 w kq - 0 13",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 25,
+      "numero": 13,
+      "cor": "white",
+      "san": "Nh5",
+      "uci": "g3h5",
+      "fen_depois": "r2qk2r/1bpnnpb1/pp1p3p/4p1pN/3PP3/2PBB3/PPNQ1PPP/R4RK1 b kq - 1 13",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 26,
+      "numero": 13,
+      "cor": "black",
+      "san": "Rg8",
+      "uci": "h8g8",
+      "fen_depois": "r2qk1r1/1bpnnpb1/pp1p3p/4p1pN/3PP3/2PBB3/PPNQ1PPP/R4RK1 w q - 2 14",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 27,
+      "numero": 14,
+      "cor": "white",
+      "san": "Nxg7+",
+      "uci": "h5g7",
+      "fen_depois": "r2qk1r1/1bpnnpN1/pp1p3p/4p1p1/3PP3/2PBB3/PPNQ1PPP/R4RK1 b q - 0 14",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 28,
+      "numero": 14,
+      "cor": "black",
+      "san": "Rxg7",
+      "uci": "g8g7",
+      "fen_depois": "r2qk3/1bpnnpr1/pp1p3p/4p1p1/3PP3/2PBB3/PPNQ1PPP/R4RK1 w q - 0 15",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 29,
+      "numero": 15,
+      "cor": "white",
+      "san": "Qe2",
+      "uci": "d2e2",
+      "fen_depois": "r2qk3/1bpnnpr1/pp1p3p/4p1p1/3PP3/2PBB3/PPN1QPPP/R4RK1 b q - 1 15",
+      "classe": "imprecisao",
+      "do_jogador": true
+    },
+    {
+      "indice": 30,
+      "numero": 15,
+      "cor": "black",
+      "san": "Ng6",
+      "uci": "e7g6",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p2np/4p1p1/3PP3/2PBB3/PPN1QPPP/R4RK1 w q - 2 16",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 31,
+      "numero": 16,
+      "cor": "white",
+      "san": "g3",
+      "uci": "g2g3",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p2np/4p1p1/3PP3/2PBB1P1/PPN1QP1P/R4RK1 b q - 0 16",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 32,
+      "numero": 16,
+      "cor": "black",
+      "san": "Nf4",
+      "uci": "g6f4",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN1QP1P/R4RK1 w q - 1 17",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 33,
+      "numero": 17,
+      "cor": "white",
+      "san": "Qd1",
+      "uci": "e2d1",
+      "fen_depois": "r2qk3/1bpn1pr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2Q1RK1 b q - 2 17",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 34,
+      "numero": 17,
+      "cor": "black",
+      "san": "Qe7",
+      "uci": "d8e7",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2Q1RK1 w q - 3 18",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 35,
+      "numero": 18,
+      "cor": "white",
+      "san": "Re1",
+      "uci": "f1e1",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PPn2/2PBB1P1/PPN2P1P/R2QR1K1 b q - 4 18",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 36,
+      "numero": 18,
+      "cor": "black",
+      "san": "Nxd3",
+      "uci": "f4d3",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PP3/2PnB1P1/PPN2P1P/R2QR1K1 w q - 0 19",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 37,
+      "numero": 19,
+      "cor": "white",
+      "san": "Qxd3",
+      "uci": "d1d3",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p3p/4p1p1/3PP3/2PQB1P1/PPN2P1P/R3R1K1 b q - 0 19",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 38,
+      "numero": 19,
+      "cor": "black",
+      "san": "h5",
+      "uci": "h6h5",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p4/4p1pp/3PP3/2PQB1P1/PPN2P1P/R3R1K1 w q - 0 20",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 39,
+      "numero": 20,
+      "cor": "white",
+      "san": "Nb4",
+      "uci": "c2b4",
+      "fen_depois": "r3k3/1bpnqpr1/pp1p4/4p1pp/1N1PP3/2PQB1P1/PP3P1P/R3R1K1 b q - 1 20",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 40,
+      "numero": 20,
+      "cor": "black",
+      "san": "Nf6",
+      "uci": "d7f6",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n2/4p1pp/1N1PP3/2PQB1P1/PP3P1P/R3R1K1 w q - 2 21",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 41,
+      "numero": 21,
+      "cor": "white",
+      "san": "d5",
+      "uci": "d4d5",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n2/3Pp1pp/1N2P3/2PQB1P1/PP3P1P/R3R1K1 b q - 0 21",
+      "classe": "imprecisao",
+      "do_jogador": true
+    },
+    {
+      "indice": 42,
+      "numero": 21,
+      "cor": "black",
+      "san": "g4",
+      "uci": "g5g4",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n2/3Pp2p/1N2P1p1/2PQB1P1/PP3P1P/R3R1K1 w q - 0 22",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 43,
+      "numero": 22,
+      "cor": "white",
+      "san": "Bh6",
+      "uci": "e3h6",
+      "fen_depois": "r3k3/1bp1qpr1/pp1p1n1B/3Pp2p/1N2P1p1/2PQ2P1/PP3P1P/R3R1K1 b q - 1 22",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 44,
+      "numero": 22,
+      "cor": "black",
+      "san": "Rg6",
+      "uci": "g7g6",
+      "fen_depois": "r3k3/1bp1qp2/pp1p1nrB/3Pp2p/1N2P1p1/2PQ2P1/PP3P1P/R3R1K1 w q - 2 23",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 45,
+      "numero": 23,
+      "cor": "white",
+      "san": "Qd2",
+      "uci": "d3d2",
+      "fen_depois": "r3k3/1bp1qp2/pp1p1nrB/3Pp2p/1N2P1p1/2P3P1/PP1Q1P1P/R3R1K1 b q - 3 23",
+      "classe": "imprecisao",
+      "do_jogador": true
+    },
+    {
+      "indice": 46,
+      "numero": 23,
+      "cor": "black",
+      "san": "Nh7",
+      "uci": "f6h7",
+      "fen_depois": "r3k3/1bp1qp1n/pp1p2rB/3Pp2p/1N2P1p1/2P3P1/PP1Q1P1P/R3R1K1 w q - 4 24",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 47,
+      "numero": 24,
+      "cor": "white",
+      "san": "Nc2",
+      "uci": "b4c2",
+      "fen_depois": "r3k3/1bp1qp1n/pp1p2rB/3Pp2p/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 b q - 5 24",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 48,
+      "numero": 24,
+      "cor": "black",
+      "san": "Ng5",
+      "uci": "h7g5",
+      "fen_depois": "r3k3/1bp1qp2/pp1p2rB/3Pp1np/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 w q - 6 25",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 49,
+      "numero": 25,
+      "cor": "white",
+      "san": "Bxg5",
+      "uci": "h6g5",
+      "fen_depois": "r3k3/1bp1qp2/pp1p2r1/3Pp1Bp/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 b q - 0 25",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 50,
+      "numero": 25,
+      "cor": "black",
+      "san": "Rxg5",
+      "uci": "g6g5",
+      "fen_depois": "r3k3/1bp1qp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PPNQ1P1P/R3R1K1 w q - 0 26",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 51,
+      "numero": 26,
+      "cor": "white",
+      "san": "Ne3",
+      "uci": "c2e3",
+      "fen_depois": "r3k3/1bp1qp2/pp1p4/3Pp1rp/4P1p1/2P1N1P1/PP1Q1P1P/R3R1K1 b q - 1 26",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 52,
+      "numero": 26,
+      "cor": "black",
+      "san": "Bc8",
+      "uci": "b7c8",
+      "fen_depois": "r1b1k3/2p1qp2/pp1p4/3Pp1rp/4P1p1/2P1N1P1/PP1Q1P1P/R3R1K1 w q - 2 27",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 53,
+      "numero": 27,
+      "cor": "white",
+      "san": "Ng2",
+      "uci": "e3g2",
+      "fen_depois": "r1b1k3/2p1qp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PP1Q1PNP/R3R1K1 b q - 3 27",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 54,
+      "numero": 27,
+      "cor": "black",
+      "san": "Bd7",
+      "uci": "c8d7",
+      "fen_depois": "r3k3/2pbqp2/pp1p4/3Pp1rp/4P1p1/2P3P1/PP1Q1PNP/R3R1K1 w q - 4 28",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 55,
+      "numero": 28,
+      "cor": "white",
+      "san": "a4",
+      "uci": "a2a4",
+      "fen_depois": "r3k3/2pbqp2/pp1p4/3Pp1rp/P3P1p1/2P3P1/1P1Q1PNP/R3R1K1 b q - 0 28",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 56,
+      "numero": 28,
+      "cor": "black",
+      "san": "a5",
+      "uci": "a6a5",
+      "fen_depois": "r3k3/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/2P3P1/1P1Q1PNP/R3R1K1 w q - 0 29",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 57,
+      "numero": 29,
+      "cor": "white",
+      "san": "b3",
+      "uci": "b2b3",
+      "fen_depois": "r3k3/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/1PP3P1/3Q1PNP/R3R1K1 b q - 0 29",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 58,
+      "numero": 29,
+      "cor": "black",
+      "san": "Kf8",
+      "uci": "e8f8",
+      "fen_depois": "r4k2/2pbqp2/1p1p4/p2Pp1rp/P3P1p1/1PP3P1/3Q1PNP/R3R1K1 w - - 1 30",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 59,
+      "numero": 30,
+      "cor": "white",
+      "san": "c4",
+      "uci": "c3c4",
+      "fen_depois": "r4k2/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/R3R1K1 b - - 0 30",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 60,
+      "numero": 30,
+      "cor": "black",
+      "san": "Kg8",
+      "uci": "f8g8",
+      "fen_depois": "r5k1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/R3R1K1 w - - 1 31",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 61,
+      "numero": 31,
+      "cor": "white",
+      "san": "Rad1",
+      "uci": "a1d1",
+      "fen_depois": "r5k1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/3RR1K1 b - - 2 31",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 62,
+      "numero": 31,
+      "cor": "black",
+      "san": "Rf8",
+      "uci": "a8f8",
+      "fen_depois": "5rk1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1p1/1P4P1/3Q1PNP/3RR1K1 w - - 3 32",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 63,
+      "numero": 32,
+      "cor": "white",
+      "san": "Nh4",
+      "uci": "g2h4",
+      "fen_depois": "5rk1/2pbqp2/1p1p4/p2Pp1rp/P1P1P1pN/1P4P1/3Q1P1P/3RR1K1 b - - 4 32",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 64,
+      "numero": 32,
+      "cor": "black",
+      "san": "f5",
+      "uci": "f7f5",
+      "fen_depois": "5rk1/2pbq3/1p1p4/p2Ppprp/P1P1P1pN/1P4P1/3Q1P1P/3RR1K1 w - - 0 33",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 65,
+      "numero": 33,
+      "cor": "white",
+      "san": "Ra1",
+      "uci": "d1a1",
+      "fen_depois": "5rk1/2pbq3/1p1p4/p2Ppprp/P1P1P1pN/1P4P1/3Q1P1P/R3R1K1 b - - 1 33",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 66,
+      "numero": 33,
+      "cor": "black",
+      "san": "Rg7",
+      "uci": "g5g7",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/p2Ppp1p/P1P1P1pN/1P4P1/3Q1P1P/R3R1K1 w - - 2 34",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 67,
+      "numero": 34,
+      "cor": "white",
+      "san": "b4",
+      "uci": "b3b4",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/p2Ppp1p/PPP1P1pN/6P1/3Q1P1P/R3R1K1 b - - 0 34",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 68,
+      "numero": 34,
+      "cor": "black",
+      "san": "axb4",
+      "uci": "a5b4",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Ppp1p/PpP1P1pN/6P1/3Q1P1P/R3R1K1 w - - 0 35",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 69,
+      "numero": 35,
+      "cor": "white",
+      "san": "Qxb4",
+      "uci": "d2b4",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Ppp1p/PQP1P1pN/6P1/5P1P/R3R1K1 b - - 0 35",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 70,
+      "numero": 35,
+      "cor": "black",
+      "san": "fxe4",
+      "uci": "f5e4",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Pp2p/PQP1p1pN/6P1/5P1P/R3R1K1 w - - 0 36",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 71,
+      "numero": 36,
+      "cor": "white",
+      "san": "Rxe4",
+      "uci": "e1e4",
+      "fen_depois": "5rk1/2pbq1r1/1p1p4/3Pp2p/PQP1R1pN/6P1/5P1P/R5K1 b - - 0 36",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 72,
+      "numero": 36,
+      "cor": "black",
+      "san": "Bf5",
+      "uci": "d7f5",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Ppb1p/PQP1R1pN/6P1/5P1P/R5K1 w - - 1 37",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 73,
+      "numero": 37,
+      "cor": "white",
+      "san": "Re2",
+      "uci": "e4e2",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Ppb1p/PQP3pN/6P1/4RP1P/R5K1 b - - 2 37",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 74,
+      "numero": 37,
+      "cor": "black",
+      "san": "Bd3",
+      "uci": "f5d3",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Pp2p/PQP3pN/3b2P1/4RP1P/R5K1 w - - 3 38",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 75,
+      "numero": 38,
+      "cor": "white",
+      "san": "Rd2",
+      "uci": "e2d2",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3Pp2p/PQP3pN/3b2P1/3R1P1P/R5K1 b - - 4 38",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 76,
+      "numero": 38,
+      "cor": "black",
+      "san": "e4",
+      "uci": "e5e4",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/3P3p/PQP1p1pN/3b2P1/3R1P1P/R5K1 w - - 0 39",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 77,
+      "numero": 39,
+      "cor": "white",
+      "san": "a5",
+      "uci": "a4a5",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP1p1pN/3b2P1/3R1P1P/R5K1 b - - 0 39",
+      "classe": "erro_grave",
+      "do_jogador": true
+    },
+    {
+      "indice": 78,
+      "numero": 39,
+      "cor": "black",
+      "san": "e3",
+      "uci": "e4e3",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3bp1P1/3R1P1P/R5K1 w - - 0 40",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 79,
+      "numero": 40,
+      "cor": "white",
+      "san": "Rxd3",
+      "uci": "d2d3",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3Rp1P1/5P1P/R5K1 b - - 0 40",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 80,
+      "numero": 40,
+      "cor": "black",
+      "san": "exf2+",
+      "uci": "e3f2",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3R2P1/5p1P/R5K1 w - - 0 41",
+      "classe": null,
+      "do_jogador": false
+    },
+    {
+      "indice": 81,
+      "numero": 41,
+      "cor": "white",
+      "san": "Kf1",
+      "uci": "g1f1",
+      "fen_depois": "5rk1/2p1q1r1/1p1p4/P2P3p/1QP3pN/3R2P1/5p1P/R4K2 b - - 1 41",
+      "classe": "aceitavel",
+      "do_jogador": true
+    },
+    {
+      "indice": 82,
+      "numero": 41,
+      "cor": "black",
+      "san": "Qe4",
+      "uci": "e7e4",
+      "fen_depois": "5rk1/2p3r1/1p1p4/P2P3p/1QP1q1pN/3R2P1/5p1P/R4K2 w - - 2 42",
+      "classe": null,
+      "do_jogador": false
+    }
+  ],
+  "curva_avaliacao": [
+    {
+      "lance": 1,
+      "cp": 20
+    },
+    {
+      "lance": 2,
+      "cp": 89
+    },
+    {
+      "lance": 3,
+      "cp": 84
+    },
+    {
+      "lance": 4,
+      "cp": 93
+    },
+    {
+      "lance": 5,
+      "cp": 91
+    },
+    {
+      "lance": 6,
+      "cp": 99
+    },
+    {
+      "lance": 7,
+      "cp": 57
+    },
+    {
+      "lance": 8,
+      "cp": 69
+    },
+    {
+      "lance": 9,
+      "cp": 72
+    },
+    {
+      "lance": 10,
+      "cp": 68
+    },
+    {
+      "lance": 11,
+      "cp": -1
+    },
+    {
+      "lance": 12,
+      "cp": 41
+    },
+    {
+      "lance": 13,
+      "cp": 36
+    },
+    {
+      "lance": 14,
+      "cp": 67
+    },
+    {
+      "lance": 15,
+      "cp": 62
+    },
+    {
+      "lance": 16,
+      "cp": 98
+    },
+    {
+      "lance": 17,
+      "cp": 57
+    },
+    {
+      "lance": 18,
+      "cp": 77
+    },
+    {
+      "lance": 19,
+      "cp": 72
+    },
+    {
+      "lance": 20,
+      "cp": 96
+    },
+    {
+      "lance": 21,
+      "cp": 70
+    },
+    {
+      "lance": 22,
+      "cp": 188
+    },
+    {
+      "lance": 23,
+      "cp": 194
+    },
+    {
+      "lance": 24,
+      "cp": 211
+    },
+    {
+      "lance": 25,
+      "cp": 164
+    },
+    {
+      "lance": 26,
+      "cp": 239
+    },
+    {
+      "lance": 27,
+      "cp": 193
+    },
+    {
+      "lance": 28,
+      "cp": 196
+    },
+    {
+      "lance": 29,
+      "cp": 62
+    },
+    {
+      "lance": 30,
+      "cp": 51
+    },
+    {
+      "lance": 31,
+      "cp": 53
+    },
+    {
+      "lance": 32,
+      "cp": 48
+    },
+    {
+      "lance": 33,
+      "cp": -21
+    },
+    {
+      "lance": 34,
+      "cp": 4
+    },
+    {
+      "lance": 35,
+      "cp": -38
+    },
+    {
+      "lance": 36,
+      "cp": -32
+    },
+    {
+      "lance": 37,
+      "cp": -19
+    },
+    {
+      "lance": 38,
+      "cp": -17
+    },
+    {
+      "lance": 39,
+      "cp": -39
+    },
+    {
+      "lance": 40,
+      "cp": 18
+    },
+    {
+      "lance": 41,
+      "cp": -97
+    },
+    {
+      "lance": 42,
+      "cp": 8
+    },
+    {
+      "lance": 43,
+      "cp": -33
+    },
+    {
+      "lance": 44,
+      "cp": -17
+    },
+    {
+      "lance": 45,
+      "cp": -143
+    },
+    {
+      "lance": 46,
+      "cp": -137
+    },
+    {
+      "lance": 47,
+      "cp": -231
+    },
+    {
+      "lance": 48,
+      "cp": -5
+    },
+    {
+      "lance": 49,
+      "cp": 0
+    },
+    {
+      "lance": 50,
+      "cp": 74
+    },
+    {
+      "lance": 51,
+      "cp": 108
+    },
+    {
+      "lance": 52,
+      "cp": 113
+    },
+    {
+      "lance": 53,
+      "cp": 60
+    },
+    {
+      "lance": 54,
+      "cp": 44
+    },
+    {
+      "lance": 55,
+      "cp": 11
+    },
+    {
+      "lance": 56,
+      "cp": 14
+    },
+    {
+      "lance": 57,
+      "cp": -17
+    },
+    {
+      "lance": 58,
+      "cp": 14
+    },
+    {
+      "lance": 59,
+      "cp": -14
+    },
+    {
+      "lance": 60,
+      "cp": -6
+    },
+    {
+      "lance": 61,
+      "cp": -27
+    },
+    {
+      "lance": 62,
+      "cp": 42
+    },
+    {
+      "lance": 63,
+      "cp": -2
+    },
+    {
+      "lance": 64,
+      "cp": 31
+    },
+    {
+      "lance": 65,
+      "cp": -4
+    },
+    {
+      "lance": 66,
+      "cp": -2
+    },
+    {
+      "lance": 67,
+      "cp": -5
+    },
+    {
+      "lance": 68,
+      "cp": 0
+    },
+    {
+      "lance": 69,
+      "cp": -5
+    },
+    {
+      "lance": 70,
+      "cp": -4
+    },
+    {
+      "lance": 71,
+      "cp": -9
+    },
+    {
+      "lance": 72,
+      "cp": 1
+    },
+    {
+      "lance": 73,
+      "cp": -27
+    },
+    {
+      "lance": 74,
+      "cp": -18
+    },
+    {
+      "lance": 75,
+      "cp": -20
+    },
+    {
+      "lance": 76,
+      "cp": -16
+    },
+    {
+      "lance": 77,
+      "cp": -586
+    },
+    {
+      "lance": 78,
+      "cp": -590
+    },
+    {
+      "lance": 79,
+      "cp": -798
+    },
+    {
+      "lance": 80,
+      "cp": -861
+    },
+    {
+      "lance": 81,
+      "cp": -866
+    },
+    {
+      "lance": 82,
+      "cp": -866
+    }
+  ]
+}
