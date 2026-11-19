@@ -43,29 +43,120 @@ trabalho-2/
 
 ## Ferramentas MCP
 
-(em construção)
+Sete ferramentas determinísticas expostas pelo servidor FastMCP
+([`mcp_server/server.py`](mcp_server/server.py)). São a única fonte de fatos
+sobre o tabuleiro que o agente pode usar. Cada chamada fica registrada em
+`logs/mcp_tools.jsonl` (RNF06).
 
-| Ferramenta | Entrada | Saída |
-|---|---|---|
-| `analisar_posicao` | `fen`, `profundidade=18`, `multipv=3` | avaliação, melhores lances, linha principal |
-| `analisar_partida` | `pgn`, `cor_do_jogador` | lista por lance com avaliação, queda, classe e melhor lance |
-| `validar_lances` | `fen`, `lances` | legalidade e SAN normalizado de cada lance |
-| `descrever_posicao` | `fen` | material, peças atacadas/indefesas, cravadas, xeques, rei exposto |
-| `buscar_partidas` | `usuario`, `max=10`, `ritmo=None` | partidas com PGN, cores, resultado e abertura |
-| `buscar_puzzles` | `temas`, `rating_min`, `rating_max`, `quantidade=5` | puzzles com FEN, solução, rating e link |
-| `buscar_conceitos` | `pergunta`, `k=4` | trechos das fichas com título e tema |
+| Ferramenta | Entrada | Saída | Fonte |
+|---|---|---|---|
+| `analisar_posicao` | `fen`, `profundidade=18`, `multipv=3` | avaliação, melhores lances em SAN, linha principal | Stockfish |
+| `analisar_partida` | `pgn`, `cor_do_jogador` | lista por lance com avaliação, queda, classe e melhor lance | Stockfish |
+| `validar_lances` | `fen`, `lances` | legalidade e SAN normalizado de cada lance (aceita SAN em inglês e português, e UCI) | python-chess |
+| `descrever_posicao` | `fen` | material, peças atacadas/indefesas, cravadas, espetos, xeques, garfos, mate em 1, rei exposto | python-chess |
+| `buscar_partidas` | `usuario`, `max=10`, `ritmo=None` | partidas com PGN, cores, resultado e abertura | API do Chess.com |
+| `buscar_puzzles` | `temas`, `rating_min`, `rating_max`, `quantidade=5` | puzzles com FEN, solução, rating e link | base Lichess (SQLite) |
+| `buscar_conceitos` | `pergunta`, `k=4` | trechos das fichas com título e tema | RAG · ChromaDB |
+
+Formato detalhado de cada ferramenta e de cada endpoint da API:
+[`docs/API.md`](docs/API.md).
 
 ## Como executar
 
-(em construção)
+Stack: Python 3.11, python-chess, Stockfish, FastMCP, LangGraph +
+langchain-mcp-adapters, ChromaDB, FastAPI, SQLite, React + Vite +
+react-chessboard, Docker Compose.
 
-Stack: Python 3.11, python-chess, FastMCP, LangGraph + langchain-mcp-adapters,
-ChromaDB, FastAPI, SQLite, React + Vite + react-chessboard, Docker Compose.
+### Pré-requisitos
+
+- **Docker:** Docker Desktop com Compose v2.24 ou mais novo. O Stockfish já vem
+  na imagem.
+- **Local:** Python 3.11+, Stockfish no `PATH` (`brew install stockfish` /
+  `sudo apt install stockfish`) e Node 20+ para o frontend.
+
+### 1. Configurar
 
 ```bash
-cp .env.example .env   # preencha as variáveis
-docker compose up
+cd trabalho-2
+cp .env.example .env
 ```
+
+No `.env`, preencha `CHESSCOM_USER_AGENT` com o nome do app e um contato (sem
+isso a API do Chess.com responde 403) e `LLM_PROVIDER` / `LLM_API_KEY` para o
+agente.
+
+### 2. Baixar a base de puzzles (uma vez)
+
+O script lê a base aberta da Lichess (CC0, cerca de 300 MB compactada) em
+streaming e salva um recorte de 50 mil puzzles com rating entre 600 e 2200 em
+`data/puzzles.sqlite`. Nada disso vai para o Git.
+
+```bash
+python data/scripts/download_puzzles.py --rating-min 600 --rating-max 2200 --quantidade 50000
+# ou, com Docker:
+docker compose run --rm puzzles
+```
+
+Se o download estiver lento, `--max-linhas 300000` lê só o começo do arquivo.
+Como a base vem ordenada pelo id do puzzle, que é aleatório, o começo já é uma
+amostra representativa. Para usar um `.zst` já baixado:
+`--arquivo caminho/lichess_db_puzzle.csv.zst`.
+
+### 3a. Subir com Docker
+
+```bash
+docker compose up --build
+```
+
+- API: http://localhost:8000 (Swagger em http://localhost:8000/docs)
+- Servidor MCP: http://localhost:8001/mcp
+
+### 3b. Subir localmente
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn backend.main:app --reload --port 8000
+```
+
+Sem `MCP_URL`, o backend carrega o servidor MCP no mesmo processo. Para rodar o
+MCP separado, como no Docker:
+
+```bash
+MCP_TRANSPORT=http python -m mcp_server.server              # terminal 1
+MCP_URL=http://localhost:8001/mcp uvicorn backend.main:app  # terminal 2
+```
+
+Inspetor do FastMCP, para testar as ferramentas uma a uma:
+
+```bash
+fastmcp dev mcp_server/server.py
+```
+
+### 4. Testes
+
+```bash
+pytest
+```
+
+Os testes cobrem as ferramentas, a classificação, a notação, o cliente do
+Chess.com (com a API simulada), os puzzles e a API de ponta a ponta. Os que
+dependem do Stockfish são pulados se ele não estiver instalado.
+
+### Exemplo pela API
+
+```bash
+curl -X POST localhost:8000/api/partidas/importar -H 'content-type: application/json' \
+     -d '{"usuario": "erik", "max": 5}'
+curl -X POST localhost:8000/api/partidas/<id>/analisar   # devolve tarefa_id
+curl localhost:8000/api/tarefas/<tarefa_id>              # progresso
+curl localhost:8000/api/partidas/<id>                    # lances, classes e explicações
+curl localhost:8000/api/relatorio/erik                   # temas fracos e puzzles
+```
+
+`python -m backend.gerar_exemplos --usuario erik` repete esse fluxo e grava as
+respostas em [`docs/api/exemplos/`](docs/api/exemplos/). Numa partida real de 41
+lances, a análise com explicações levou cerca de 15 s (RNF02 pede até 60 s).
 
 ## Como reproduzir a avaliação
 

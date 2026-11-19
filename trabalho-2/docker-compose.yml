@@ -1,51 +1,66 @@
-# Lance a Lance – esqueleto do Docker Compose (em construção)
+# Lance a Lance – sobe o servidor MCP e o backend com um comando:
+#   cp .env.example .env        # preencha as variáveis
+#   docker compose up --build
 #
-# Sobe tudo com um comando:   docker compose up
-# As variáveis vêm do arquivo .env (copie de .env.example).
-# Os Dockerfiles de cada serviço ainda serão criados.
+# Base de puzzles (uma vez, ~300 MB de download):
+#   docker compose run --rm puzzles
 
 services:
   # Servidor de ferramentas MCP (Stockfish, python-chess, Chess.com, puzzles, RAG)
   mcp_server:
     build:
       context: .
-      dockerfile: mcp_server/Dockerfile   # a criar
-    env_file: .env
-    # O binário do Stockfish deve estar na imagem (ou montado via volume) no
-    # caminho definido em STOCKFISH_PATH.
-    # volumes:
-    #   - ./data:/app/data                   # recorte da base de puzzles (SQLite)
-    #   - ./knowledge_base:/app/knowledge_base
-    #   - chroma_data:/app/chroma            # índice do ChromaDB
-    # ports:
-    #   - "8001:8001"                        # se usar transporte HTTP/SSE em vez de stdio
+      dockerfile: mcp_server/Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MCP_TRANSPORT: http
+      MCP_PORT: "8001"
+    volumes:
+      - ./data:/app/data                    # recorte da base de puzzles e cache do Chess.com
+      - ./logs:/app/logs                    # log das chamadas de ferramentas
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
 
   # API FastAPI + agente LangGraph
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile       # a criar
-    env_file: .env
+      dockerfile: backend/Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MCP_URL: http://mcp_server:8001/mcp
+    volumes:
+      - ./data:/app/data                    # cache de análises e explicações (SQLite)
+      - ./logs:/app/logs
     ports:
       - "8000:8000"
     depends_on:
       - mcp_server
-    # volumes:
-    #   - sqlite_data:/app/db                # cache de análises e explicações (SQLite)
-    # command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
 
-  # Interface React + Vite
-  frontend:
+  # Interface React + Vite (Milton): descomentar quando frontend/Dockerfile existir.
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     - backend
+  #   environment:
+  #     - VITE_API_URL=http://localhost:8000
+
+  # Baixa a base de puzzles da Lichess e salva o recorte em data/puzzles.sqlite.
+  puzzles:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile                # a criar
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
-    # environment:
-    #   - VITE_API_URL=http://localhost:8000
-
-# volumes:
-#   chroma_data:
-#   sqlite_data:
+      context: .
+      dockerfile: mcp_server/Dockerfile
+    profiles: ["dados"]
+    command: ["python", "data/scripts/download_puzzles.py"]
+    volumes:
+      - ./data:/app/data

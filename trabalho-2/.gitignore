@@ -1,0 +1,11 @@
+# Dados gerados (o script em data/scripts/ baixa tudo; ver data/README.md)
+data/*.sqlite
+data/*.sqlite-*
+data/*.db
+data/*.tmp
+data/*.zst
+data/*.csv
+data/cache/
+
+# Logs das chamadas de ferramentas (RNF06)
+logs/
