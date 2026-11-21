@@ -1,0 +1,149 @@
+{
+  "mcp_real": {
+    "analisar_posicao": 4,
+    "analisar_partida": 2,
+    "validar_lances": 2,
+    "descrever_posicao": 11,
+    "buscar_partidas": 1,
+    "buscar_puzzles": 5,
+    "buscar_conceitos": 1
+  },
+  "docker_http": {
+    "http": {
+      "health": 200,
+      "openapi": 200,
+      "chesscom": 201,
+      "importar": 201,
+      "analisar": 202,
+      "tarefa": 200,
+      "partida": 200,
+      "explicar": 200,
+      "chat": 200,
+      "relatorio": 200
+    },
+    "lances": 81,
+    "tarefa": "ef1feaaa482145e7b0c0c9dc3daa7cbd",
+    "partida": "22adcf954fc8fbbe7041a7a9",
+    "puzzles": 5
+  },
+  "docker_preflight": {
+    "primeira_tentativa": "bloqueado",
+    "etapa_da_primeira_tentativa": "buscar_conceitos",
+    "reteste_apos_reinicio": "preflight_ok",
+    "melhor_lance": "Rd7",
+    "fonte": "knowledge_base/garfo.md"
+  },
+  "recomendacao_real_rejeitada": {
+    "id": "lichess:04GtP",
+    "fen": "r4rk1/pp6/4p1pp/3b2p1/7n/3P4/PBN1QP1P/5RK1 w - - 4 25",
+    "versao": "A",
+    "recomendado": "Nc6",
+    "resultado_do_validador_compartilhado": {
+      "valida": false,
+      "lances": [
+        {
+          "lance": "Nc6",
+          "legal": false
+        }
+      ],
+      "erros": [
+        "Lance ilegal ou não confirmado na variante: Nc6."
+      ]
+    },
+    "ferramentas": [
+      {
+        "nome": "validar_lances",
+        "argumentos": {
+          "fen": "r4rk1/pp6/4p1pp/3b2p1/7n/3P4/PBN1QP1P/5RK1 w - - 4 25",
+          "lances": [
+            "Nc6"
+          ]
+        }
+      }
+    ]
+  },
+  "docker_persistencia_apos_reinicio": {
+    "lances": 81,
+    "tarefa": "concluida"
+  },
+  "sqlite_explicacoes_confirmadas": 4,
+  "chat_adversarial": {
+    "entrada": "Qz9",
+    "rascunhos_rejeitados": 3,
+    "retorno": "variante do Stockfish validada"
+  },
+  "triagem_pgn": {
+    "url": "https://lichess.org/game/xdFXCpYF",
+    "candidatas_sem_rotulo": 2,
+    "incluidas_no_dataset_oficial": 0
+  },
+  "retomada_piloto": {
+    "linhas_preservadas": 5,
+    "novas_respostas": 10,
+    "pares_distintos": 15
+  },
+  "docker_llm_real": {
+    "provedor": "ollama",
+    "modelo": "qwen3:1.7b",
+    "motor": "Stockfish 15.1",
+    "explicacao": {
+      "http": 200,
+      "explicacao": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lance_jogado": "Rd2",
+        "melhor_lance": "Rd7",
+        "melhor_lance_uci": "d8d7",
+        "classe": "erro_grave",
+        "queda": 68.03127481446464,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou uma torre das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perdas e manter a posição em equilíbrio. O Stockfish indicou `Rd7` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": false
+      }
+    },
+    "chat": {
+      "http": 200,
+      "cache": true,
+      "chat": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Consulte o Stockfish. Qual é o melhor lance para o lado a jogar? Diga o lance em SAN.",
+        "resposta": "O melhor lance para o lado a jogar é **Rd7**.",
+        "ferramentas_usadas": [
+          {
+            "nome": "analisar_posicao",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+              "profundidade": 18,
+              "multipv": 3
+            }
+          },
+          {
+            "nome": "validar_lances",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+              "lances": [
+                "Rd7"
+              ]
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok"
+      }
+    }
+  }
+}

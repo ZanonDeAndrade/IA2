@@ -1,45 +1,45 @@
 # Dependências do Trabalho 2 – Lance a Lance
-# Versões fixas nas dependências do MCP, da API e dos testes; as do agente,
-# RAG e avaliação ainda precisam ser fixadas (pip freeze) antes da entrega.
+# Sem versões fixas ainda: fixar (pip freeze) antes da entrega.
 
 # Regras do jogo, PGN/FEN e comunicação com o Stockfish via UCI
-chess==1.11.2
+chess
 
 # Servidor de ferramentas MCP
-fastmcp==4.2.2
+# FastMCP 4 usa o SDK MCP 2, incompatível com o adapter abaixo.
+fastmcp==3.4.11
+mcp==1.30.0
 
 # Agente
-langgraph
+langgraph==1.0.8
 langchain-core
-langchain-mcp-adapters
+langchain-mcp-adapters==0.3.1
 
-# Provedor de LLM: escolher UM e descomentar, conforme LLM_PROVIDER no .env
-# langchain-anthropic
-# langchain-openai
-# langchain-google-genai
-# langchain-ollama
+# OpenAI ou endpoint compatível, incluindo Ollama
+langchain-openai
 
 # RAG (base vetorial e embeddings multilíngues)
 chromadb
 sentence-transformers
+PyYAML
 
 # API
-fastapi==0.165.0
-uvicorn[standard]==0.54.0
-pydantic==2.14.3
+fastapi
+uvicorn[standard]
+pydantic
 
 # Cache e dados (SQLite é da biblioteca padrão)
 pandas
-zstandard==0.25.0
+zstandard
 
 # Utilidades
-httpx==0.28.1
-python-dotenv==1.2.4
+httpx
+python-dotenv
 
 # Avaliação
-ragas
+ragas==0.4.3
+# O RAGAS 0.4.3 importa chat_models.vertexai, removido no langchain-community 0.4.2.
+langchain-community==0.4.1
 matplotlib
 
 # Testes
-pytest==9.2.0
-pytest-asyncio==1.5.0
+pytest

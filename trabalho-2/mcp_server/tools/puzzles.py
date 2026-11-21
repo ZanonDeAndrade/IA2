@@ -1,131 +1,52 @@
-"""Ferramenta de recomendação de puzzles da base aberta da Lichess (CC0).
+"""Consulta ao recorte público Lichess, preparado por data/scripts/download_puzzles.py."""
 
-Consulta o recorte da base salvo em SQLite por ``data/scripts/download_puzzles.py``.
-Os temas usam os nomes em inglês da coluna ``Themes`` (``fork``, ``pin``,
-``hangingPiece``...); a tradução para português fica em ``temas.py``, que é
-compartilhado com o agente.
-
-Formato da Lichess: o FEN do puzzle é a posição ANTES do lance do adversário; o
-primeiro lance de ``solucao`` é o do adversário e o resto é a resposta do
-jogador. Para facilitar a interface, cada puzzle também traz ``fen_jogador``
-(posição que o jogador resolve) e a solução em SAN.
-"""
-
-from __future__ import annotations
-
+import json
 import os
-import sqlite3
 from pathlib import Path
+import sqlite3
+from contextlib import closing
 
-import chess
+from fastmcp.exceptions import ToolError
 
-from mcp_server.tools.notacao import san_pt
-from mcp_server.tools.temas import TEMAS_NAO_TATICOS, para_lichess, rotulo, tema_do_agente
-
-
-class ErroPuzzles(RuntimeError):
-    pass
-
-
-def caminho_base() -> Path:
-    padrao = Path(__file__).resolve().parents[2] / "data" / "puzzles.sqlite"
-    return Path(os.getenv("PUZZLES_DB", padrao))
-
-
-def _conectar() -> sqlite3.Connection:
-    caminho = caminho_base()
-    if not caminho.exists():
-        raise ErroPuzzles(
-            f"Base de puzzles não encontrada em {caminho}. "
-            "Rode: python data/scripts/download_puzzles.py"
-        )
-    con = sqlite3.connect(f"file:{caminho}?mode=ro", uri=True)
-    con.row_factory = sqlite3.Row
-    return con
+# As chaves são os temas da interface do agente. Os valores são tags oficiais.
+TAGS = {
+    "garfo": "fork", "cravada": "pin", "espeto": "skewer",
+    "ataque_descoberto": "discoveredAttack", "ataque_duplo": "fork",
+    "peca_pendurada": "hangingPiece", "mate": "mate", "sobrecarga": "overloading",
+    "desvio": "deflection", "atracao": "attraction",
+}
+ROTULOS = {
+    "fork": "Garfo", "pin": "Cravada", "skewer": "Espeto", "discoveredAttack": "Ataque descoberto",
+    "hangingPiece": "Peça pendurada", "mate": "Mate", "deflection": "Desvio", "attraction": "Atração",
+    "overloading": "Sobrecarga", "endgame": "Final", "middlegame": "Meio-jogo",
+    "opening": "Abertura", "sacrifice": "Sacrifício", "promotion": "Promoção",
+    "mateIn1": "Mate em 1", "mateIn2": "Mate em 2", "mateIn3": "Mate em 3",
+    "mateIn4": "Mate em 4", "mateIn5": "Mate em 5 ou mais",
+}
+PADRAO = Path(__file__).resolve().parents[2] / "data" / "puzzles.sqlite"
 
 
-def formatar(linha: sqlite3.Row) -> dict:
-    board = chess.Board(linha["fen"])
-    uci = linha["moves"].split()
-    adversario = chess.Move.from_uci(uci[0])
-    lance_adversario = board.san(adversario)
-    board.push(adversario)
-    fen_jogador = board.fen()
-    vez = "white" if board.turn else "black"
+def buscar_puzzles(temas: list[str], rating_min: int, rating_max: int, quantidade: int = 5) -> list[dict]:
+    """Retorna puzzles do recorte por faixa de rating e por qualquer tema solicitado.
 
-    solucao_san = []
-    for u in uci[1:]:
-        mv = chess.Move.from_uci(u)
-        solucao_san.append(board.san(mv))
-        board.push(mv)
-
-    temas = linha["themes"].split()
-    return {
-        "id": linha["id"],
-        "fen": linha["fen"],
-        "solucao": uci,
-        "rating": linha["rating"],
-        "temas": temas,
-        "temas_label": [rotulo(t) for t in temas if t not in TEMAS_NAO_TATICOS],
-        "url": f"https://lichess.org/training/{linha['id']}",
-        "fen_jogador": fen_jogador,
-        "vez": vez,
-        "lance_adversario": lance_adversario,
-        "solucao_san": solucao_san,
-        "solucao_san_pt": [san_pt(s) for s in solucao_san],
-        "tema_agente": tema_do_agente(temas),
-        "popularidade": linha["popularity"],
-        "partida_original": linha["game_url"],
-    }
-
-
-def buscar_puzzles(
-    temas: list[str],
-    rating_min: int,
-    rating_max: int,
-    quantidade: int = 5,
-    excluir: list[str] | None = None,
-) -> list[dict]:
-    """Busca puzzles por tema e faixa de rating.
-
-    Os puzzles com mais temas pedidos vêm primeiro; o resto é aleatório, para
-    cada chamada sugerir exercícios diferentes.
-
-    Args:
-        temas: temas da Lichess (``["fork", "hangingPiece"]``), em português
-            (``garfo``) ou ids do agente (``peca_pendurada``). Vazio = qualquer tema.
-        rating_min: rating mínimo do puzzle.
-        rating_max: rating máximo do puzzle.
-        quantidade: quantidade de puzzles devolvidos (1 a 50, padrão 5).
-        excluir: ids de puzzles que não devem voltar.
-
-    Returns:
-        Lista de puzzles, cada um com ``id``, ``fen``, ``solucao`` (UCI, o primeiro
-        é do adversário), ``rating``, ``temas``, ``temas_label``, ``url``
-        (``https://lichess.org/training/{id}``), ``fen_jogador`` e ``solucao_san``.
+    O FEN é a posição para o jogador resolver, depois do lance preparatório.
     """
-    quantidade = max(1, min(int(quantidade), 50))
-    rating_min, rating_max = sorted((int(rating_min), int(rating_max)))
-    temas_en = [para_lichess(t) for t in (temas or []) if t and t.strip()]
-    excluir = excluir or []
-    filtro_excluir = f"AND p.id NOT IN ({','.join('?' * len(excluir))})" if excluir else ""
-
-    with _conectar() as con:
-        if temas_en:
-            sql = f"""
-                SELECT p.*, COUNT(*) AS acertos
-                FROM puzzle_temas t JOIN puzzles p ON p.id = t.puzzle_id
-                WHERE t.tema IN ({','.join('?' * len(temas_en))})
-                  AND p.rating BETWEEN ? AND ? {filtro_excluir}
-                GROUP BY p.id
-                ORDER BY acertos DESC, RANDOM()
-                LIMIT ?"""
-            params = [*temas_en, rating_min, rating_max, *excluir, quantidade]
-        else:
-            sql = f"""
-                SELECT p.* FROM puzzles p
-                WHERE p.rating BETWEEN ? AND ? {filtro_excluir}
-                ORDER BY RANDOM() LIMIT ?"""
-            params = [rating_min, rating_max, *excluir, quantidade]
-        linhas = con.execute(sql, params).fetchall()
-    return [formatar(l) for l in linhas]
+    if not 0 <= rating_min <= rating_max <= 4000 or not 1 <= quantidade <= 50 or len(temas) > 30:
+        raise ValueError("Faixa de rating, temas ou quantidade inválidos.")
+    caminho = Path(os.getenv("PUZZLES_DB") or PADRAO).resolve()
+    if not caminho.is_file():
+        raise ToolError("PUZZLES_BASE_AUSENTE")
+    tags = sorted({TAGS.get(tema, tema) for tema in temas})
+    consulta = "SELECT p.dados FROM puzzles p WHERE p.rating BETWEEN ? AND ?"
+    parametros = [rating_min, rating_max]
+    if tags:
+        marcadores = ",".join("?" for _ in tags)
+        consulta += f" AND EXISTS (SELECT 1 FROM temas t WHERE t.puzzle_id=p.id AND t.tema IN ({marcadores}))"
+        parametros.extend(tags)
+    consulta += " ORDER BY abs(p.rating - ?), p.id LIMIT ?"
+    parametros.extend([(rating_min + rating_max) / 2, quantidade])
+    try:
+        with closing(sqlite3.connect(caminho.as_uri() + "?mode=ro", uri=True)) as conn:
+            return [json.loads(linha[0]) for linha in conn.execute(consulta, parametros)]
+    except (sqlite3.Error, ValueError) as erro:
+        raise ToolError("PUZZLES_BASE_INVALIDA") from erro

@@ -1,0 +1,29 @@
+{
+  "fonte_lichess": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "semente": 20261119,
+  "prefixo_registros": 16000,
+  "fonte_sha256": "6d6849bcb29665754b70365e021ea8d82b813505190355233ed9b1df5ca22ff1",
+  "snapshot_lichess": "2026-11-01 ETag 6ae6f0f4-12766d85",
+  "dataset_sha256": "71161d231ce0c24caa6184e5585814a3fafc162e4bbd40e794d84e05c4036065",
+  "stockfish": "Stockfish 11 64",
+  "executavel_sha256": "29a08e682cf4ebb693033c750d8b16f2f3a6351882c4df003b53cdf9fb9923fa",
+  "profundidade": 16,
+  "threads": 1,
+  "hash_mib": 16,
+  "queda_minima_pp": 20.0,
+  "por_origem": {
+    "lichess": 70
+  },
+  "por_tema": {
+    "garfo": 9,
+    "cravada": 9,
+    "espeto": 9,
+    "ataque_descoberto": 9,
+    "peca_pendurada": 9,
+    "mate": 9,
+    "desvio": 8,
+    "atracao": 8
+  },
+  "candidatos_examinados": 73,
+  "candidatos_sha256": "181c7eee3ab80593ab92e1eeb0c62a2f5e2ae948fbdda1fc5107bb6970cfdfe9"
+}

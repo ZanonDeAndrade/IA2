@@ -45,10 +45,30 @@ Lances: 1. Nxe5 ... (explicar o que acontece)
 
 - Uma ficha = um trecho na base vetorial. Fichas com mais de ~500 palavras
   devem ser divididas por subtítulo.
-- O campo `tema` deve bater com os nomes da coluna `Themes` da Lichess
-  (`fork`, `pin`, `skewer`, `hangingPiece`, `discoveredAttack`, ...), para
-  cruzar com os puzzles recomendados.
+- Use o identificador da coluna `Themes` da Lichess quando houver um equivalente.
+  Em conceitos sem equivalente direto, `tema` usa o identificador local.
+  O campo `tema_pt` identifica a ficha para o agente.
 - A lista fechada de temas usada pelo agente (garfo, cravada, espeto, ataque
   descoberto, peça pendurada, mate, sobrecarga, desvio, atração, outro) deve
   ter uma ficha cada.
 - Escreva com as próprias palavras; cite a referência no fim da ficha.
+
+## Criar o índice
+
+Na raiz do projeto, com as dependências Python instaladas:
+
+```bash
+python -m knowledge_base.index
+python -m knowledge_base.index --reconstruir
+```
+
+O primeiro comando atualiza apenas os trechos modificados. O segundo recalcula
+todos os vetores. Ambos removem trechos de fichas excluídas. As configurações
+`CHROMA_PATH` e `EMBEDDING_MODEL` são opcionais. Por padrão, o índice fica em
+`data/chroma` e o modelo é o [MiniLM multilíngue](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2).
+Na primeira execução o modelo pode precisar ser baixado. Para uso offline,
+`EMBEDDING_MODEL` também aceita o caminho de uma cópia local do modelo.
+
+`buscar_conceitos(pergunta, k=4, tema=None)` consulta esse índice no servidor MCP
+existente. A busca devolve o texto e a origem de cada trecho. Sem índice ou sem
+resultados para o tema informado, devolve uma lista vazia.

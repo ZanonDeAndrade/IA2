@@ -1,219 +1,164 @@
-"""Baixa a base aberta de puzzles da Lichess e salva um recorte em SQLite.
-
-A base completa (lichess_db_puzzle.csv.zst) tem ~300 MB compactada e milhões de
-linhas. O script lê o arquivo em streaming (sem salvar o .zst em disco),
-filtra por rating e popularidade e guarda uma amostra aleatória
-(reservoir sampling) de N puzzles.
-
-Uso:
-    python data/scripts/download_puzzles.py                 # 50 mil puzzles, rating 600-2200
-    python data/scripts/download_puzzles.py --quantidade 20000 --rating-min 800
-    python data/scripts/download_puzzles.py --arquivo lichess_db_puzzle.csv.zst  # usa arquivo local
-    python data/scripts/download_puzzles.py --max-linhas 300000      # download lento: só o começo
-
-Licença dos dados: CC0 (domínio público) - https://database.lichess.org/#puzzles
-"""
-
-from __future__ import annotations
+"""Prepara um recorte do CSV público e publica o SQLite depois de validá-lo."""
 
 import argparse
 import csv
 import io
-import random
-import sqlite3
-import sys
-import time
+import json
+from itertools import islice
 from pathlib import Path
+import random
+import re
+import sqlite3
+import tempfile
+from contextlib import closing
 
+import chess
 import httpx
 import zstandard
 
-URL_PADRAO = "https://database.lichess.org/lichess_db_puzzle.csv.zst"
-RAIZ = Path(__file__).resolve().parents[2]
-SAIDA_PADRAO = RAIZ / "data" / "puzzles.sqlite"
+from mcp_server.tools.puzzles import PADRAO, ROTULOS, TAGS
+
+URL_BASE_PUZZLES = "https://database.lichess.org/lichess_db_puzzle.csv.zst"
+CAMINHO_SQLITE_PADRAO = str(PADRAO)
+SNAPSHOT = PADRAO.parents[1] / "evaluation" / "lichess_candidatos.jsonl"
 
 
-def _linhas_csv(fluxo_binario) -> csv.DictReader:
-    dctx = zstandard.ZstdDecompressor()
-    leitor = dctx.stream_reader(fluxo_binario)
-    texto = io.TextIOWrapper(leitor, encoding="utf-8", newline="")
-    return csv.DictReader(texto)
-
-
-class _FluxoHttp(io.RawIOBase):
-    """Adapta um download httpx em streaming para um objeto de arquivo binário."""
-
-    def __init__(self, resposta: httpx.Response):
-        self._iter = resposta.iter_bytes(chunk_size=1 << 20)
-        self._buffer = b""
-        self.baixado = 0
-        self.total = int(resposta.headers.get("content-length", 0))
-
-    def readable(self) -> bool:
-        return True
-
-    def readinto(self, b) -> int:
-        while not self._buffer:
-            try:
-                self._buffer = next(self._iter)
-                self.baixado += len(self._buffer)
-            except StopIteration:
-                return 0
-        n = min(len(b), len(self._buffer))
-        b[:n] = self._buffer[:n]
-        self._buffer = self._buffer[n:]
-        return n
-
-
-def _seguro(linhas):
-    """Para de ler sem erro se o .zst estiver incompleto (download parcial)."""
+def baixar_base(destino: str) -> str:
+    caminho = Path(destino)
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    parcial = caminho.with_suffix(caminho.suffix + ".part")
     try:
-        yield from linhas
-    except (zstandard.ZstdError, csv.Error, EOFError, UnicodeDecodeError) as e:
-        print(f"  arquivo terminou antes do fim ({e.__class__.__name__}); usando o que foi lido",
-              file=sys.stderr)
+        with httpx.stream("GET", URL_BASE_PUZZLES, timeout=30, follow_redirects=True) as resposta:
+            resposta.raise_for_status()
+            with parcial.open("wb") as arquivo:
+                for bloco in resposta.iter_bytes(1024 * 1024):
+                    arquivo.write(bloco)
+        parcial.replace(caminho)
+    finally:
+        parcial.unlink(missing_ok=True)
+    return str(caminho)
 
 
-def amostrar(linhas, quantidade: int, rating_min: int, rating_max: int,
-             popularidade_min: int, jogadas_min: int, semente: int,
-             progresso=None, max_linhas: int | None = None) -> tuple[list[dict], int]:
-    """Reservoir sampling: amostra uniforme de `quantidade` linhas válidas.
-
-    `max_linhas` limita quantas linhas são lidas. A base vem ordenada pelo
-    PuzzleId (aleatório), então o começo do arquivo já é uma amostra
-    representativa - útil quando o download é lento.
-    """
-    rng = random.Random(semente)
-    reservatorio: list[dict] = []
-    validos = 0
-    for i, linha in enumerate(_seguro(linhas)):
-        if max_linhas and i >= max_linhas:
+def recortar(caminho_zst: str, rating_min: int, rating_max: int, quantidade: int, prefixo: int | None = None):
+    """Amostra determinística com cotas dos temas principais e complemento geral."""
+    rng = random.Random(20261119)
+    amostra, contagem = {}, {}
+    geral = []
+    total = 0
+    estratos = sorted(set(TAGS.values()))
+    teto = max(1, quantidade // (len(estratos) + 1))
+    with open(caminho_zst, "rb") as fonte, zstandard.ZstdDecompressor().stream_reader(fonte) as dados:
+        leitor = csv.DictReader(io.TextIOWrapper(dados, encoding="utf-8", newline=""))
+        for row in islice(leitor, prefixo):
+            rating = row.get("Rating", "")
+            if not rating.isdecimal() or not rating_min <= int(rating) <= rating_max:
+                continue
+            total += 1
+            if len(geral) < quantidade:
+                geral.append(row)
+            elif (indice := rng.randrange(total)) < quantidade:
+                geral[indice] = row
+            tags = set(row["Themes"].split())
+            estrato = next((tag for tag in estratos if tag in tags), None)
+            if estrato is None:
+                continue
+            grupo = amostra.setdefault(estrato, [])
+            contagem[estrato] = contagem.get(estrato, 0) + 1
+            if len(grupo) < teto:
+                grupo.append(row)
+            elif (indice := rng.randrange(contagem[estrato])) < teto:
+                grupo[indice] = row
+    escolhidos = {}
+    for row in [*(row for tag in estratos for row in amostra.get(tag, [])), *geral]:
+        escolhidos[row["PuzzleId"]] = row
+        if len(escolhidos) == quantidade:
             break
-        if progresso and i % 200_000 == 0:
-            progresso(i, validos)
-        try:
-            rating = int(linha["Rating"])
-            popularidade = int(linha["Popularity"])
-            jogadas = int(linha["NbPlays"])
-        except (KeyError, ValueError):
-            continue
-        if not (rating_min <= rating <= rating_max):
-            continue
-        if popularidade < popularidade_min or jogadas < jogadas_min:
-            continue
-        validos += 1
-        if len(reservatorio) < quantidade:
-            reservatorio.append(linha)
-        else:
-            j = rng.randrange(validos)
-            if j < quantidade:
-                reservatorio[j] = linha
-    return reservatorio, validos
+    return list(escolhidos.values())
 
 
-def salvar(puzzles: list[dict], destino: Path) -> None:
+def _puzzle(row: dict) -> dict:
+    id_ = row["PuzzleId"]
+    if not re.fullmatch(r"[A-Za-z0-9]+", id_):
+        raise ValueError("Identificador de puzzle inválido.")
+    original = row["FEN"]
+    tabuleiro = chess.Board(original)
+    movimentos = row["Moves"].split()
+    if not tabuleiro.is_valid() or len(movimentos) < 2:
+        raise ValueError("Posição de puzzle inválida.")
+    for indice, uci in enumerate(movimentos):
+        lance = tabuleiro.parse_uci(uci)
+        if not lance:
+            raise ValueError("Lance nulo no puzzle.")
+        tabuleiro.push(lance)
+        if indice == 0:
+            fen = tabuleiro.fen()
+    temas = list(dict.fromkeys(row["Themes"].split()))
+    return {"id": id_, "fen": fen, "fen_origem": original, "lance_preparatorio": movimentos[0],
+            "solucao": movimentos[1:], "rating": int(row["Rating"]), "temas": temas,
+            "temas_label": [ROTULOS.get(tema, tema) for tema in temas],
+            "url": f"https://lichess.org/training/{id_}"}
+
+
+def salvar_sqlite(recorte, caminho_sqlite: str = CAMINHO_SQLITE_PADRAO, origem: str = URL_BASE_PUZZLES) -> int:
+    destino = Path(caminho_sqlite)
     destino.parent.mkdir(parents=True, exist_ok=True)
-    tmp = destino.with_suffix(".tmp")
-    tmp.unlink(missing_ok=True)
-    con = sqlite3.connect(tmp)
-    con.executescript(
-        """
-        CREATE TABLE puzzles (
-            id TEXT PRIMARY KEY,
-            fen TEXT NOT NULL,          -- posição ANTES do lance do adversário
-            moves TEXT NOT NULL,        -- lances em UCI; o 1º é o do adversário
-            rating INTEGER NOT NULL,
-            rating_deviation INTEGER,
-            popularity INTEGER,
-            nb_plays INTEGER,
-            themes TEXT NOT NULL,       -- temas em inglês separados por espaço
-            game_url TEXT,
-            opening_tags TEXT
-        );
-        CREATE TABLE puzzle_temas (
-            puzzle_id TEXT NOT NULL REFERENCES puzzles(id),
-            tema TEXT NOT NULL
-        );
-        """
-    )
-    con.executemany(
-        "INSERT INTO puzzles VALUES (?,?,?,?,?,?,?,?,?,?)",
-        [
-            (
-                p["PuzzleId"], p["FEN"], p["Moves"], int(p["Rating"]),
-                int(p["RatingDeviation"] or 0), int(p["Popularity"]),
-                int(p["NbPlays"]), p["Themes"], p.get("GameUrl", ""),
-                p.get("OpeningTags", ""),
-            )
-            for p in puzzles
-        ],
-    )
-    con.executemany(
-        "INSERT INTO puzzle_temas VALUES (?,?)",
-        [(p["PuzzleId"], t) for p in puzzles for t in p["Themes"].split()],
-    )
-    con.executescript(
-        """
-        CREATE INDEX idx_temas_tema ON puzzle_temas(tema, puzzle_id);
-        CREATE INDEX idx_puzzles_rating ON puzzles(rating);
-        """
-    )
-    con.commit()
-    con.close()
-    tmp.replace(destino)
+    with tempfile.NamedTemporaryFile(dir=destino.parent, delete=False) as arquivo:
+        caminho = Path(arquivo.name)
+    try:
+        with closing(sqlite3.connect(caminho)) as conn, conn:
+            conn.executescript("""
+                CREATE TABLE puzzles(id TEXT PRIMARY KEY, rating INTEGER NOT NULL, dados TEXT NOT NULL);
+                CREATE TABLE temas(puzzle_id TEXT NOT NULL REFERENCES puzzles(id), tema TEXT NOT NULL,
+                                   PRIMARY KEY(puzzle_id, tema));
+                CREATE TABLE origem(fonte TEXT NOT NULL);
+                CREATE INDEX puzzles_rating ON puzzles(rating);
+                CREATE INDEX temas_por_tag ON temas(tema, puzzle_id);
+            """)
+            conn.execute("INSERT INTO origem VALUES (?)", (origem,))
+            for row in recorte:
+                try:
+                    puzzle = _puzzle(row)
+                except (KeyError, ValueError, TypeError):
+                    continue
+                cursor = conn.execute("INSERT OR IGNORE INTO puzzles VALUES (?, ?, ?)",
+                                      (puzzle["id"], puzzle["rating"], json.dumps(puzzle, ensure_ascii=False)))
+                if cursor.rowcount:
+                    conn.executemany("INSERT INTO temas VALUES (?, ?)", ((puzzle["id"], tag) for tag in puzzle["temas"]))
+            total = conn.execute("SELECT count(*) FROM puzzles").fetchone()[0]
+            if total == 0:
+                raise ValueError("O recorte não contém puzzles válidos.")
+        caminho.replace(destino)
+        return total
+    finally:
+        caminho.unlink(missing_ok=True)
 
 
-def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--url", default=URL_PADRAO)
-    ap.add_argument("--arquivo", type=Path, help="usar um .csv.zst já baixado em vez da URL")
-    ap.add_argument("--saida", type=Path, default=SAIDA_PADRAO)
-    ap.add_argument("--quantidade", type=int, default=50_000)
-    ap.add_argument("--rating-min", type=int, default=600)
-    ap.add_argument("--rating-max", type=int, default=2200)
-    ap.add_argument("--popularidade-min", type=int, default=50,
-                    help="descarta puzzles mal avaliados (Popularity vai de -100 a 100)")
-    ap.add_argument("--jogadas-min", type=int, default=100)
-    ap.add_argument("--semente", type=int, default=42)
-    ap.add_argument("--max-linhas", type=int, default=None,
-                    help="lê só as primeiras N linhas (ex.: 300000 para download lento)")
-    args = ap.parse_args(argv)
-
-    inicio = time.time()
-
-    def progresso_factory(fluxo=None):
-        def progresso(i, validos):
-            extra = ""
-            if fluxo is not None and fluxo.total:
-                extra = f" | {fluxo.baixado / fluxo.total:5.1%} baixado"
-            print(f"  {i:>9,} linhas lidas, {validos:>9,} válidas{extra}", file=sys.stderr, flush=True)
-        return progresso
-
-    if args.arquivo:
-        print(f"Lendo {args.arquivo} ...", file=sys.stderr)
-        with open(args.arquivo, "rb") as f:
-            puzzles, validos = amostrar(_linhas_csv(f), args.quantidade, args.rating_min,
-                                        args.rating_max, args.popularidade_min,
-                                        args.jogadas_min, args.semente, progresso_factory(),
-                                        args.max_linhas)
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    origens = parser.add_mutually_exclusive_group()
+    origens.add_argument("--arquivo", help="CSV.zst já baixado")
+    origens.add_argument("--recorte-versionado", action="store_true", help="Usa o recorte público rastreado na avaliação.")
+    parser.add_argument("--download", default=str(PADRAO.with_name("lichess_db_puzzle.csv.zst")))
+    parser.add_argument("--saida", default=CAMINHO_SQLITE_PADRAO)
+    parser.add_argument("--rating-min", type=int, default=600)
+    parser.add_argument("--rating-max", type=int, default=2200)
+    parser.add_argument("--quantidade", type=int, default=50_000)
+    parser.add_argument("--prefixo", type=int, help="Examina apenas este número de entradas do CSV.")
+    args = parser.parse_args()
+    if not 0 <= args.rating_min <= args.rating_max <= 4000 or args.quantidade < 1 or (args.prefixo or 1) < 1:
+        parser.error("Faixa de rating, prefixo ou tamanho inválidos.")
+    if args.recorte_versionado:
+        with SNAPSHOT.open(encoding="utf-8") as fonte:
+            dados = [json.loads(linha)["row"] for linha in fonte]
+        selecionados = {row["PuzzleId"]: row for row in dados
+                        if args.rating_min <= int(row["Rating"]) <= args.rating_max}
+        total = salvar_sqlite(islice(selecionados.values(), args.quantidade), args.saida,
+                              "evaluation/lichess_candidatos.jsonl")
     else:
-        print(f"Baixando {args.url} em streaming ...", file=sys.stderr)
-        with httpx.stream("GET", args.url, follow_redirects=True, timeout=60) as r:
-            r.raise_for_status()
-            fluxo = _FluxoHttp(r)
-            puzzles, validos = amostrar(_linhas_csv(io.BufferedReader(fluxo, 1 << 20)),
-                                        args.quantidade, args.rating_min, args.rating_max,
-                                        args.popularidade_min, args.jogadas_min,
-                                        args.semente, progresso_factory(fluxo), args.max_linhas)
-
-    salvar(puzzles, args.saida)
-    print(
-        f"Pronto: {len(puzzles):,} puzzles (de {validos:,} válidos) salvos em {args.saida} "
-        f"em {time.time() - inicio:.0f}s",
-        file=sys.stderr,
-    )
-    return 0
+        caminho_zst = args.arquivo or baixar_base(args.download)
+        total = salvar_sqlite(recortar(caminho_zst, args.rating_min, args.rating_max, args.quantidade, args.prefixo), args.saida)
+    print(f"{total} puzzles reais em {args.saida}")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
