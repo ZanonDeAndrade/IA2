@@ -4,6 +4,16 @@ x-analise: &analise
   ANALISE_REVISAO_MOTOR: ${ANALISE_REVISAO_MOTOR:-1}
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+    init: true
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
   mcp_server:
     build:
       context: .

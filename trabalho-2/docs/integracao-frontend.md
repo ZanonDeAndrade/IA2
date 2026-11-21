@@ -4,6 +4,12 @@ A interface consome apenas HTTP/JSON. A base local é `http://127.0.0.1:8000`.
 A documentação interativa fica em `/docs` e os modelos de entrada e saída
 descrevem-se em `/openapi.json`.
 
+A interface está em `frontend/`. No desenvolvimento, o Vite em
+`http://127.0.0.1:5173` encaminha `/api` e `/healthz` para essa API. No Compose,
+o Nginx do serviço `frontend` encaminha para `backend:8000`. Para a execução
+local no Windows, `preparar.ps1` prepara o ambiente e `iniciar.ps1` inicia os
+serviços. Veja o [guia da interface](../frontend/README.md).
+
 ## Execução local
 
 1. Copie `.env.example` para `.env` se o arquivo ainda não existir.
