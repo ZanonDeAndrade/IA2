@@ -113,11 +113,11 @@ def _fatos_do_lance(antes: dict, depois: dict, origem: str, destino: str) -> tup
     return anterior, posterior
 
 
-def _garfo_com_xeque(tabuleiro: chess.Board, linha: list[str]) -> str | None:
-    """Identifica ataques simultâneos da peça que acabou de jogar na variante."""
-    nomes = {chess.KING: "rei", chess.QUEEN: "dama", chess.ROOK: "torre", chess.BISHOP: "bispo", chess.KNIGHT: "cavalo"}
+def _garfo_com_xeque(tabuleiro: chess.Board, linha: list[str]) -> dict[str, str] | None:
+    """Confirma que a peça que deu xeque captura o outro alvo na mesma variante."""
+    nomes = {chess.PAWN: "peão", chess.QUEEN: "dama", chess.ROOK: "torre", chess.BISHOP: "bispo", chess.KNIGHT: "cavalo"}
     copia = tabuleiro.copy(stack=False)
-    for san in linha[:4]:
+    for indice, san in enumerate(linha[:4]):
         try:
             lance = copia.parse_san(san)
         except ValueError:
@@ -125,10 +125,22 @@ def _garfo_com_xeque(tabuleiro: chess.Board, linha: list[str]) -> str | None:
         copia.push(lance)
         if copia.turn == tabuleiro.turn or not copia.is_check() or copia.king(copia.turn) not in copia.attacks(lance.to_square):
             continue
-        for casa in copia.attacks(lance.to_square) & copia.occupied_co[copia.turn]:
-            tipo = copia.piece_type_at(casa)
-            if tipo in nomes and tipo != chess.KING:
-                return nomes[tipo]
+        if indice + 2 >= len(linha):
+            break
+        resposta = copia.copy(stack=False)
+        try:
+            defesa = resposta.push_san(linha[indice + 1])
+            captura = resposta.parse_san(linha[indice + 2])
+        except ValueError:
+            return None
+        alvo = copia.piece_at(captura.to_square)
+        atacante = copia.piece_at(lance.to_square)
+        if (alvo and alvo.color == copia.turn and alvo.piece_type not in {chess.PAWN, chess.KING}
+                and atacante and atacante.piece_type in nomes and defesa.from_square != captura.to_square
+                and captura.from_square == lance.to_square and resposta.is_capture(captura)
+                and captura.to_square in copia.attacks(lance.to_square)):
+            cor = "brancas" if atacante.color == chess.WHITE else "pretas"
+            return {"atacante": f"{nomes[atacante.piece_type]} das {cor}", "alvo": nomes[alvo.piece_type]}
     return None
 
 
@@ -138,9 +150,14 @@ def _escolhas_fatuais(fatos: dict) -> dict[str, list[str]]:
     artigo = "uma" if (peca or "").startswith(("torre", "dama")) else "um"
     aconteceu = f"O lance da partida deslocou {artigo} {peca}." if peca else "O lance da partida mudou a posição."
     motivos = []
-    if alvo := fatos.get("garfo_com_xeque"):
+    if mate := fatos.get("mate_em"):
+        unidade = "lance" if mate == 1 else "lances"
+        motivos.append(f"Na posição resultante, o Stockfish indicou mate em {mate} {unidade} para o lado a jogar.")
+    elif garfo := fatos.get("garfo_com_xeque"):
+        alvo = garfo["alvo"]
         artigo = "uma" if alvo in {"torre", "dama"} else "um"
-        motivos.append(f"Na variante analisada, a mesma peça dá xeque e também ataca {artigo} {alvo}.")
+        artigo_atacante = "uma" if garfo["atacante"].startswith(("torre", "dama")) else "um"
+        motivos.append(f"Na variante analisada, {artigo_atacante} {garfo['atacante']} dá xeque e depois captura {artigo} {alvo}.")
     else:
         if "peca_movida_defendida" in depois:
             defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
@@ -233,25 +250,38 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
         escolhas = {}
         selecao = {}
         instrucao_tema = _prompt("sistema") + "\n" + _prompt("tema")
+        temas_permitidos = TEMAS
         if os.getenv("LLM_JSON_MODE") == "1":
             if "analisar_posicao" in ferramentas.disponiveis:
                 try:
                     analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
-                    if alvo := _garfo_com_xeque(tabuleiro, analise["linha_principal"]):
-                        fatos["garfo_com_xeque"] = alvo
+                    avaliacao = analise.get("avaliacao", {})
+                    if avaliacao.get("tipo") == "mate" and avaliacao["valor"] > 0:
+                        fatos["mate_em"] = avaliacao["valor"]
+                    elif garfo := _garfo_com_xeque(tabuleiro, analise["linha_principal"]):
+                        fatos["garfo_com_xeque"] = garfo
                 except (RuntimeError, KeyError, TypeError):
                     LOGGER.info("Não foi possível conferir a variante após o lance.")
             escolhas = _escolhas_fatuais(fatos)
-            temas_sustentados = ["garfo"] if fatos.get("garfo_com_xeque") else list(TEMAS)
-            selecao = {"tema": temas_sustentados}
-            instrucao_tema += "\nUse o esquema JSON com a chave tema."
+            if fatos.get("mate_em"):
+                temas_permitidos = {"mate": TEMAS["mate"]}
+            elif fatos.get("garfo_com_xeque"):
+                temas_permitidos = {"garfo": TEMAS["garfo"]}
+            else:
+                temas_permitidos = {"outro": TEMAS["outro"], **{
+                    tema: titulo for tema, titulo in TEMAS.items() if tema not in {"garfo", "mate", "outro"}
+                }}
+            selecao = {"tema": list(temas_permitidos)}
+            instrucao_tema += "\nRetorne um objeto JSON com a chave tema."
+        else:
+            instrucao_tema += "\nDevolva apenas o identificador, sem aspas, pontuação ou Markdown."
         try:
             resposta = await _invocar(modelo, [
                 SystemMessage(content=instrucao_tema),
-                _contexto({"temas_permitidos": TEMAS, "fatos": fatos}),
+                _contexto({"temas_permitidos": temas_permitidos, "fatos": fatos}),
             ], campos=("tema",) if selecao else (), escolhas=selecao)
             tema = json.loads(resposta.text)["tema"] if selecao else resposta.text.strip().lower()
-            if tema not in TEMAS:
+            if not isinstance(tema, str) or tema not in temas_permitidos:
                 tema = "outro"
         except Exception as erro:
             LOGGER.warning("Preparação da explicação falhou (%s)", type(erro).__name__)

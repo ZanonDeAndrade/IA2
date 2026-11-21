@@ -106,8 +106,9 @@ def test_modo_json_rejeita_frase_factual_fora_do_esquema(monkeypatch):
             dados = json.loads(mensagens[-1].content)
             propriedades = opcoes["response_format"]["json_schema"]["schema"]["properties"]
             if "temas_permitidos" in dados:
-                assert "outro" in propriedades["tema"]["enum"]
-                return AIMessage(content='{"tema":"outro"}')
+                temas = propriedades["tema"]["enum"]
+                assert "outro" in temas and "garfo" not in temas and "mate" not in temas
+                return AIMessage(content='{"tema":"garfo"}')
             frases = dados["frases_permitidas"]
             assert propriedades["aconteceu"]["enum"] == frases["aconteceu"]
             texto = frases["aconteceu"][0] if dados["erros"] else "A dama das brancas se moveu."
@@ -120,7 +121,17 @@ def test_modo_json_rejeita_frase_factual_fora_do_esquema(monkeypatch):
         "fen": FEN, "lance_jogado": "d4", "melhor_lance": "e4", "linha_motor": LINHA,
     }))
     assert estado["pronto"] and estado["validada"] and estado["tentativas"] == 2
+    assert estado["tema"] == "outro" and estado["ficha"]["id"] == "outro"
     assert "peao das brancas" in estado["texto"] and "dama" not in estado["texto"]
+
+
+def test_garfo_com_xeque_exige_captura_do_outro_alvo_na_variante():
+    fen = "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32"
+    tabuleiro = chess.Board(fen)
+    linha = ["Rxg6+", "fxg6", "Qe7+", "Kh6", "Qxf8+"]
+    assert graph._garfo_com_xeque(tabuleiro, linha[:-1]) is None
+    assert graph._garfo_com_xeque(tabuleiro, linha) == {"atacante": "dama das brancas", "alvo": "torre"}
+    assert tabuleiro.fen() == fen
 
 
 def test_chat_rejeita_descricao_que_contradiz_a_vez(monkeypatch):
