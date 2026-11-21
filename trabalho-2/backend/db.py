@@ -1,199 +1,184 @@
-"""Cache em SQLite: partidas importadas, análises e explicações já geradas.
-
-Evita reprocessar partidas (RF11) e guarda o progresso das tarefas de análise.
-O caminho do banco vem de ``DB_PATH`` (padrão ``data/lance_a_lance.sqlite``) e
-os arquivos ``*.sqlite`` nunca entram no Git.
-"""
-
-from __future__ import annotations
+"""Armazenamento SQLite da API e dos caches das ferramentas."""
 
 import json
 import os
 import sqlite3
-import time
-import uuid
-from contextlib import contextmanager
-from datetime import datetime
+from contextlib import closing
+from datetime import datetime, timezone
+from hashlib import sha256
 from pathlib import Path
-from typing import Any, Iterator
+from uuid import uuid4
 
 RAIZ = Path(__file__).resolve().parents[1]
 
-ESQUEMA = """
-CREATE TABLE IF NOT EXISTS partidas (
-    id TEXT PRIMARY KEY,
-    usuario TEXT,                 -- usuário do Chess.com (minúsculo) ou NULL para PGN colado
-    origem TEXT NOT NULL,         -- 'chesscom' | 'pgn'
-    pgn TEXT NOT NULL,
-    cor_do_jogador TEXT NOT NULL, -- 'white' | 'black'
-    meta TEXT NOT NULL,           -- JSON: url, data, ritmo, adversario, resultado, abertura...
-    importada_em REAL NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_partidas_usuario ON partidas(usuario);
 
-CREATE TABLE IF NOT EXISTS analises (
-    partida_id TEXT PRIMARY KEY REFERENCES partidas(id),
-    lances TEXT NOT NULL,         -- JSON devolvido por analisar_partida
-    criada_em REAL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS explicacoes (
-    chave TEXT PRIMARY KEY,       -- fen antes do lance + lance em UCI
-    explicacao TEXT NOT NULL,
-    criada_em REAL NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS tarefas (
-    id TEXT PRIMARY KEY,
-    partida_id TEXT NOT NULL,
-    status TEXT NOT NULL,         -- pendente | em_andamento | concluida | erro
-    etapa TEXT,                   -- analisando | explicando
-    lance_atual INTEGER NOT NULL DEFAULT 0,
-    total_lances INTEGER NOT NULL DEFAULT 0,
-    erro TEXT,
-    iniciada_em TEXT NOT NULL,
-    atualizada_em REAL NOT NULL
-);
-"""
+def agora() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def caminho_db() -> Path:
-    return Path(os.getenv("DB_PATH", RAIZ / "data" / "lance_a_lance.sqlite"))
+def conectar(caminho: str | None = None) -> sqlite3.Connection:
+    destino = caminho or os.getenv("SQLITE_PATH") or str(RAIZ / "data" / "lance.sqlite")
+    Path(destino).parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(destino, timeout=15)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys=ON")
+    return conn
 
 
-@contextmanager
-def conectar() -> Iterator[sqlite3.Connection]:
-    caminho = caminho_db()
-    caminho.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(caminho, timeout=10)
-    con.row_factory = sqlite3.Row
-    try:
-        yield con
-        con.commit()
-    finally:
-        con.close()
+def inicializar_banco(conn: sqlite3.Connection) -> None:
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS partidas (
+            id TEXT PRIMARY KEY, usuario TEXT, dados TEXT NOT NULL, analise TEXT
+        );
+        CREATE INDEX IF NOT EXISTS partidas_usuario ON partidas(usuario);
+        CREATE TABLE IF NOT EXISTS lances (
+            partida_id TEXT NOT NULL REFERENCES partidas(id) ON DELETE CASCADE,
+            indice INTEGER NOT NULL, dados TEXT NOT NULL, PRIMARY KEY(partida_id, indice)
+        );
+        CREATE INDEX IF NOT EXISTS lance_posicao
+            ON lances(json_extract(dados,'$.fen_antes'), json_extract(dados,'$.san'));
+        CREATE TABLE IF NOT EXISTS explicacoes (
+            fen TEXT NOT NULL, lance TEXT NOT NULL, perfil TEXT NOT NULL, dados TEXT NOT NULL,
+            PRIMARY KEY(fen, lance, perfil)
+        );
+        CREATE TABLE IF NOT EXISTS tarefas (
+            id TEXT PRIMARY KEY, partida_id TEXT NOT NULL REFERENCES partidas(id) ON DELETE CASCADE,
+            status TEXT NOT NULL, inicio TEXT NOT NULL, atual INTEGER NOT NULL,
+            total INTEGER NOT NULL, erro TEXT
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS tarefa_ativa ON tarefas(partida_id)
+            WHERE status IN ('pendente', 'em_andamento');
+        CREATE TABLE IF NOT EXISTS cache_mcp (
+            chave TEXT PRIMARY KEY, criado REAL NOT NULL, dados TEXT NOT NULL
+        );
+    """)
 
 
-def inicializar_banco() -> None:
-    """Cria as tabelas e marca como erro as tarefas interrompidas por um reinício."""
-    with conectar() as con:
-        con.execute("PRAGMA journal_mode=WAL")
-        con.executescript(ESQUEMA)
-        con.execute("UPDATE tarefas SET status='erro', erro='Servidor reiniciado durante a análise' "
-                    "WHERE status IN ('pendente','em_andamento')")
+def salvar_partida(conn, partida: dict) -> str:
+    origem = partida.get("url") or partida.get("chave_pgn") or partida["pgn"]
+    usuario = (partida.get("usuario") or "").casefold()
+    chave = (origem, usuario, partida["cor_do_jogador"])
+    id_ = sha256(json.dumps(chave, ensure_ascii=False).encode()).hexdigest()[:24]
+    dados = {k: v for k, v in partida.items() if k != "chave_pgn"}
+    with conn:
+        conn.execute("INSERT INTO partidas(id, usuario, dados) VALUES (?, ?, ?) ON CONFLICT(id) DO NOTHING",
+                     (id_, usuario, json.dumps(dados, ensure_ascii=False)))
+    return id_
 
 
-# -- partidas -------------------------------------------------------------------
-
-_COLUNAS = {"id", "usuario", "origem", "pgn", "cor_do_jogador"}
-
-
-def salvar_partida(p: dict[str, Any]) -> str:
-    meta = {k: v for k, v in p.items() if k not in _COLUNAS}
-    with conectar() as con:
-        con.execute(
-            "INSERT INTO partidas VALUES (?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET meta=excluded.meta",
-            (p["id"], p.get("usuario"), p["origem"], p["pgn"], p["cor_do_jogador"],
-             json.dumps(meta, ensure_ascii=False), time.time()),
-        )
-    return p["id"]
-
-
-def _partida(linha: sqlite3.Row) -> dict[str, Any]:
-    return {**json.loads(linha["meta"]), "id": linha["id"], "usuario": linha["usuario"],
-            "origem": linha["origem"], "pgn": linha["pgn"], "cor_do_jogador": linha["cor_do_jogador"]}
-
-
-def obter_partida(partida_id: str) -> dict[str, Any] | None:
-    with conectar() as con:
-        linha = con.execute("SELECT * FROM partidas WHERE id = ?", (partida_id,)).fetchone()
-    return _partida(linha) if linha else None
-
-
-def partidas_do_usuario(usuario: str) -> list[dict[str, Any]]:
-    with conectar() as con:
-        linhas = con.execute("SELECT * FROM partidas WHERE usuario = ?", (usuario.lower(),)).fetchall()
-    partidas = [_partida(l) for l in linhas]
-    partidas.sort(key=lambda p: p.get("data_hora") or p.get("data") or "", reverse=True)
-    return partidas
-
-
-# -- análises -------------------------------------------------------------------
-
-def salvar_analise(partida_id: str, lances: list[dict]) -> None:
-    with conectar() as con:
-        con.execute("INSERT OR REPLACE INTO analises VALUES (?,?,?)",
-                    (partida_id, json.dumps(lances, ensure_ascii=False), time.time()))
-
-
-def obter_analise(partida_id: str) -> list[dict] | None:
-    with conectar() as con:
-        linha = con.execute("SELECT lances FROM analises WHERE partida_id = ?", (partida_id,)).fetchone()
-    return json.loads(linha["lances"]) if linha else None
-
-
-# -- explicações ----------------------------------------------------------------
-
-def chave_explicacao(fen: str, lance_uci: str) -> str:
-    return f"{fen}|{lance_uci}"
-
-
-def salvar_explicacao(fen: str, lance_uci: str, explicacao: dict[str, Any]) -> None:
-    with conectar() as con:
-        con.execute("INSERT OR REPLACE INTO explicacoes VALUES (?,?,?)",
-                    (chave_explicacao(fen, lance_uci), json.dumps(explicacao, ensure_ascii=False), time.time()))
-
-
-def obter_explicacao(fen: str, lance_uci: str) -> dict[str, Any] | None:
-    with conectar() as con:
-        linha = con.execute("SELECT explicacao FROM explicacoes WHERE chave = ?",
-                            (chave_explicacao(fen, lance_uci),)).fetchone()
-    return json.loads(linha["explicacao"]) if linha else None
-
-
-# -- tarefas --------------------------------------------------------------------
-
-def criar_tarefa(partida_id: str) -> dict[str, Any]:
-    tarefa_id = "tarefa-" + uuid.uuid4().hex[:10]
-    with conectar() as con:
-        con.execute("INSERT INTO tarefas VALUES (?,?,?,?,?,?,?,?,?)",
-                    (tarefa_id, partida_id, "pendente", None, 0, 0, None,
-                     datetime.now().astimezone().isoformat(timespec="seconds"), time.time()))
-    return obter_tarefa(tarefa_id)
-
-
-def atualizar_tarefa(tarefa_id: str, **campos: Any) -> None:
-    campos["atualizada_em"] = time.time()
-    sets = ", ".join(f"{k} = ?" for k in campos)
-    with conectar() as con:
-        con.execute(f"UPDATE tarefas SET {sets} WHERE id = ?", (*campos.values(), tarefa_id))
-
-
-def obter_tarefa(tarefa_id: str) -> dict[str, Any] | None:
-    """Tarefa no formato de ``frontend/src/mocks/tarefa.json``."""
-    with conectar() as con:
-        t = con.execute("SELECT * FROM tarefas WHERE id = ?", (tarefa_id,)).fetchone()
-    if not t:
+def obter_partida(conn, partida_id: str, perfil: str = "") -> dict | None:
+    partida = conn.execute("SELECT * FROM partidas WHERE id=?", (partida_id,)).fetchone()
+    if partida is None:
         return None
-    total = t["total_lances"]
-    return {
-        "id": t["id"],
-        "tarefa_id": t["id"],
-        "partida_id": t["partida_id"],
-        "status": t["status"],
-        "etapa": t["etapa"],
-        "progresso": {
-            "lance_atual": t["lance_atual"],
-            "total_lances": total,
-            "percentual": round(100 * t["lance_atual"] / total, 1) if total else 0.0,
-        },
-        "iniciada_em": t["iniciada_em"],
-        "erro": t["erro"],
-    }
+    registros = conn.execute("""
+        SELECT l.dados, e.dados AS explicacao FROM lances l
+        LEFT JOIN explicacoes e ON e.fen=json_extract(l.dados,'$.fen_antes')
+            AND e.lance=json_extract(l.dados,'$.san') AND e.perfil=?
+        WHERE l.partida_id=? ORDER BY l.indice
+        """, (perfil, partida_id))
+    lances = []
+    for linha in registros:
+        lance = json.loads(linha["dados"])
+        lance["explicacao"] = json.loads(linha["explicacao"]) if linha["explicacao"] else None
+        lances.append(lance)
+    tarefa = conn.execute("SELECT status FROM tarefas WHERE partida_id=? ORDER BY rowid DESC LIMIT 1",
+                          (partida_id,)).fetchone()
+    return {"id": partida_id, **json.loads(partida["dados"]), "lances": lances,
+            "status_analise": tarefa["status"] if tarefa else "pendente",
+            "analise": partida["analise"]}
 
 
-def ultima_tarefa(partida_id: str) -> dict[str, Any] | None:
-    with conectar() as con:
-        linha = con.execute("SELECT id FROM tarefas WHERE partida_id = ? ORDER BY atualizada_em DESC LIMIT 1",
-                            (partida_id,)).fetchone()
-    return obter_tarefa(linha["id"]) if linha else None
+def salvar_analise(conn, partida_id: str, lances: list[dict], assinatura: str | None = None,
+                   tarefa_id: str | None = None) -> None:
+    with conn:
+        conn.executemany("INSERT OR REPLACE INTO lances VALUES (?, ?, ?)",
+                         ((partida_id, l["indice"], json.dumps(l, ensure_ascii=False)) for l in lances))
+        if assinatura is not None:
+            conn.execute("UPDATE partidas SET analise=? WHERE id=?", (assinatura, partida_id))
+            if tarefa_id is not None:
+                conn.execute("UPDATE tarefas SET status='concluida', atual=total WHERE id=?", (tarefa_id,))
+        elif tarefa_id is not None and lances:
+            conn.execute("UPDATE tarefas SET atual=? WHERE id=?", (lances[-1]["indice"], tarefa_id))
+
+
+def salvar_explicacao(conn, fen: str, lance: str, explicacao: dict, perfil: str = "") -> None:
+    with conn:
+        conn.execute("INSERT OR REPLACE INTO explicacoes VALUES (?, ?, ?, ?)",
+                     (fen, lance, perfil, json.dumps(explicacao, ensure_ascii=False)))
+
+
+def obter_explicacao(conn, fen: str, lance: str, perfil: str) -> dict | None:
+    item = conn.execute("SELECT dados FROM explicacoes WHERE fen=? AND lance=? AND perfil=?",
+                        (fen, lance, perfil)).fetchone()
+    return json.loads(item["dados"]) if item else None
+
+
+def obter_lance_analisado(conn, fen: str, lance: str, assinatura: str) -> dict | None:
+    item = conn.execute("""
+        SELECT l.dados FROM lances l JOIN partidas p ON p.id=l.partida_id
+        WHERE json_extract(l.dados,'$.fen_antes')=? AND json_extract(l.dados,'$.san')=? AND p.analise=?
+        ORDER BY l.partida_id LIMIT 1
+        """, (fen, lance, assinatura)).fetchone()
+    return json.loads(item["dados"]) if item else None
+
+
+def iniciar_tarefa(conn, id_partida: str, assinatura: str) -> tuple[str, bool]:
+    conn.execute("BEGIN IMMEDIATE")
+    with conn:
+        partida = conn.execute("SELECT dados, analise FROM partidas WHERE id=?", (id_partida,)).fetchone()
+        if partida is None:
+            raise KeyError(id_partida)
+        tarefa = conn.execute("""SELECT id, status FROM tarefas WHERE partida_id=?
+            ORDER BY rowid DESC LIMIT 1""", (id_partida,)).fetchone()
+        if tarefa and (tarefa["status"] in {"pendente", "em_andamento"} or partida["analise"] == assinatura):
+            return tarefa["id"], False
+        ativas = conn.execute("SELECT count(*) FROM tarefas WHERE status IN ('pendente','em_andamento')").fetchone()[0]
+        if ativas >= 8:
+            raise OverflowError("A fila de análises está cheia.")
+        id_ = uuid4().hex
+        total = json.loads(partida["dados"])["total_lances"]
+        conn.execute("DELETE FROM lances WHERE partida_id=?", (id_partida,))
+        conn.execute("UPDATE partidas SET analise=NULL WHERE id=?", (id_partida,))
+        conn.execute("INSERT INTO tarefas VALUES (?, ?, 'pendente', ?, 0, ?, NULL)",
+                     (id_, id_partida, agora(), total))
+        return id_, True
+
+
+def atualizar_tarefa(conn, tarefa_id: str, progresso: dict) -> None:
+    with conn:
+        conn.execute("UPDATE tarefas SET status=?, atual=?, erro=? WHERE id=?",
+                     (progresso["status"], progresso["atual"], progresso.get("erro"), tarefa_id))
+
+
+def obter_tarefa(conn, tarefa_id: str) -> dict | None:
+    linha = conn.execute("SELECT * FROM tarefas WHERE id=?", (tarefa_id,)).fetchone()
+    if not linha:
+        return None
+    atual, total = linha["atual"], linha["total"]
+    return {"id": tarefa_id, "partida_id": linha["partida_id"], "status": linha["status"],
+            "progresso": {"lance_atual": atual, "total_lances": total, "percentual": round(100 * atual / total, 1)},
+            "iniciada_em": linha["inicio"], "erro": linha["erro"],
+            "resultado": f"/api/partidas/{linha['partida_id']}" if linha["status"] == "concluida" else None}
+
+
+def interromper_tarefas(conn) -> None:
+    with conn:
+        conn.execute("""UPDATE tarefas SET status='erro', erro='Análise interrompida. Inicie novamente.'
+                     WHERE status IN ('pendente','em_andamento')""")
+
+
+def partidas_analisadas(conn, usuario: str, perfil: str):
+    ids = conn.execute("SELECT id FROM partidas WHERE usuario=? AND analise IS NOT NULL", (usuario.casefold(),))
+    return [obter_partida(conn, linha["id"], perfil) for linha in ids]
+
+
+def abrir_cache():
+    """Abre o cache das ferramentas mesmo quando o servidor MCP roda sozinho."""
+    conn = conectar()
+    try:
+        inicializar_banco(conn)
+    except sqlite3.Error:
+        conn.close()
+        raise
+    return closing(conn)
