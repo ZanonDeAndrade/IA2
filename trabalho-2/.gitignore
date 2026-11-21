@@ -1,0 +1,7 @@
+/data/chroma/
+/evaluation/results/execucao/
+/evaluation/results/execucao-*/
+/data/*.sqlite*
+/data/*.db*
+/data/*.zst*
+/data/*.csv

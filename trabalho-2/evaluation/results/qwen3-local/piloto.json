@@ -1,0 +1,132 @@
+{
+  "id": "lichess:00ldC",
+  "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+  "lance_jogado": "Rd2",
+  "status": "explicacao_validada",
+  "etapa": "agente",
+  "ferramentas_preflight": [
+    {
+      "nome": "analisar_posicao",
+      "argumentos": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "profundidade": 18,
+        "multipv": 3
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31"
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32"
+      }
+    },
+    {
+      "nome": "validar_lances",
+      "argumentos": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lances": [
+          "Rd2",
+          "e5"
+        ]
+      }
+    },
+    {
+      "nome": "buscar_conceitos",
+      "argumentos": {
+        "pergunta": "garfo",
+        "k": 4,
+        "tema": "garfo"
+      }
+    }
+  ],
+  "motor": {
+    "avaliacao": {
+      "tipo": "cp",
+      "valor": 487
+    },
+    "linha_principal": [
+      "e5",
+      "h3",
+      "Qd4",
+      "R6f2",
+      "Rd7",
+      "Qf6+",
+      "Kg8",
+      "Re2",
+      "e4",
+      "Qh4",
+      "f5",
+      "Ree1",
+      "Qe5",
+      "Qg5",
+      "Rf6",
+      "Kg1",
+      "Rd8"
+    ]
+  },
+  "fonte_preflight": {
+    "id": "garfo",
+    "titulo": "Garfo",
+    "arquivo": "knowledge_base/garfo.md"
+  },
+  "explicacao": "O lance da partida deslocou uma torre das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perdas e manter a posição em equilíbrio. O Stockfish indicou `e5` como alternativa.",
+  "tema_identificado": "garfo",
+  "melhor_lance": "e5",
+  "validada": true,
+  "fonte_agente": {
+    "id": "garfo",
+    "titulo": "Garfo",
+    "arquivo": "knowledge_base/garfo.md"
+  },
+  "fallback": false,
+  "tentativas": 1,
+  "ferramentas_agente": [
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31"
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32"
+      }
+    },
+    {
+      "nome": "analisar_posicao",
+      "argumentos": {
+        "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32",
+        "profundidade": 16,
+        "multipv": 1
+      }
+    },
+    {
+      "nome": "buscar_conceitos",
+      "argumentos": {
+        "pergunta": "Garfo",
+        "tema": "garfo",
+        "k": 4
+      }
+    },
+    {
+      "nome": "validar_lances",
+      "argumentos": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lances": [
+          "e5"
+        ]
+      }
+    }
+  ],
+  "erros": [],
+  "chamadas_llm": 2,
+  "tokens_entrada": 1923,
+  "tokens_saida": 106,
+  "rascunhos_invalidos": 0
+}

@@ -1,51 +1,76 @@
-# Lance a Lance – esqueleto do Docker Compose (em construção)
-#
-# Sobe tudo com um comando:   docker compose up
-# As variáveis vêm do arquivo .env (copie de .env.example).
-# Os Dockerfiles de cada serviço ainda serão criados.
+x-analise: &analise
+  SQLITE_PATH: /var/lib/lance/lance.sqlite
+  ANALISE_PROFUNDIDADE: ${ANALISE_PROFUNDIDADE:-12}
+  ANALISE_REVISAO_MOTOR: ${ANALISE_REVISAO_MOTOR:-1}
 
 services:
-  # Servidor de ferramentas MCP (Stockfish, python-chess, Chess.com, puzzles, RAG)
   mcp_server:
     build:
       context: .
-      dockerfile: mcp_server/Dockerfile   # a criar
-    env_file: .env
-    # O binário do Stockfish deve estar na imagem (ou montado via volume) no
-    # caminho definido em STOCKFISH_PATH.
-    # volumes:
-    #   - ./data:/app/data                   # recorte da base de puzzles (SQLite)
-    #   - ./knowledge_base:/app/knowledge_base
-    #   - chroma_data:/app/chroma            # índice do ChromaDB
-    # ports:
-    #   - "8001:8001"                        # se usar transporte HTTP/SSE em vez de stdio
+      dockerfile: mcp_server/Dockerfile
+      additional_contexts:
+        lance_base: service:backend
+    init: true
+    environment:
+      <<: *analise
+      STOCKFISH_PATH: /usr/games/stockfish
+      CHROMA_PATH: /var/lib/chroma
+      HF_HOME: /var/lib/huggingface
+      HF_HUB_DISABLE_XET: "1"
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
+      OMP_NUM_THREADS: ${OMP_NUM_THREADS:-4}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-}
+      CHESSCOM_USER_AGENT: ${CHESSCOM_USER_AGENT:-}
+      PUZZLES_DB: /var/lib/lance/puzzles.sqlite
+    volumes:
+      - dados:/var/lib/lance
+      - chroma:/var/lib/chroma
+      - modelos:/var/lib/huggingface
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8001/healthz', timeout=2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 180s
 
-  # API FastAPI + agente LangGraph
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile       # a criar
-    env_file: .env
+      dockerfile: backend/Dockerfile
+    init: true
+    environment:
+      <<: *analise
+      MCP_URL: http://mcp_server:8001/mcp
+      MCP_HEALTH_URL: http://mcp_server:8001/healthz
+      CORS_ORIGENS: ${CORS_ORIGENS:-http://localhost:5173,http://127.0.0.1:5173}
+      LLM_PROVIDER: ${LLM_PROVIDER:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_TEMPERATURA: ${LLM_TEMPERATURA:-0}
+      LLM_RACIOCINIO: ${LLM_RACIOCINIO:-}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-}
+      LLM_TIMEOUT: ${LLM_TIMEOUT:-25}
+      LLM_JSON_MODE: ${LLM_JSON_MODE:-0}
+      LLM_REVISAO: ${LLM_REVISAO:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - dados:/var/lib/lance
     ports:
-      - "8000:8000"
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
     depends_on:
-      - mcp_server
-    # volumes:
-    #   - sqlite_data:/app/db                # cache de análises e explicações (SQLite)
-    # command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+      mcp_server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/healthz', timeout=2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
 
-  # Interface React + Vite
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile                # a criar
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
-    # environment:
-    #   - VITE_API_URL=http://localhost:8000
-
-# volumes:
-#   chroma_data:
-#   sqlite_data:
+volumes:
+  dados:
+  chroma:
+  modelos:

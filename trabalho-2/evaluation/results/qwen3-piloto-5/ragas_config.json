@@ -1,0 +1,10 @@
+{
+  "versao": "0.4.3",
+  "metrica": "Faithfulness",
+  "modelo": "qwen3:1.7b",
+  "temperatura": 0.0,
+  "contexto": "trecho recuperado e entregue ao LLM",
+  "timeout_s": 210.0,
+  "endpoint": "http://127.0.0.1:11435",
+  "raciocinio": "none"
+}

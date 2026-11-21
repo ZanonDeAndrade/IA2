@@ -5,22 +5,22 @@
 chess
 
 # Servidor de ferramentas MCP
-fastmcp
+# FastMCP 4 usa o SDK MCP 2, incompatível com o adapter abaixo.
+fastmcp==3.4.11
+mcp==1.30.0
 
 # Agente
-langgraph
+langgraph==1.0.8
 langchain-core
-langchain-mcp-adapters
+langchain-mcp-adapters==0.3.1
 
-# Provedor de LLM: escolher UM e descomentar, conforme LLM_PROVIDER no .env
-# langchain-anthropic
-# langchain-openai
-# langchain-google-genai
-# langchain-ollama
+# OpenAI ou endpoint compatível, incluindo Ollama
+langchain-openai
 
 # RAG (base vetorial e embeddings multilíngues)
 chromadb
 sentence-transformers
+PyYAML
 
 # API
 fastapi
@@ -36,7 +36,9 @@ httpx
 python-dotenv
 
 # Avaliação
-ragas
+ragas==0.4.3
+# O RAGAS 0.4.3 importa chat_models.vertexai, removido no langchain-community 0.4.2.
+langchain-community==0.4.1
 matplotlib
 
 # Testes

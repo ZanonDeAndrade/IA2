@@ -19,7 +19,12 @@ Execução (a partir de ``trabalho-2/``):
     fastmcp dev mcp_server/server.py     # inspetor do FastMCP
 """
 
+import argparse
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastmcp import FastMCP
+from starlette.responses import JSONResponse
 
 from mcp_server.tools.board import descrever_posicao, validar_lances
 from mcp_server.tools.chesscom import buscar_partidas
@@ -43,9 +48,23 @@ for ferramenta in FERRAMENTAS:
     mcp.tool()(ferramenta)
 
 
+@mcp.custom_route("/healthz", methods=["GET"])
+async def health(_request):
+    return JSONResponse({"status": "ok"})
+
+
 def main() -> None:
-    """Sobe o servidor MCP (transporte stdio por padrão)."""
-    mcp.run()
+    """Sobe o mesmo servidor via stdio ou Streamable HTTP."""
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--http", action="store_true")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int, default=8001)
+    args = parser.parse_args()
+    if args.http:
+        mcp.run(transport="streamable-http", host=args.host, port=args.port, stateless_http=True, json_response=True)
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":

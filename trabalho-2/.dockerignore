@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+.venv
+**/__pycache__
+.pytest_cache
+frontend
+data/*.db*
+data/*.sqlite*
+data/*.zst*
+data/chroma
+evaluation/results
+docs
+*.pdf

@@ -1,0 +1,345 @@
+{
+  "api": "http://127.0.0.1:18731",
+  "modelo": "qwen3:1.7b",
+  "explicacoes": [
+    {
+      "indice": 62,
+      "http": 200,
+      "segundos": 11.382,
+      "resposta": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lance_jogado": "Rd2",
+        "melhor_lance": "Qd4",
+        "melhor_lance_uci": "b2d4",
+        "classe": "erro_grave",
+        "queda": 75.14716891802516,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou uma torre das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perdas e manter a posição em equilíbrio. O Stockfish indicou `Qd4` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": false
+      }
+    },
+    {
+      "indice": 62,
+      "http": 200,
+      "segundos": 0.005,
+      "resposta": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lance_jogado": "Rd2",
+        "melhor_lance": "Qd4",
+        "melhor_lance_uci": "b2d4",
+        "classe": "erro_grave",
+        "queda": 75.14716891802516,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou uma torre das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perdas e manter a posição em equilíbrio. O Stockfish indicou `Qd4` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": true
+      }
+    },
+    {
+      "indice": 24,
+      "http": 200,
+      "segundos": 10.784,
+      "resposta": {
+        "fen": "rn2k2r/pp2bppp/2p1pn2/6B1/2P3q1/2NBQ3/PP3PPP/3R1RK1 b kq - 3 12",
+        "lance_jogado": "O-O",
+        "melhor_lance": "h6",
+        "melhor_lance_uci": "h7h6",
+        "classe": "erro_grave",
+        "queda": 30.989594895797207,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou um rei das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma dama. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perdas e garantir a segurança das peças. O Stockfish indicou `h6` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": false
+      }
+    },
+    {
+      "indice": 36,
+      "http": 200,
+      "segundos": 10.689,
+      "resposta": {
+        "fen": "r1q2rk1/pp1nbppp/2p1pn2/4B3/2P2P2/P1NBQ3/1P4PP/3R1RK1 b - - 0 18",
+        "lance_jogado": "Ng4",
+        "melhor_lance": "Bc5",
+        "melhor_lance_uci": "e7c5",
+        "classe": "erro",
+        "queda": 24.047408986817423,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou um cavalo das pretas. Na posição resultante, o lado a jogar dispõe de pelo menos um xeque legal. Evite mover o rei ou a dama sem verificar se as casas de salto do cavalo inimigo estão disponíveis, pois isso pode criar uma situação de xeque legal para o lado a jogar. O Stockfish indicou `Bc5` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": false
+      }
+    },
+    {
+      "indice": 64,
+      "http": 200,
+      "segundos": 14.046,
+      "resposta": {
+        "fen": "5r2/pp3pk1/2p1R1p1/6Qp/2P5/P7/1q1r2PP/5R1K b - - 0 32",
+        "lance_jogado": "fxe6",
+        "melhor_lance": "Rf2",
+        "melhor_lance_uci": "d2f2",
+        "classe": "erro_grave",
+        "queda": 70.39343241447841,
+        "tema": "garfo",
+        "tema_label": "Garfo",
+        "texto": "O lance da partida deslocou um peao das pretas. Na variante analisada, a mesma peça dá xeque e também ataca uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia eficaz para evitar perigos e manter a posição controlada. O Stockfish indicou `Rf2` como alternativa.",
+        "ficha": {
+          "id": "garfo",
+          "titulo": "Garfo",
+          "arquivo": "knowledge_base/garfo.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": false
+      }
+    }
+  ],
+  "chat": [],
+  "partida": {
+    "id": "22adcf954fc8fbbe7041a7a9",
+    "usuario": "Stonewall_BoyRivers",
+    "lances": 81,
+    "fonte": "https://lichess.org/game/xdFXCpYF"
+  },
+  "relatorio": {
+    "usuario": "Stonewall_BoyRivers",
+    "partidas_analisadas": 1,
+    "rating_estimado": 1828,
+    "temas_fracos": [
+      {
+        "tema": "fork",
+        "tema_label": "Garfo",
+        "erros": 4
+      }
+    ],
+    "erros_sem_tema": 0,
+    "evolucao": [
+      {
+        "imprecisoes": 7,
+        "erros": 1,
+        "erros_graves": 3,
+        "precisao": 88.8,
+        "lances_do_jogador_analisados": 40,
+        "partida_id": "22adcf954fc8fbbe7041a7a9",
+        "data": "2022-11-27"
+      }
+    ],
+    "puzzles_recomendados": [
+      {
+        "id": "05Vzs",
+        "fen": "2kr2r1/pp5p/1q2pp2/8/8/1N1n3P/PP2QPP1/3R1RK1 b - - 4 19",
+        "fen_origem": "2kr2r1/pp5p/1q2pp2/8/8/1N1n3P/PP2QPP1/R4RK1 w - - 3 19",
+        "lance_preparatorio": "a1d1",
+        "solucao": [
+          "g8g2",
+          "g1g2",
+          "d3f4",
+          "g2f3",
+          "f4e2"
+        ],
+        "rating": 1829,
+        "temas": [
+          "advantage",
+          "attraction",
+          "fork",
+          "long",
+          "master",
+          "middlegame",
+          "sacrifice"
+        ],
+        "temas_label": [
+          "advantage",
+          "Atração",
+          "Garfo",
+          "long",
+          "master",
+          "Meio-jogo",
+          "Sacrifício"
+        ],
+        "url": "https://lichess.org/training/05Vzs"
+      },
+      {
+        "id": "0M4wO",
+        "fen": "r4k2/pp3p1p/1N3b2/8/2Bn4/3PK3/PPP3rP/R2QR3 b - - 0 19",
+        "fen_origem": "r4k2/pp3p1p/1q3b2/3N4/2Bn4/3PK3/PPP3rP/R2QR3 w - - 6 19",
+        "lance_preparatorio": "d5b6",
+        "solucao": [
+          "a8e8",
+          "c4e6",
+          "e8e6",
+          "e3f4",
+          "f6g5"
+        ],
+        "rating": 1829,
+        "temas": [
+          "fork",
+          "long",
+          "mate",
+          "mateIn3",
+          "middlegame"
+        ],
+        "temas_label": [
+          "Garfo",
+          "long",
+          "Mate",
+          "Mate em 3",
+          "Meio-jogo"
+        ],
+        "url": "https://lichess.org/training/0M4wO"
+      },
+      {
+        "id": "0PKwP",
+        "fen": "2r4r/pp2k3/1qn1ppp1/3p4/1P3PP1/P2Qn2N/7P/1RB2R1K w - - 1 23",
+        "fen_origem": "2r4r/pp2k3/1qn1ppp1/3p1n2/1P3PP1/P2Q3N/7P/1RB2R1K b - - 0 22",
+        "lance_preparatorio": "f5e3",
+        "solucao": [
+          "c1e3",
+          "h8h3",
+          "e3c5",
+          "b6c5",
+          "d3h3"
+        ],
+        "rating": 1827,
+        "temas": [
+          "advantage",
+          "collinearMove",
+          "discoveredAttack",
+          "fork",
+          "long",
+          "middlegame"
+        ],
+        "temas_label": [
+          "advantage",
+          "collinearMove",
+          "Ataque descoberto",
+          "Garfo",
+          "long",
+          "Meio-jogo"
+        ],
+        "url": "https://lichess.org/training/0PKwP"
+      },
+      {
+        "id": "0Z7wP",
+        "fen": "r6k/2p2Qp1/7p/n7/p2P4/7P/P4KP1/3r4 w - - 1 38",
+        "fen_origem": "r6k/2p2Qp1/7p/n7/p2P4/7P/P4KP1/2r5 b - - 0 37",
+        "lance_preparatorio": "c1d1",
+        "solucao": [
+          "f7f3",
+          "a8b8",
+          "f3d1"
+        ],
+        "rating": 1827,
+        "temas": [
+          "advantage",
+          "endgame",
+          "fork",
+          "short"
+        ],
+        "temas_label": [
+          "advantage",
+          "Final",
+          "Garfo",
+          "short"
+        ],
+        "url": "https://lichess.org/training/0Z7wP"
+      },
+      {
+        "id": "0cI2F",
+        "fen": "2r5/5kpr/p1np2pP/np1p1pP1/3PpP2/1P2P1N1/P1BK2R1/7R w - - 5 36",
+        "fen_origem": "2r5/4nkpr/p2p2pP/np1p1pP1/3PpP2/1P2P1N1/P1BK2R1/7R b - - 4 35",
+        "lance_preparatorio": "e7c6",
+        "solucao": [
+          "g3f5",
+          "g6f5",
+          "g5g6",
+          "f7f6",
+          "g6h7"
+        ],
+        "rating": 1833,
+        "temas": [
+          "advancedPawn",
+          "advantage",
+          "fork",
+          "long",
+          "middlegame",
+          "sacrifice"
+        ],
+        "temas_label": [
+          "advancedPawn",
+          "advantage",
+          "Garfo",
+          "long",
+          "Meio-jogo",
+          "Sacrifício"
+        ],
+        "url": "https://lichess.org/training/0cI2F"
+      }
+    ],
+    "puzzles_personalizados_por_tema": true,
+    "aviso_puzzles": null
+  }
+}

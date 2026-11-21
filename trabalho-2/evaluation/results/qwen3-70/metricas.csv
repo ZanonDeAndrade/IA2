@@ -1,0 +1,4 @@
+versao,previstas,executadas,explicacoes,completas,incompletas,falhas,fallbacks,invalidos_pct,melhor_pct,tema_pct,tempo_media_s,tempo_s_n,tokens_total,tokens_n,custo_total_usd,custo_n,ragas_media,ragas_n,humana_media,humana_n,rascunhos_invalidos,rascunhos_n
+A,70,70,69,69,1,0,0,71.01449275362319,0.0,14.492753623188406,9.274185729855162,69,27364,70,,0,,0,,0,,0
+B,70,70,70,70,0,0,0,21.428571428571427,100.0,12.857142857142856,10.338419183414329,70,33257,70,,0,,0,,0,,0
+C,70,70,69,69,1,0,1,0.0,100.0,11.594202898550725,12.856442221333293,69,168295,70,,0,,0,,0,0,79
