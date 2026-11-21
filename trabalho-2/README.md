@@ -161,12 +161,12 @@ confirmou a persistência de lances e tarefas ao reiniciar os serviços.
 O pré-teste e a geração real para `lichess:00ldC` passaram com Ollama
 0.40.16 e Qwen3 `qwen3:1.7b` Q4_K_M. O agente recuperou a ficha de garfo,
 confirmou `e5` na análise ao vivo do Stockfish 11 e publicou a explicação em
-português sem fallback. Na API, uma segunda solicitação recuperou a explicação
-do SQLite. Quatro erros de uma partida pública foram explicados. O relatório
-agregou o tema `fork` e retornou cinco puzzles reais. O chat foi exercitado por
-HTTP com cinco perguntas sobre o tabuleiro e um teste adversarial. A regressão
-desta rodada teve **121 testes aprovados**, sem falhas ou testes ignorados.
-[Piloto CLI](evaluation/results/qwen3-local/piloto.json) · [Verificação HTTP](evaluation/results/qwen3-local/http.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
+português sem fallback. Na rodada inicial da API, a segunda solicitação
+recuperou a explicação do SQLite. Quatro erros de uma partida pública foram
+explicados, e o relatório retornou cinco puzzles reais. O chat foi exercitado
+por HTTP com cinco perguntas sobre o tabuleiro e um teste adversarial.
+A regressão final teve **122 testes aprovados**, sem falhas ou testes ignorados.
+[Piloto revisado](evaluation/results/qwen3-local/piloto-revisado.json) · [Verificação HTTP](evaluation/results/qwen3-local/http.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
 
 O Compose também passou pela geração e pelo chat com o Ollama do host. Com
 Stockfish 15.1, o contêiner retornou `Rd7` e persistiu a explicação. A segunda
@@ -178,7 +178,13 @@ a frases verificáveis. A geração do modelo produz a lição, que entra no
 texto submetido à validação de lances. A arquitetura mantém a variante ao
 vivo do piloto separada da referência congelada do experimento A/B/C.
 
-O dataset efetivo tem **70 de 100 posições**. Faltam 30 posições rotuladas de
+O dataset efetivo tem **70 de 100 posições**. A rodada principal produziu 208
+explicações completas em 210 tentativas. C obteve 0% de lances ilegais e 100%
+de acordo com a melhor alternativa fornecida pelo motor. O acerto de tema
+de 11,59% motivou uma revisão no perfil estruturado. A fidelidade RAGAS foi
+0,175 em dez respostas do perfil original. [Relatório da rodada](evaluation/results/qwen3-70/relatorio.md)
+
+Faltam 30 posições rotuladas de
 PGNs da equipe ou colegas e as avaliações cegas dos três participantes. O
 [relatório de preparação](evaluation/results/preparacao/relatorio.md) registra
 o estado histórico anterior à inferência real. A configuração local e os

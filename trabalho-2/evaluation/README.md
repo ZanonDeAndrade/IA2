@@ -5,8 +5,8 @@
 O [dataset](dataset.jsonl) reúne 70 posições da base aberta da Lichess. As 30
 posições anotadas do grupo ou de colegas estão pendentes. A busca no
 repositório, no histórico e no Drive acessível não encontrou PGNs da equipe.
-Cada linha contém o FEN anterior ao erro, a jogada realizada em SAN, a melhor alternativa do
-Stockfish nesse mesmo FEN, o tema, a origem e os dados da avaliação pelo motor.
+Cada linha contém o FEN anterior ao erro, a jogada realizada em SAN, a melhor
+alternativa do Stockfish nesse FEN, o tema, a origem e os dados do motor.
 
 Na [base oficial de puzzles](https://database.lichess.org/#puzzles), o FEN
 precede a primeira jogada de `Moves`. Esta jogada foi realizada pelo oponente
@@ -185,11 +185,13 @@ do grafo. A explicação resume diferenças factuais do tabuleiro e envia só
 o conteúdo conceitual da ficha ao modelo e ao juiz.
 
 Nesse perfil, o LangGraph pede ao Stockfish a melhor variante após o erro,
-com profundidade 16 e MultiPV 1. Um garfo com xeque detectado nos primeiros
-quatro meios-lances oferece evidência objetiva para o tema. As duas frases
-sobre a posição ficam restritas a fatos verificáveis e o LLM redige a lição
-em português. O sistema acrescenta a melhor alternativa e confere os lances.
-Esse procedimento é uma heurística para um motivo tático na linha analisada.
+com profundidade 16 e MultiPV 1. A revisão temática confirma `garfo` quando a
+peça que dá xeque captura o outro alvo em sua próxima jogada na variante. Um
+anúncio positivo de mate pelo Stockfish tem prioridade. O esquema restringe
+os dois rótulos a essas evidências. As frases sobre a posição usam fatos
+verificáveis e o LLM redige a lição em português. O sistema acrescenta a
+melhor alternativa e confere os lances. Garfos sem xeque ou sem captura na
+variante principal podem ficar sem esse rótulo no perfil estruturado.
 
 A saída JSON registra as chamadas do pré-teste, as chamadas do agente e, em
 caso de sucesso, a ficha usada e a explicação validada. Se a descrição, a ficha
@@ -198,10 +200,10 @@ para e registra a ferramenta. Um fallback deixa o piloto incompleto. O piloto
 fica fora do checkpoint e das métricas A/B/C.
 
 [Pré-teste local](results/qwen3-local/preflight.json) e
-[geração real](results/qwen3-local/piloto.json) registram o erro `Rd2`, a fonte
+[geração real revisada](results/qwen3-local/piloto-revisado.json) registram o erro `Rd2`, a fonte
 `knowledge_base/garfo.md` e a alternativa interativa `e5`. A primeira variante
 após `Rd2` contém `Rxg6+ fxg6 Qe7+`. Depois de `Qe7+`, a dama branca dá xeque
-e ataca a torre preta em f8. O modelo usou 1.923 tokens de entrada e 106 de
+e captura a torre preta em f8 na jogada seguinte das brancas. O modelo usou 1.853 tokens de entrada e 113 de
 saída em duas chamadas. A explicação foi aprovada na primeira redação.
 
 Com a API iniciada sob o mesmo perfil, é possível repetir o caso HTTP:
@@ -317,6 +319,39 @@ temática de C. A inferência local não gerou cobrança de provedor e o campo
 de custo em USD ficou vazio. As notas dos três avaliadores ainda estão
 pendentes. [Amostra cega](results/qwen3-piloto-5/amostra_cega.csv) ·
 [Formulário](results/qwen3-piloto-5/formulario_humano.csv)
+
+## Rodada principal em 70 posições
+
+Foram concluídas as **210 tentativas** e **208 explicações completas**. A teve
+uma resposta sem todos os campos exigidos. C usou um fallback após três
+tentativas de redação em uma posição. Cada incompleta fica visível no relatório
+e fora dos denominadores de legalidade, melhor lance e tema.
+[Relatório](results/qwen3-70/relatorio.md) · [CSV](results/qwen3-70/metricas.csv) ·
+[Gráfico](results/qwen3-70/comparacao.png)
+
+| Versão | Explicações | Com lance ilegal | Melhor lance | Tema | Tempo médio | Tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| A | 69/70 | 71,01% | 0% | 14,49% | 9,27 s | 27.364 |
+| B | 70/70 | 21,43% | 100% | 12,86% | 10,34 s | 33.257 |
+| C | 69/70 | 0% | 100% | 11,59% | 12,86 s | 168.295 |
+
+O melhor lance em B e C mede a aderência à referência do motor entregue às
+duas versões. C escolheu `garfo` nas 69 respostas completas, inclusive em 41
+casos em que a heurística do ensaio não encontrou o motivo. O resultado levou
+à revisão do esquema e das evidências para o rótulo. O checkpoint original
+mantém as respostas e o SHA-256 do código usado. Para reproduzir esse perfil
+histórico, reverta o [patch da revisão temática](results/qwen3-70/revisao-tematica.patch)
+em uma cópia dos arquivos desta entrega antes de executar o protocolo.
+
+A fidelidade RAGAS **0,175** foi medida nas primeiras dez posições elegíveis
+pela ordem de ID. O Qwen3 foi usado como juiz sob temperatura 0 e timeout de
+210 s. A amostra usa o trecho RAG entregue ao agente como única fonte da nota.
+[Configuração do juiz](results/qwen3-70/ragas_config.json)
+
+A avaliação cega tem 90 respostas de 30 posições pareadas. Cada um dos três
+avaliadores recebe 90 campos de nota. As notas ainda estão pendentes.
+[Amostra cega](results/qwen3-70/amostra_cega.csv) ·
+[Formulário](results/qwen3-70/formulario_humano.csv)
 
 ## Relatórios e avaliação humana
 

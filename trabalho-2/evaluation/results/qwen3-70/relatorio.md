@@ -22,7 +22,7 @@ As comparações abaixo usam apenas posições com respostas completas nas três
 
 1. Menor taxa de lances inválidos: C (0.000).
 2. B versus A com Stockfish: -51.47 pp em lances inválidos, +100.00 pp em melhor lance e -1.47 pp em tema, em 68 posições.
-3. RAG: 0 escores de fidelidade. A e B são inaplicáveis. O desenho A/B/C combina RAG, ferramentas e validação em C.
+3. RAG: 10 escores de fidelidade (média 0.175). A e B são inaplicáveis. O desenho A/B/C combina RAG, ferramentas e validação em C.
 4. Validador: 0 rascunhos com lances inválidos em 79 rascunhos inspecionados. Taxa final de C: 0.00% em 69 explicações.
 5. Maior custo estimado: Cobertura de preços e tokens insuficiente nas tríades.
 6. Maior tempo médio: C (12.868).
@@ -33,7 +33,7 @@ As comparações abaixo usam apenas posições com respostas completas nas três
 - melhor_pct: pendente. Valor observado: 100.0. Meta: 95.0.
 - tema_pct: pendente. Valor observado: 11.594202898550725. Meta: 60.0.
 - humana_media: pendente. Valor observado: n/d. Meta: 4.0.
-- ragas_media: pendente. Valor observado: n/d. Meta: 0.8.
+- ragas_media: pendente. Valor observado: 0.175. Meta: 0.8.
 
 ## Exemplos lado a lado
 
