@@ -1,3 +1,3 @@
-# Escolher o tema
+# Motivo tático verificado
 
-Compare os fatos calculados antes e depois do lance. Escolha um único identificador de `temas_permitidos` para o motivo mais bem sustentado. Se houver apenas um identificador permitido, use esse identificador. Se os fatos não mostrarem um motivo claro, escolha `outro`. Uma peça atacada com defesa não está pendurada só por estar sob ataque. Um xeque possível não confirma mate.
+O grafo seleciona o tema a partir da sequência legal do Stockfish depois do erro. Use o tema e a consequência apresentados como dados. Se o tema for Outro, use a observação disponível e escolha uma lição de revisão geral.

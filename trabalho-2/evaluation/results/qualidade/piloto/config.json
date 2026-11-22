@@ -1,0 +1,36 @@
+{
+  "dataset_sha256": "83ccabfd42358a6116138f108008c4c3859f1bd7cd918a29589296c4ef54d674",
+  "ids": [
+    "lichess:074ux",
+    "lichess:07dVd",
+    "lichess:00H87",
+    "lichess:08Lna"
+  ],
+  "semente_amostra": 20261119,
+  "modelo": "qwen3:1.7b",
+  "provedor": "ollama",
+  "temperatura": 0.0,
+  "endpoint_llm": "http://127.0.0.1:11435",
+  "modelo_revisao": "8f68893c685c",
+  "raciocinio": "none",
+  "max_tokens_por_chamada": 384,
+  "timeout_modelo_s": 60.0,
+  "formato_json": true,
+  "timeout_s": 150.0,
+  "precos_por_milhao_usd": null,
+  "fonte_dataset": {},
+  "bibliotecas": {
+    "chess": "1.11.2",
+    "langchain-openai": "1.8.5",
+    "langgraph": "1.0.8",
+    "ragas": "0.4.3",
+    "chromadb": "1.5.9"
+  },
+  "codigo_sha256": "7750de173ae5ac2d7a6cf556ea8178942e2996baf00cc04abe35870b38ea7d44",
+  "fichas_sha256": "efdaf2b2df46df76a02ca883a2b9bd800fda866085f67402214885ed2f4cb3d2",
+  "embeddings_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "mcp_transporte": "http",
+  "preflight": {
+    "C": "Disponível."
+  }
+}

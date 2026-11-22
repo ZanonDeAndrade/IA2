@@ -1,0 +1,841 @@
+--- a/agent/graph.py
++++ b/agent/graph.py
+@@ -1,6 +1,7 @@
+ """Fluxos LangGraph de explicação e chat, com validação antes da publicação."""
+ 
+ import asyncio
++from dataclasses import asdict
+ import json
+ import logging
+ import os
+@@ -14,6 +15,7 @@
+ from langgraph.graph import END, START, StateGraph
+ 
+ from agent.mcp import RAIZ, Ferramentas, carregar_ferramentas_mcp as carregar_ferramentas_mcp, sessao_mcp
++from agent.taticas import candidatos_taticos, justificar_alternativa
+ from agent.validator import explicacao_padrao, extrair_lances, ler_fen, validar_resposta_async
+ 
+ LOGGER = logging.getLogger(__name__)
+@@ -41,8 +43,9 @@
+     linha_motor: list[str]
+     tema: str
+     ficha: dict | None
+-    fatos: dict
+     escolhas_fatuais: dict[str, list[str]]
++    evidencias_taticas: list[dict]
++    justificativa: str
+     respostas_fatuais_chat: list[str]
+     pergunta: str
+     historico: list[dict]
+@@ -91,7 +94,8 @@
+     """Resume as descrições MCP para o modelo comparar somente fatos pertinentes."""
+     def nome(peca: dict) -> str:
+         lado = "brancas" if peca["cor"] == "white" else "pretas"
+-        return f"{peca['tipo']} das {lado}"
++        tipo = "peão" if peca["tipo"] == "peao" else peca["tipo"]
++        return f"{tipo} das {lado}"
+ 
+     campos = ("lado_a_jogar", "em_xeque", "xeque_mate", "afogamento")
+     anterior, posterior = ({k: dados[k] for k in campos if k in dados} for dados in (antes, depois))
+@@ -113,58 +117,33 @@
+     return anterior, posterior
+ 
+ 
+-def _garfo_com_xeque(tabuleiro: chess.Board, linha: list[str]) -> dict[str, str] | None:
+-    """Confirma que a peça que deu xeque captura o outro alvo na mesma variante."""
+-    nomes = {chess.PAWN: "peão", chess.QUEEN: "dama", chess.ROOK: "torre", chess.BISHOP: "bispo", chess.KNIGHT: "cavalo"}
+-    copia = tabuleiro.copy(stack=False)
+-    for indice, san in enumerate(linha[:4]):
+-        try:
+-            lance = copia.parse_san(san)
+-        except ValueError:
+-            return None
+-        copia.push(lance)
+-        if copia.turn == tabuleiro.turn or not copia.is_check() or copia.king(copia.turn) not in copia.attacks(lance.to_square):
+-            continue
+-        if indice + 2 >= len(linha):
+-            break
+-        resposta = copia.copy(stack=False)
+-        try:
+-            defesa = resposta.push_san(linha[indice + 1])
+-            captura = resposta.parse_san(linha[indice + 2])
+-        except ValueError:
+-            return None
+-        alvo = copia.piece_at(captura.to_square)
+-        atacante = copia.piece_at(lance.to_square)
+-        if (alvo and alvo.color == copia.turn and alvo.piece_type not in {chess.PAWN, chess.KING}
+-                and atacante and atacante.piece_type in nomes and defesa.from_square != captura.to_square
+-                and captura.from_square == lance.to_square and resposta.is_capture(captura)
+-                and captura.to_square in copia.attacks(lance.to_square)):
+-            cor = "brancas" if atacante.color == chess.WHITE else "pretas"
+-            return {"atacante": f"{nomes[atacante.piece_type]} das {cor}", "alvo": nomes[alvo.piece_type]}
+-    return None
+-
+-
+-def _escolhas_fatuais(fatos: dict) -> dict[str, list[str]]:
++def _escolhas_fatuais(fatos: dict, motivo: str | None) -> dict[str, list[str]]:
+     depois = fatos["depois"]
+-    peca = depois["peca_movida"]
++    peca = fatos["antes"]["peca_movida"]
+     artigo = "uma" if (peca or "").startswith(("torre", "dama")) else "um"
+     aconteceu = f"O lance da partida deslocou {artigo} {peca}." if peca else "O lance da partida mudou a posição."
+-    motivos = []
+-    if fatos.get("mate_em"):
+-        motivos.append("Na posição resultante, o Stockfish encontrou uma sequência forçada de xeque-mate para o lado a jogar.")
+-    elif garfo := fatos.get("garfo_com_xeque"):
+-        alvo = garfo["alvo"]
+-        artigo = "uma" if alvo in {"torre", "dama"} else "um"
+-        artigo_atacante = "uma" if garfo["atacante"].startswith(("torre", "dama")) else "um"
+-        motivos.append(f"Na variante analisada, {artigo_atacante} {garfo['atacante']} dá xeque e depois captura {artigo} {alvo}.")
++    if motivo:
++        motivos = [motivo]
++    elif "peca_movida_defendida" in depois:
++        defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
++        motivos = [f"Na posição resultante, a peça movida está sob ataque e {defesa}."]
++    elif depois["quantidade_de_xeques_legais"]:
++        motivos = ["Na posição resultante, o lado a jogar dispõe de pelo menos um xeque legal."]
+     else:
+-        if "peca_movida_defendida" in depois:
+-            defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
+-            motivos.append(f"Na posição resultante, a peça movida está sob ataque e {defesa}.")
+-        if depois["quantidade_de_xeques_legais"]:
+-            motivos.append("Na posição resultante, o lado a jogar dispõe de pelo menos um xeque legal.")
+-    return {"aconteceu": [aconteceu],
+-            "motivo": motivos or ["Compare as ameaças da posição resultante com a alternativa analisada."]}
++        motivos = ["A variante analisada não confirma um motivo tático específico para o lance."]
++    return {"aconteceu": [aconteceu], "motivo": motivos}
++
++
++def _licoes_da_ficha(ficha: dict | None) -> list[str]:
++    if not ficha:
++        return []
++    secoes = dict(re.findall(r"^## ([^\n]+)\n(.*?)(?=^## |\Z)", ficha["texto"], flags=re.M | re.S))
++    frases = []
++    for secao in ("Como evitar", "Como reconhecer"):
++        texto = secoes.get(secao, "").strip()
++        if texto:
++            frases.append(re.split(r"(?<=[.!?])\s+|\n", texto, maxsplit=1)[0])
++    return frases
+ 
+ 
+ def _texto_conceitual(texto: str) -> str:
+@@ -232,8 +211,9 @@
+ 
+     async def preparar(estado: Estado) -> dict:
+         fen, jogado = estado["fen"], estado["lance_jogado"]
+-        tabuleiro = ler_fen(fen)
+-        movimento = tabuleiro.parse_san(jogado)
++        raiz = ler_fen(fen)
++        movimento = raiz.parse_san(jogado)
++        tabuleiro = raiz.copy(stack=False)
+         tabuleiro.push(movimento)
+         if modelo is None:
+             return {"pronto": False}
+@@ -246,45 +226,16 @@
+             return {"pronto": False, **({"bloqueio_mcp": "descrever_posicao"} if exigir_mcp else {})}
+         antes, depois = _fatos_do_lance(antes, depois, movimento.uci()[:2], movimento.uci()[2:4])
+         fatos = {"antes": antes, "depois": depois}
+-        escolhas = {}
+-        selecao = {}
+-        instrucao_tema = _prompt("sistema") + "\n" + _prompt("tema")
+-        temas_permitidos = TEMAS
+-        if os.getenv("LLM_JSON_MODE") == "1":
+-            if "analisar_posicao" in ferramentas.disponiveis:
+-                try:
+-                    analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
+-                    avaliacao = analise.get("avaliacao", {})
+-                    if avaliacao.get("tipo") == "mate" and avaliacao["valor"] > 0:
+-                        fatos["mate_em"] = avaliacao["valor"]
+-                    elif garfo := _garfo_com_xeque(tabuleiro, analise["linha_principal"]):
+-                        fatos["garfo_com_xeque"] = garfo
+-                except (RuntimeError, KeyError, TypeError):
+-                    LOGGER.info("Não foi possível conferir a variante após o lance.")
+-            escolhas = _escolhas_fatuais(fatos)
+-            if fatos.get("mate_em"):
+-                temas_permitidos = {"mate": TEMAS["mate"]}
+-            elif fatos.get("garfo_com_xeque"):
+-                temas_permitidos = {"garfo": TEMAS["garfo"]}
+-            else:
+-                temas_permitidos = {"outro": TEMAS["outro"], **{
+-                    tema: titulo for tema, titulo in TEMAS.items() if tema not in {"garfo", "mate", "outro"}
+-                }}
+-            selecao = {"tema": list(temas_permitidos)}
+-            instrucao_tema += "\nRetorne um objeto JSON com a chave tema."
+-        else:
+-            instrucao_tema += "\nDevolva apenas o identificador, sem aspas, pontuação ou Markdown."
+-        try:
+-            resposta = await _invocar(modelo, [
+-                SystemMessage(content=instrucao_tema),
+-                _contexto({"temas_permitidos": temas_permitidos, "fatos": fatos}),
+-            ], campos=("tema",) if selecao else (), escolhas=selecao)
+-            tema = json.loads(resposta.text)["tema"] if selecao else resposta.text.strip().lower()
+-            if not isinstance(tema, str) or tema not in temas_permitidos:
+-                tema = "outro"
+-        except Exception as erro:
+-            LOGGER.warning("Preparação da explicação falhou (%s)", type(erro).__name__)
+-            return {"pronto": False}
++        evidencias = []
++        if "analisar_posicao" in ferramentas.disponiveis:
++            try:
++                analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
++                evidencias = candidatos_taticos(tabuleiro, analise)
++            except (RuntimeError, KeyError, TypeError):
++                LOGGER.info("Não foi possível conferir a variante após o lance.")
++        principal = evidencias[0] if evidencias else None
++        tema = principal.tema if principal else "outro"
++        escolhas = _escolhas_fatuais(fatos, principal.frase if principal else None)
+         ficha = None
+         try:
+             trechos = await ferramentas.chamar("buscar_conceitos", pergunta=TEMAS[tema], tema=tema, k=4)
+@@ -298,25 +249,23 @@
+             ficha = {**ficha, "texto": conceitual} if conceitual else None
+         if exigir_mcp and ficha is None:
+             return {"pronto": False, "tema": tema, "bloqueio_mcp": "buscar_conceitos"}
+-        return {"pronto": True, "tema": tema, "ficha": ficha, "fatos": fatos, "escolhas_fatuais": escolhas}
++        if licoes := _licoes_da_ficha(ficha):
++            escolhas["licao"] = licoes
++        justificativa = justificar_alternativa(raiz, estado["melhor_lance"], estado["linha_motor"])
++        return {"pronto": True, "tema": tema, "ficha": ficha,
++                "escolhas_fatuais": escolhas, "evidencias_taticas": [asdict(e) for e in evidencias],
++                "justificativa": justificativa}
+ 
+     async def gerar(estado: Estado) -> dict:
+-        instrucoes = _prompt("sistema") + "\n" + _prompt("explicacao")
++        instrucoes = "\n".join(_prompt(nome) for nome in ("sistema", "tema", "explicacao"))
+         if estado.get("erros"):
+             instrucoes += "\n" + _prompt("correcao")
+-        escolhas = estado.get("escolhas_fatuais") or {}
+-        if escolhas:
+-            instrucoes += "\nCopie frases permitidas para aconteceu e motivo. Redija uma lição geral curta, sem afirmar outros fatos sobre esta posição."
+-            if estado["fatos"].get("mate_em"):
+-                instrucoes += "\nNa lição, ensine o jogador a conferir as ameaças de mate do adversário antes de decidir o lance."
+-            elif estado["fatos"].get("garfo_com_xeque"):
+-                instrucoes += "\nNa lição, ensine o jogador a procurar xeques e ataques simultâneos do adversário antes de jogar."
++        escolhas = estado["escolhas_fatuais"]
+         try:
+             resposta = await _invocar(modelo, [
+                 SystemMessage(content=instrucoes),
+-                _contexto({"fatos": estado["fatos"], "tema": TEMAS[estado["tema"]],
+-                           "ficha": estado["ficha"], "erros": estado.get("erros", []),
+-                           **({"frases_permitidas": escolhas} if escolhas else {})}),
++                _contexto({"tema": TEMAS[estado["tema"]], "ficha": estado["ficha"],
++                           "frases_permitidas": escolhas, "erros": estado.get("erros", [])}),
+             ], campos=("aconteceu", "motivo", "licao"), escolhas=escolhas)
+             texto = resposta.text.strip()
+         except Exception as erro:
+@@ -343,7 +292,7 @@
+         resultado = await validar_resposta_async(
+             texto, estado["fen"], estado["linha_motor"], validar_lances=ferramentas.validar,
+         )
+-        alternativa = f"O Stockfish indicou `{estado['melhor_lance']}` como alternativa."
++        alternativa = f"O Stockfish indicou `{estado['melhor_lance']}` como alternativa{estado.get('justificativa', '')}."
+         if resultado["valida"]:
+             resultado = await validar_resposta_async(
+                 alternativa, estado["fen"], estado["linha_motor"], validar_lances=ferramentas.validar,
+--- a/agent/prompts/explicacao.md
++++ b/agent/prompts/explicacao.md
+@@ -1,11 +1,7 @@
+ # Explicar um erro
+ 
+-Devolva um objeto JSON com exatamente três campos textuais, sem delimitadores Markdown em torno do objeto.
++Responda em português com um objeto JSON de três campos textuais: `aconteceu`, `motivo` e `licao`.
+ 
+-- `aconteceu` contém uma frase sobre a mudança confirmada na posição.
+-- `motivo` contém uma frase simples sobre por que a mudança pode prejudicar o jogador. Se as ferramentas não indicarem uma consequência clara, explicite a limitação.
+-- `licao` contém uma frase prática para evitar o problema, embasada no conceito recuperado quando houver ficha.
++Copie as opções fornecidas em `frases_permitidas` sem alterações. Para `licao`, escolha a opção da ficha que melhor ajuda a reconhecer ou evitar o motivo. Se a ficha estiver ausente, escreva uma orientação geral curta com uma frase.
+ 
+-O sistema acrescenta a alternativa do Stockfish. Nos três campos, use nomes de peças e escreva a ideia tática por extenso. Deixe lances, variantes e coordenadas exclusivamente para o sistema. Refira-se à jogada feita como “o lance da partida”.
+-
+-Use somente as mudanças registradas. Uma peça atacada pode estar protegida e um ataque geométrico por si só não comprova uma captura forçada. Sem consequência certa, descreva a mudança observada e formule uma lição geral. Use uma frase por campo e responda em português.
++Use uma frase por campo. A alternativa do Stockfish e sua justificativa são adicionadas pelo grafo. Deixe lances, variantes e coordenadas exclusivamente para o grafo.
+--- a/agent/prompts/tema.md
++++ b/agent/prompts/tema.md
+@@ -1,3 +1,3 @@
+-# Escolher o tema
++# Motivo tático verificado
+ 
+-Compare os fatos calculados antes e depois do lance. Escolha um único identificador de `temas_permitidos` para o motivo mais bem sustentado. Se houver apenas um identificador permitido, use esse identificador. Se os fatos não mostrarem um motivo claro, escolha `outro`. Uma peça atacada com defesa não está pendurada só por estar sob ataque. Um xeque possível não confirma mate.
++O grafo seleciona o tema a partir da sequência legal do Stockfish depois do erro. Use o tema e a consequência apresentados como dados. Se o tema for Outro, use a observação disponível e escolha uma lição de revisão geral.
+--- /dev/null
++++ b/agent/taticas.py
+@@ -0,0 +1,227 @@
++"""Evidências de motivos táticos em variantes legais, sem acesso ao dataset."""
++
++from dataclasses import dataclass
++
++import chess
++
++NOMES = ("", "peão", "cavalo", "bispo", "torre", "dama", "rei")
++VALORES = (0, 1, 3, 3, 5, 9, 100)
++DESLIZANTES = {chess.BISHOP, chess.ROOK, chess.QUEEN}
++
++
++@dataclass(frozen=True)
++class Passo:
++    antes: chess.Board
++    lance: chess.Move
++    depois: chess.Board
++
++    @property
++    def peca(self):
++        return self.depois.piece_at(self.lance.to_square)
++
++    @property
++    def alvo(self):
++        if self.antes.is_en_passant(self.lance):
++            return chess.Piece(chess.PAWN, not self.antes.turn)
++        return self.antes.piece_at(self.lance.to_square)
++
++
++@dataclass(frozen=True)
++class Evidencia:
++    tema: str
++    frase: str
++    forca: int
++    meio_lance: int
++
++
++def _passos(raiz, linha):
++    passos = []
++    antes = raiz
++    for san in linha[:10]:
++        try:
++            lance = antes.parse_san(san)
++        except (ValueError, TypeError):
++            break
++        depois = antes.copy(stack=False)
++        depois.push(lance)
++        passos.append(Passo(antes, lance, depois))
++        antes = depois
++    return passos
++
++
++def _nome(peca):
++    return NOMES[peca.piece_type]
++
++
++def _artigo(peca):
++    return ("a " if peca.piece_type in (chess.ROOK, chess.QUEEN) else "o ") + _nome(peca)
++
++
++def _valor(peca):
++    return VALORES[peca.piece_type] if peca else 0
++
++
++def _alinhamentos(tabuleiro, casa):
++    """Retorna as duas primeiras peças em cada raio utilizado pelo atacante."""
++    peca = tabuleiro.piece_at(casa)
++    if not peca or peca.piece_type not in DESLIZANTES:
++        return
++    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)):
++        diagonal = bool(dx and dy)
++        if (peca.piece_type == chess.ROOK and diagonal) or (peca.piece_type == chess.BISHOP and not diagonal):
++            continue
++        x, y = chess.square_file(casa) + dx, chess.square_rank(casa) + dy
++        ocupadas = []
++        while 0 <= x < 8 and 0 <= y < 8:
++            alvo = chess.square(x, y)
++            if tabuleiro.piece_at(alvo):
++                ocupadas.append(alvo)
++                if len(ocupadas) == 2:
++                    yield tuple(ocupadas)
++                    break
++            x, y = x + dx, y + dy
++
++
++def _troca(tabuleiro, casa, profundidade=0):
++    """Maior ganho imediato por capturas legais sucessivas na mesma casa."""
++    alvo = tabuleiro.piece_at(casa)
++    if not alvo or profundidade == 8:
++        return 0
++    ganhos = [0]
++    for movimento in tabuleiro.generate_legal_captures(to_mask=chess.BB_SQUARES[casa]):
++        depois = tabuleiro.copy(stack=False)
++        depois.push(movimento)
++        promocao = VALORES[movimento.promotion] - VALORES[chess.PAWN] if movimento.promotion else 0
++        ganhos.append(_valor(alvo) + promocao - _troca(depois, casa, profundidade + 1))
++    return max(ganhos)
++
++
++def _geometria(ataque, defesa, ganho, indice):
++    casa = ataque.lance.to_square
++    for frente, fundo in _alinhamentos(ataque.depois, casa):
++        primeiro, segundo = (ataque.depois.piece_at(c) for c in (frente, fundo))
++        if primeiro.color == ataque.peca.color or segundo.color == ataque.peca.color:
++            continue
++        if (defesa.lance.from_square == frente and ganho.lance.from_square == casa
++                and ganho.lance.to_square == fundo and ganho.alvo == segundo and _valor(primeiro) > _valor(segundo) >= 3):
++            yield Evidencia("espeto", f"Na variante, {_artigo(primeiro)} sai da linha de ataque e expõe {_artigo(segundo)} à captura.", 99, indice)
++    if ganho.lance.from_square == casa and _valor(ganho.alvo) >= 3:
++        alvos = ataque.depois.attacks(casa) & ataque.depois.occupied_co[defesa.antes.turn]
++        if ganho.lance.to_square in alvos and any(
++            outro != ganho.lance.to_square and (_valor(ataque.depois.piece_at(outro)) == VALORES[chess.KING]
++                or (outro == defesa.lance.from_square and _valor(ataque.depois.piece_at(outro)) >= max(3, _valor(ataque.peca))))
++            for outro in alvos
++        ):
++            yield Evidencia("garfo", f"Na variante, {_artigo(ataque.peca)} ataca dois alvos e depois captura {_artigo(ganho.alvo)}.", 88, indice)
++
++
++def _cravadas(ataque, ganho, indice):
++    lado = ataque.antes.turn
++    for casa in chess.SquareSet(ataque.depois.occupied_co[lado]):
++        peca = ataque.depois.piece_at(casa)
++        for frente, fundo in _alinhamentos(ataque.depois, casa):
++            primeiro, segundo = (ataque.depois.piece_at(c) for c in (frente, fundo))
++            if primeiro.color == lado or segundo.color == lado or not _valor(segundo) > _valor(primeiro) >= 3:
++                continue
++            nova = casa == ataque.lance.to_square or (frente, fundo) not in _alinhamentos(ataque.antes, casa)
++            explora = ganho and ganho.alvo == primeiro and ganho.lance.to_square == frente
++            absoluta = segundo.piece_type == chess.KING
++            if nova and (absoluta or explora):
++                forca = 102 if absoluta else 96
++            elif explora:
++                forca = 90
++            elif absoluta and indice == 0:
++                forca = 70
++            else:
++                continue
++            yield Evidencia("cravada", f"Na variante, {_artigo(peca)} crava {_artigo(primeiro)} na linha de {_artigo(segundo)}.", forca, indice)
++
++
++def _descoberto(ataque, ganho, indice):
++    lado = ataque.antes.turn
++    origem = ataque.lance.from_square
++    for casa in chess.SquareSet(ataque.antes.occupied_co[lado]):
++        peca = ataque.antes.piece_at(casa)
++        if casa == origem or peca.piece_type not in DESLIZANTES:
++            continue
++        novos = (ataque.depois.attacks(casa) - ataque.antes.attacks(casa)) & ataque.depois.occupied_co[not lado]
++        for alvo in novos:
++            if origem not in chess.SquareSet(chess.between(casa, alvo)):
++                continue
++            vitima = ataque.depois.piece_at(alvo)
++            captura_na_linha = (ganho and ganho.lance.from_square == casa and _valor(ganho.alvo) >= 3
++                                 and (ganho.lance.to_square == alvo or alvo in chess.SquareSet(chess.between(casa, ganho.lance.to_square))))
++            if vitima.piece_type == chess.KING or captura_na_linha:
++                yield Evidencia("ataque_descoberto", f"Na variante, {_artigo(ataque.peca)} abre a linha para {_artigo(peca)} atacar {_artigo(vitima)}.", 95, indice)
++
++
++def _defensores(ataque, defesa, ganho, passos, indice):
++    alvo = ganho.lance.to_square
++    origem_defesa = defesa.lance.from_square
++    if (ganho.alvo and (_valor(ganho.alvo) >= 3 or ataque.depois.is_check()) and alvo != defesa.lance.to_square
++            and alvo in defesa.antes.attacks(origem_defesa)
++            and alvo not in defesa.depois.attacks(defesa.lance.to_square)):
++        forca = 93 if _valor(ganho.alvo) >= 3 else 89
++        yield Evidencia("desvio", f"Na variante, {_artigo(defesa.peca)} deixa de defender a peça que acaba sendo capturada.", forca, indice)
++    if defesa.lance.to_square != ataque.lance.to_square or defesa.alvo != ataque.peca or _valor(ataque.peca) < 3:
++        return
++    respostas = passos[indice + 2:indice + 6:2]
++    for posterior in respostas:
++        capturou_isca = (posterior.lance.to_square == defesa.lance.to_square and posterior.alvo == defesa.peca
++                         and _valor(defesa.peca) >= 3)
++        rei_exposto = defesa.peca.piece_type == chess.KING and posterior is ganho and ganho.depois.is_check()
++        if capturou_isca or rei_exposto:
++            efeito = "sofre uma captura posterior" if capturou_isca else "sofre um novo xeque"
++            forca = 81 if posterior.depois.is_checkmate() and capturou_isca else 97
++            if _valor(ataque.peca) <= _valor(ataque.alvo) and not ataque.depois.is_check():
++                forca -= 4
++            yield Evidencia("atracao", f"Na variante, a captura oferecida leva {_artigo(defesa.peca)} a uma casa onde {efeito}.", forca, indice)
++            break
++
++
++def _enumerar(raiz, analise):
++    passos = _passos(raiz, analise.get("linha_principal", []))
++    avaliacao = analise.get("avaliacao", {})
++    if avaliacao.get("tipo") == "mate" and avaliacao.get("valor", 0) > 0:
++        forca = 105 if avaliacao["valor"] == 1 else 86
++        yield Evidencia("mate", "Na posição resultante, o Stockfish encontrou uma sequência forçada de xeque-mate para o lado a jogar.", forca, 0)
++    for indice in range(0, min(7, len(passos)), 2):
++        ataque = passos[indice]
++        ganho = passos[indice + 2] if indice + 2 < len(passos) else None
++        yield from _descoberto(ataque, ganho, indice)
++        yield from _cravadas(ataque, ganho, indice)
++        if ganho:
++            defesa = passos[indice + 1]
++            yield from _geometria(ataque, defesa, ganho, indice)
++            yield from _defensores(ataque, defesa, ganho, passos, indice)
++    if passos and _valor(passos[0].alvo) >= 3:
++        passo = passos[0]
++        if _valor(passo.alvo) - _troca(passo.depois, passo.lance.to_square) >= 2:
++            yield Evidencia("peca_pendurada", f"Na variante, a resposta imediata captura {_artigo(passo.alvo)} com ganho na troca dessa casa.", 91, 0)
++
++
++def candidatos_taticos(raiz, analise):
++    """Prioriza evidências com consequência na PV e limita o efeito de lances tardios."""
++    ordenados = sorted(_enumerar(raiz, analise), key=lambda e: (-(e.forca - 3 * e.meio_lance), e.meio_lance, e.tema))
++    melhores = {}
++    for evidencia in ordenados:
++        melhores.setdefault(evidencia.tema, evidencia)
++    return list(melhores.values())
++
++
++def justificar_alternativa(raiz, melhor, linha):
++    passos = _passos(raiz, linha[:2])
++    if not passos or passos[0].lance != raiz.parse_san(melhor):
++        return ""
++    passo = passos[0]
++    if passo.depois.is_checkmate():
++        return " e esse lance encerra a partida com mate"
++    if passo.alvo:
++        return f" e esse lance captura {_artigo(passo.alvo)}"
++    if passo.depois.is_check():
++        return " e esse lance dá xeque"
++    if passo.peca.piece_type == chess.KING and raiz.is_check():
++        return " e esse lance tira o rei do xeque"
++    if len(passos) == 2 and not passos[1].alvo and not passos[1].depois.is_check():
++        return " e, na linha analisada, a resposta imediata do adversário vem sem captura ou xeque"
++    return ""
+--- /dev/null
++++ b/evaluation/qualidade.py
+@@ -0,0 +1,277 @@
++"""Auditoria C pareada, com divisão congelada e contextos de fidelidade separados."""
++
++import argparse
++import asyncio
++from collections import Counter, defaultdict
++import csv
++from hashlib import sha256
++from importlib.metadata import version
++import json
++from math import isfinite
++from pathlib import Path
++from statistics import fmean
++
++import chess
++
++from agent.mcp import Ferramentas, sessao_mcp
++from evaluation.dataset import carregar_dataset
++from evaluation.metrics import calcular_metricas
++from evaluation.run_eval import PERGUNTA
++from knowledge_base.index import carregar_trechos
++
++PASTA = Path(__file__).parent
++HISTORICO = PASTA / "results/qwen3-c-final/checkpoint.jsonl"
++SEMENTE = "lance-a-lance-temas-20261121-v1"
++LOCAL = "http://127.0.0.1:11435/v1"
++MODELO = "qwen3:1.7b"
++REVISAO = "8f68893c685c"
++
++
++def _gravar(caminho, valor):
++    with caminho.open("x", encoding="utf-8") as arquivo:
++        json.dump(valor, arquivo, ensure_ascii=False, indent=2)
++        arquivo.write("\n")
++
++
++def _respostas(caminho):
++    respostas = {}
++    for linha in caminho.read_text(encoding="utf-8").splitlines():
++        registro = json.loads(linha)
++        if registro["versao"] == "C":
++            respostas[registro["id"]] = registro
++    return respostas
++
++
++def _ordem(id_):
++    return sha256(f"{SEMENTE}:{id_}".encode()).digest()
++
++
++def dividir(dataset):
++    grupos = defaultdict(list)
++    for item in dataset:
++        grupos[item["tema_esperado"]].append(item["id"])
++    divisao = {"desenvolvimento": [], "validacao": [], "ragas_validacao": []}
++    for ids in grupos.values():
++        ordenados = sorted(ids, key=_ordem)
++        total_validacao = len(ids) * 4 // 9
++        divisao["validacao"].extend(ordenados[:total_validacao])
++        divisao["desenvolvimento"].extend(ordenados[total_validacao:])
++        if total_validacao:
++            divisao["ragas_validacao"].append(ordenados[0])
++    return {"semente": SEMENTE, **divisao}
++
++
++def _jsonl(caminho, registros):
++    with caminho.open("x", encoding="utf-8") as f:
++        for registro in registros:
++            f.write(json.dumps(registro, ensure_ascii=False) + "\n")
++
++
++def _resumo_mcp(descricao):
++    return {k: descricao[k] for k in (
++        "lado_a_jogar", "pecas", "pecas_atacadas", "pecas_cravadas", "xeques_possiveis", "em_xeque", "xeque_mate",
++    )}
++
++
++def _trilha(tabuleiro, linha):
++    nomes = ("", "peão", "cavalo", "bispo", "torre", "dama", "rei")
++    fatos = []
++    for san in linha[:8]:
++        movimento = tabuleiro.parse_san(san)
++        peca = tabuleiro.piece_at(movimento.from_square)
++        nome = nomes[peca.piece_type]
++        lado = "brancas" if tabuleiro.turn else "pretas"
++        captura = tabuleiro.piece_at(movimento.to_square)
++        tipo = f" captura {nomes[captura.piece_type]}" if captura else " captura peão en passant" if tabuleiro.is_en_passant(movimento) else ""
++        tabuleiro.push(movimento)
++        efeito = " e dá xeque-mate" if tabuleiro.is_checkmate() else " e dá xeque" if tabuleiro.is_check() else ""
++        fatos.append(f"{lado} jogam {san} com {nome}{tipo}{efeito}")
++    return fatos
++
++
++def _contexto_tabuleiro(item, analise):
++    raiz = chess.Board(item["fen"])
++    realizado = _trilha(raiz, [item["lance_jogado"]])[0]
++    depois = _trilha(raiz, analise["linha_principal"])
++    alternativa = _trilha(chess.Board(item["fen"]), item["motor"]["linha_principal"])
++    avaliacao = analise["avaliacao"]
++    mate = (" O motor constatou mate forçado para o lado a jogar após o erro."
++            if avaliacao["tipo"] == "mate" and avaliacao["valor"] > 0 else "")
++    return (f"Lance realizado: {realizado}. Variante principal após o erro: {'; '.join(depois)}. "
++            f"Melhor alternativa na posição inicial segundo Stockfish: {item['melhor_lance']}. "
++            f"Variante da melhor alternativa: {'; '.join(alternativa)}.{mate}")
++
++
++async def preparar(pasta):
++    dataset = carregar_dataset()
++    respostas = _respostas(HISTORICO)
++    if set(respostas) != {d["id"] for d in dataset} or any(
++        (r["fen"], r["lance_jogado"]) != (d["fen"], d["lance_jogado"])
++        for d in dataset for r in [respostas[d["id"]]]
++    ):
++        raise ValueError("A linha de base diverge do dataset íntegro.")
++    divisao = dividir(dataset)
++    pasta.mkdir(parents=True, exist_ok=True)
++    _gravar(pasta / "divisao.json", {**divisao, "dataset_sha256": sha256((PASTA / "dataset.jsonl").read_bytes()).hexdigest(),
++                                   "checkpoint_base_sha256": sha256(HISTORICO.read_bytes()).hexdigest()})
++    for grupo in ("desenvolvimento", "validacao"):
++        _jsonl(pasta / f"{grupo}.jsonl", (d for d in dataset if d["id"] in divisao[grupo]))
++    async with sessao_mcp() as disponiveis:
++        ferramentas = Ferramentas(disponiveis)
++        with (pasta / "auditoria_base.jsonl").open("x", encoding="utf-8") as arquivo:
++            for item in dataset:
++                tabuleiro = chess.Board(item["fen"])
++                tabuleiro.push_san(item["lance_jogado"])
++                descricoes = [await ferramentas.chamar("descrever_posicao", fen=fen) for fen in (item["fen"], tabuleiro.fen())]
++                analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
++                r = respostas[item["id"]]
++                d = {"id": item["id"], "tema_esperado": item["tema_esperado"], "tema_anterior": r["tema"],
++                     "fen": item["fen"], "jogado": item["lance_jogado"], "melhor": item["melhor_lance"],
++                     "descricao_antes": _resumo_mcp(descricoes[0]), "descricao_depois": _resumo_mcp(descricoes[1]),
++                     "linha_apos_erro": analise["linha_principal"], "avaliacao_apos_erro": analise["avaliacao"],
++                     "contexto_tabuleiro": _contexto_tabuleiro(item, analise), "ficha": r["fonte_rag"],
++                     "trecho": r["contextos_rag"], "explicacao": r["texto"]}
++                arquivo.write(json.dumps(d, ensure_ascii=False) + "\n")
++                arquivo.flush()
++        cards = []
++        for texto, meta in carregar_trechos(Path("knowledge_base")).values():
++            termo = meta["titulo"]
++            filtrado = await ferramentas.chamar("buscar_conceitos", pergunta=termo, tema=meta["tema_pt"], k=4)
++            livre = await ferramentas.chamar("buscar_conceitos", pergunta=termo, k=4)
++            cards.append({**meta, "secoes": [l[3:] for l in texto.splitlines() if l.startswith("## ")],
++                          "filtrado": [d["id"] for d in filtrado], "livre": [d["id"] for d in livre]})
++        _gravar(pasta / "auditoria_fichas.json", cards)
++
++
++def comparar(pasta, checkpoint):
++    divisao = json.loads((pasta / "divisao.json").read_text(encoding="utf-8"))
++    conjuntos = {k: divisao[k] for k in ("desenvolvimento", "validacao")}
++    conjuntos["total"] = conjuntos["desenvolvimento"] + conjuntos["validacao"]
++    fontes = {"nova": _respostas(checkpoint)} if checkpoint else {"base": _respostas(HISTORICO)}
++    for nome, respostas in fontes.items():
++        grupos = {k: [respostas[i] for i in ids if i in respostas] for k, ids in conjuntos.items()}
++        _gravar(pasta / f"metricas_{nome}.json", {k: calcular_metricas(valores, len(conjuntos[k])) for k, valores in grupos.items()})
++        for grupo, registros in grupos.items():
++            colunas = sorted({r.get("tema") or "sem_tema" for r in registros} | {r["tema_esperado"] for r in registros})
++            ocorrencias = Counter((r["tema_esperado"], r.get("tema") or "sem_tema") for r in registros)
++            with (pasta / f"matriz_{nome}_{grupo}.csv").open("x", encoding="utf-8", newline="") as arquivo:
++                csv_ = csv.writer(arquivo, lineterminator="\n")
++                csv_.writerow(["esperado / previsto", *colunas])
++                for esperado in sorted({r["tema_esperado"] for r in registros}):
++                    csv_.writerow([esperado, *(ocorrencias[esperado, previsto] for previsto in colunas)])
++
++
++def diagnosticar(pasta, checkpoint):
++    """Compara a solução pública somente na auditoria, depois das inferências."""
++    from agent.taticas import candidatos_taticos
++
++    dados = {d["id"]: d for d in carregar_dataset()}
++    saidas = _respostas(checkpoint)
++    divisao = json.loads((pasta / "divisao.json").read_text())
++    registros = []
++    for linha in (pasta / "auditoria_base.jsonl").read_text().splitlines():
++        auditoria = json.loads(linha)
++        id_ = auditoria["id"]
++        item, resposta = dados[id_], saidas[id_]
++        esperado = item["tema_esperado"]
++        tabuleiro = chess.Board(item["fen"])
++        tabuleiro.push_san(item["lance_jogado"])
++        copia = tabuleiro.copy(stack=False)
++        solucao = []
++        for uci in item["origem"].get("moves_uci", [])[1:]:
++            jogada = copia.parse_uci(uci)
++            solucao.append(copia.san(jogada))
++            copia.push(jogada)
++        analise = {"linha_principal": solucao, "avaliacao": {"tipo": "mate", "valor": (len(solucao) + 1) // 2}
++                   if solucao and copia.is_checkmate() and copia.turn != tabuleiro.turn else {}}
++        temas_solucao = [e.tema for e in candidatos_taticos(tabuleiro, analise)]
++        temas_pv = [e["tema"] for e in resposta.get("evidencias_taticas", [])]
++        if resposta.get("tema") == esperado:
++            diagnostico = "acerto"
++        elif esperado in temas_pv:
++            diagnostico = "evidencias concorrentes na PV"
++        elif esperado in temas_solucao:
++            diagnostico = "motivo detectado apenas na solução pública"
++        else:
++            diagnostico = "motivo de referência sem evidência nas regras atuais"
++        registros.append({"id": id_, "grupo": "validacao" if id_ in divisao["validacao"] else "desenvolvimento",
++                          "esperado": esperado, "anterior": auditoria["tema_anterior"], "novo": resposta.get("tema"),
++                          "pv": " ".join(auditoria["linha_apos_erro"][:10]), "solucao_publica": " ".join(solucao),
++                          "evidencias_pv": ", ".join(temas_pv), "evidencias_solucao": ", ".join(temas_solucao),
++                          "diagnostico": diagnostico, "ficha_anterior": (auditoria["ficha"] or {}).get("id"),
++                          "ficha_nova": (resposta.get("fonte_rag") or {}).get("id")})
++    with (pasta / "diagnostico_pareado.csv").open("x", encoding="utf-8", newline="") as arquivo:
++        escritor = csv.DictWriter(arquivo, fieldnames=list(registros[0]), lineterminator="\n")
++        escritor.writeheader()
++        escritor.writerows(registros)
++
++
++async def julgar(pasta, checkpoint, nome):
++    from openai import AsyncOpenAI
++    from ragas.llms import llm_factory
++    from ragas.metrics.collections import Faithfulness
++
++    ids = json.loads((pasta / "divisao.json").read_text(encoding="utf-8"))["ragas_validacao"]
++    auditoria = {r["id"]: r for r in map(json.loads, (pasta / "auditoria_base.jsonl").read_text().splitlines())}
++    saidas = _respostas(checkpoint or HISTORICO)
++    caminho = pasta / f"ragas_{nome}.jsonl"
++    vistos = {(d["id"], d["regime"]) for d in map(json.loads, caminho.read_text().splitlines())} if caminho.exists() else set()
++    async with AsyncOpenAI(api_key="ollama", base_url=LOCAL, timeout=210, max_retries=0) as cliente:
++        juiz = Faithfulness(llm=llm_factory(MODELO, client=cliente, temperature=0.0, reasoning_effort="none"))
++        with caminho.open("a", encoding="utf-8") as arquivo:
++            for id_ in ids:
++                r = saidas.get(id_, {})
++                if r.get("status") != "ok" or not r.get("contextos_rag"):
++                    continue
++                pergunta = f"{PERGUNTA} FEN: {r['fen']}. Lance jogado: {r['lance_jogado']}."
++                afirmacoes = None
++                for regime in ("ficha", "ficha_e_tabuleiro"):
++                    if (id_, regime) in vistos:
++                        continue
++                    contextos = list(r["contextos_rag"])
++                    if regime == "ficha_e_tabuleiro":
++                        evidencia = auditoria[id_]
++                        descricao = evidencia["descricao_depois"]
++                        contextos.append(evidencia["contexto_tabuleiro"] +
++                                         f" Casas e defensores das peças atacadas após o erro: {descricao['pecas_atacadas']}. "
++                                         f"Xeques legais após o erro: {descricao['xeques_possiveis']}.")
++                    registro = {"id": id_, "regime": regime, "resposta": r["texto"], "contextos": contextos,
++                                "pergunta": pergunta, "ficha": r["fonte_rag"], "modelo": MODELO,
++                                "revisao": REVISAO, "ragas": version("ragas"), "temperatura": 0,
++                                "raciocinio": "none", "timeout_s": 210, "nota": None}
++                    try:
++                        if afirmacoes is None:
++                            afirmacoes = await asyncio.wait_for(juiz._create_statements(pergunta, r["texto"]), 210)
++                        vereditos = await asyncio.wait_for(juiz._create_verdicts(afirmacoes, "\n".join(contextos)), 210) if afirmacoes else []
++                        registro["afirmacoes"] = afirmacoes
++                        registro["vereditos"] = vereditos.model_dump() if vereditos else None
++                        if vereditos and isfinite(nota := juiz._compute_score(vereditos)):
++                            registro["nota"] = nota
++                    except Exception as erro:
++                        registro["erro"] = type(erro).__name__
++                    arquivo.write(json.dumps(registro, ensure_ascii=False) + "\n")
++                    arquivo.flush()
++                    print(nome, id_, regime, registro["nota"], flush=True)
++    linhas = list(map(json.loads, caminho.read_text().splitlines()))
++    for regime in ("ficha", "ficha_e_tabuleiro"):
++        notas = [r["nota"] for r in linhas if r["regime"] == regime and r["nota"] is not None]
++        print(nome, regime, len(notas), fmean(notas) if notas else None)
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("acao", choices=("preparar", "comparar", "diagnosticar", "julgar"))
++    parser.add_argument("pasta", type=Path)
++    parser.add_argument("--checkpoint", type=Path)
++    parser.add_argument("--nome", choices=("base", "nova"), default="base")
++    args = parser.parse_args()
++    if args.acao == "preparar":
++        asyncio.run(preparar(args.pasta))
++    elif args.acao == "comparar":
++        comparar(args.pasta, args.checkpoint)
++    elif args.acao == "diagnosticar":
++        if not args.checkpoint:
++            parser.error("diagnosticar exige --checkpoint com as respostas da revisão.")
++        diagnosticar(args.pasta, args.checkpoint)
++    else:
++        asyncio.run(julgar(args.pasta, args.checkpoint, args.nome))
+--- a/evaluation/run_eval.py
++++ b/evaluation/run_eval.py
+@@ -186,7 +186,7 @@
+         ragas_status = "inaplicavel_fallback" if validada and not estado.get("pronto") else "sem_contexto"
+     respostas = [resposta.text for resposta in observado.respostas]
+     rascunhos = []
+-    for bruto in respostas[1:]:
++    for bruto in respostas:
+         partes = _objeto(bruto)
+         rascunhos.append(". ".join(_texto(partes, k).rstrip(".!?")
+                                   for k in ("aconteceu", "motivo", "licao")) if partes else bruto)
+@@ -209,6 +209,7 @@
+             "tentativas": estado.get("tentativas", 0), "fallback": bool(validada and not estado.get("pronto")),
+             "ferramentas_usadas": ferramentas.usadas, "contextos_rag": contextos, "ragas_status": ragas_status,
+             "fonte_rag": fonte_rag, "bloqueio_mcp": bloqueio_mcp,
++            "evidencias_taticas": estado.get("evidencias_taticas", []),
+             "rascunhos_n": len(rascunhos), "rascunhos_invalidos": invalidos, "erros": erros}
+ 
+ 
+--- a/knowledge_base/atracao.md
++++ b/knowledge_base/atracao.md
+@@ -12,7 +12,7 @@
+ 
+ ## Como reconhecer
+ 
+-Veja se uma captura oferecida colocaria rei ou dama ao alcance de uma ameaça decisiva.
++Veja se uma captura oferecida leva a peça que a aceita a uma casa onde ela própria ficaria exposta à próxima ameaça.
+ 
+ ## Por que é importante
+ 
+--- a/knowledge_base/desvio.md
++++ b/knowledge_base/desvio.md
+@@ -12,7 +12,7 @@
+ 
+ ## Como reconhecer
+ 
+-Verifique se uma captura com tempo obriga o adversário a mover o guardião de uma casa.
++Verifique o que uma peça defendia antes de responder à ameaça e qual alvo ficou sem sua defesa depois da resposta.
+ 
+ ## Por que é importante
+ 
+--- a/knowledge_base/espeto.md
++++ b/knowledge_base/espeto.md
+@@ -12,7 +12,7 @@
+ 
+ ## Como reconhecer
+ 
+-Busque rei e dama na mesma coluna ou diagonal.
++Busque duas peças alinhadas com um atacante de longo alcance, com a peça mais valiosa na frente.
+ 
+ ## Por que é importante
+ 
+--- a/knowledge_base/garfo.md
++++ b/knowledge_base/garfo.md
+@@ -12,7 +12,7 @@
+ 
+ ## Como reconhecer
+ 
+-Procure uma casa de onde um cavalo ataque o rei e uma peça valiosa.
++Procure uma casa de onde a mesma peça ataque dois alvos, como um cavalo que ameaça o rei e uma torre ou uma dama que dá xeque e ataca outra peça.
+ 
+ ## Por que é importante
+ 
+@@ -20,7 +20,7 @@
+ 
+ ## Como evitar
+ 
+-Antes de mover o rei ou a dama, confira quais casas de salto do cavalo inimigo ficarão disponíveis.
++Antes de jogar, confira se alguma peça adversária pode atacar o rei e outra peça ao mesmo tempo.
+ 
+ ## Exemplo
+ 

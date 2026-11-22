@@ -1,0 +1,30 @@
+{
+  "primeira": {
+    "fen": "5rk1/6p1/p2Np1Qp/8/5Pn1/P5Pq/1P3P1P/2R3K1 w - - 9 28",
+    "lance_jogado": "Ne4",
+    "melhor_lance": "Qxe6+",
+    "melhor_lance_uci": "g6e6",
+    "classe": "erro_grave",
+    "queda": 50.15686119226285,
+    "tema": "espeto",
+    "tema_label": "Espeto",
+    "texto": "O lance da partida deslocou um cavalo das brancas. Na variante, o rei sai da linha de ataque e expõe a torre à captura. Evite alinhar peças valiosas em linhas dominadas pelo adversário. O Stockfish indicou `Qxe6+` como alternativa e esse lance captura o peão.",
+    "ficha": {
+      "id": "espeto",
+      "titulo": "Espeto",
+      "arquivo": "knowledge_base/espeto.md"
+    },
+    "ferramentas_usadas": [
+      "analisar_posicao",
+      "descrever_posicao",
+      "buscar_conceitos",
+      "validar_lances"
+    ],
+    "tentativas": 1,
+    "validada": true,
+    "fallback": false,
+    "cache": false
+  },
+  "cache_segunda": true,
+  "lance_invalido_status": 422
+}

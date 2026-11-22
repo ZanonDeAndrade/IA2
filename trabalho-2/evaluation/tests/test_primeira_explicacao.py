@@ -10,7 +10,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 import pytest
 
 from agent.graph import construir_grafo_explicacao
-from agent.mcp import Ferramentas, sessao_mcp
+from agent.mcp import RAIZ, Ferramentas, sessao_mcp
 from evaluation import primeira_explicacao as piloto
 from evaluation.dataset import carregar_dataset
 from knowledge_base import index
@@ -123,16 +123,11 @@ def test_rag_real_reconstruido_por_stdio(monkeypatch, tmp_path, posicao):
             class ModeloFixture:
                 async def ainvoke(self, mensagens):
                     dados = json.loads(mensagens[-1].content)
-                    if "temas_permitidos" in dados:
-                        return AIMessage(content="garfo")
-                    assert dados["ficha"]["arquivo"] == origem["arquivo"]
+                    arquivo = dados["ficha"]["arquivo"]
+                    assert arquivo == f"knowledge_base/{dados['ficha']['id']}.md"
                     texto = dados["ficha"]["texto"]
-                    assert texto and origem["texto"].startswith(texto) and "## Exemplo" not in texto
-                    return AIMessage(content=json.dumps({
-                        "aconteceu": "A jogada mudou a posição",
-                        "motivo": "Compare as alternativas",
-                        "licao": "Confira as ameaças antes de jogar",
-                    }))
+                    assert texto and RAIZ.joinpath(arquivo).read_text().find(texto) >= 0 and "## Exemplo" not in texto
+                    return AIMessage(content=json.dumps({k: v[0] for k, v in dados["frases_permitidas"].items()}))
 
             ferramentas = Ferramentas([
                 *[f for f in disponiveis if f.name != "descrever_posicao"],

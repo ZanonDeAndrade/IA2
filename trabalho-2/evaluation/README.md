@@ -1,5 +1,8 @@
 # Avaliação A/B/C
 
+A revisão que usa evidências das variantes tem protocolo e resultados próprios.
+[Auditoria de qualidade da versão C](QUALIDADE.md)
+
 ## Dataset e protocolo de seleção
 
 O [dataset](dataset.jsonl) reúne 70 posições da base aberta da Lichess. As 30
@@ -203,8 +206,12 @@ fica fora do checkpoint e das métricas A/B/C.
 [geração real revisada](results/qwen3-local/piloto-revisado.json) registram o erro `Rd2`, a fonte
 `knowledge_base/garfo.md` e a alternativa interativa `e5`. A primeira variante
 após `Rd2` contém `Rxg6+ fxg6 Qe7+`. Depois de `Qe7+`, a dama branca dá xeque
-e captura a torre preta em f8 na jogada seguinte das brancas. O modelo usou 1.853 tokens de entrada e 113 de
-saída em duas chamadas. A explicação foi aprovada na primeira redação.
+e captura a torre preta em f8 na jogada seguinte das brancas. O modelo usou
+1.853 tokens de entrada e 113 de saída em duas chamadas. A explicação foi
+aprovada na primeira redação. Também foi validado um caso de mate forçado
+em `lichess:02ChS`, em que a frase factual usa a sequência indicada pelo
+Stockfish e respeita a regra de omitir avaliações numéricas.
+[Piloto de mate](results/qwen3-local/piloto-mate.json)
 
 Com a API iniciada sob o mesmo perfil, é possível repetir o caso HTTP:
 
@@ -217,11 +224,12 @@ curl -fsS http://127.0.0.1:8000/api/chat -H 'Content-Type: application/json' \
 ```
 
 Repita a primeira requisição para verificar `cache:true`. O caso da partida
-pública usou 81 meios-lances, gerou quatro explicações armazenadas, contou
-quatro ocorrências de `fork` e retornou cinco puzzles recomendados. A triagem
-PGN também produziu duas candidatas sem rótulo nessa partida pública, fora do
-dataset oficial. [Contratos HTTP](../docs/integracao-frontend.md) ·
-[Explicações e relatório](results/qwen3-local/http.json) · [Chat](results/qwen3-local/chat.json) ·
+pública usou 81 meios-lances, gerou quatro explicações armazenadas e retornou
+cinco puzzles recomendados. O relatório revisado contou duas ocorrências de
+`fork` e duas de `pin`. A triagem PGN também produziu duas candidatas sem
+rótulo nessa partida pública, fora do dataset oficial.
+[Contratos HTTP](../docs/integracao-frontend.md) ·
+[Explicações e relatório revisado](results/qwen3-local/http-revisado.json) · [Chat](results/qwen3-local/chat.json) ·
 [MCP, Docker, SQLite e triagem](results/qwen3-local/infra.json)
 
 Para verificar a reconstrução e recuperação real pelo MCP, execute
@@ -341,7 +349,9 @@ casos em que a heurística do ensaio não encontrou o motivo. O resultado levou
 à revisão do esquema e das evidências para o rótulo. O checkpoint original
 mantém as respostas e o SHA-256 do código usado. Para reproduzir esse perfil
 histórico, reverta o [patch da revisão temática](results/qwen3-70/revisao-tematica.patch)
-em uma cópia dos arquivos desta entrega antes de executar o protocolo.
+em uma cópia dos arquivos antes de executar o protocolo. Se a cópia já incluir
+a revisão de qualidade posterior, reverta primeiro o
+[patch de qualidade](results/qualidade/revisao-agente.patch).
 
 A fidelidade RAGAS **0,175** foi medida nas primeiras dez posições elegíveis
 pela ordem de ID. O Qwen3 foi usado como juiz sob temperatura 0 e timeout de
@@ -352,6 +362,37 @@ A avaliação cega tem 90 respostas de 30 posições pareadas. Cada um dos três
 avaliadores recebe 90 campos de nota. As notas ainda estão pendentes.
 [Amostra cega](results/qwen3-70/amostra_cega.csv) ·
 [Formulário](results/qwen3-70/formulario_humano.csv)
+
+### Reexecução de C após a revisão temática
+
+A primeira reexecução expôs um conflito entre o fato numérico sobre mate e
+a regra de redação do grafo. Ela foi interrompida com 48 registros, que
+ficaram disponíveis para auditoria. A redação factual final preserva a
+sequência forçada de mate sem indicar sua distância, e foi validada em um
+piloto com Stockfish e LLM reais. [Diagnóstico intermediário](results/qwen3-c-revisada/relatorio.md) ·
+[Piloto de mate](results/qwen3-local/piloto-mate.json)
+
+O perfil final de C gerou **70/70 explicações completas, sem fallback**.
+Teve **0% de lances ilegais**, **100% de acerto da melhor alternativa** e
+**28,57% de acerto do tema**. O tempo médio foi 11,71 s e o consumo foi de
+154.014 tokens. O rótulo mais frequente foi `cravada` em 31 respostas, seguido
+de `mate` em 14. A meta temática de 60% segue pendente. Esta reexecução usa
+as mesmas posições da rodada principal. Seus resultados medem a revisão
+nesse conjunto conhecido. A amostra cega da seção anterior pertence à rodada
+A/B/C original. [Relatório da revisão final](results/qwen3-c-final/relatorio.md) ·
+[CSV](results/qwen3-c-final/metricas.csv) · [Gráfico](results/qwen3-c-final/comparacao.png)
+
+RAGAS obteve **0,25** nas primeiras três respostas elegíveis da revisão pela
+ordem de ID. A cobertura é menor que a da rodada principal. A amostra mede
+fidelidade à ficha recuperada e usa Qwen3 como juiz, com a mesma configuração
+do ensaio original. [Configuração do juiz](results/qwen3-c-final/ragas_config.json)
+
+```bash
+python -m evaluation.run_eval --versoes C --completa --timeout 150 --resultados /tmp/lance-c-final
+RAGAS_MODEL=qwen3:1.7b RAGAS_RACIOCINIO=none RAGAS_DO_NOT_TRACK=true \
+  python -m evaluation.run_eval --somente-relatorio --ragas --limite-ragas 3 --timeout 210 \
+  --resultados /tmp/lance-c-final
+```
 
 ## Relatórios e avaliação humana
 

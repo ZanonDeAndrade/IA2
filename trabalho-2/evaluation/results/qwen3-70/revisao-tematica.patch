@@ -43,14 +43,13 @@
      return None
  
  
-@@ -138,9 +150,14 @@
+@@ -138,9 +150,13 @@
      artigo = "uma" if (peca or "").startswith(("torre", "dama")) else "um"
      aconteceu = f"O lance da partida deslocou {artigo} {peca}." if peca else "O lance da partida mudou a posição."
      motivos = []
 -    if alvo := fatos.get("garfo_com_xeque"):
-+    if mate := fatos.get("mate_em"):
-+        unidade = "lance" if mate == 1 else "lances"
-+        motivos.append(f"Na posição resultante, o Stockfish indicou mate em {mate} {unidade} para o lado a jogar.")
++    if fatos.get("mate_em"):
++        motivos.append("Na posição resultante, o Stockfish encontrou uma sequência forçada de xeque-mate para o lado a jogar.")
 +    elif garfo := fatos.get("garfo_com_xeque"):
 +        alvo = garfo["alvo"]
          artigo = "uma" if alvo in {"torre", "dama"} else "um"
@@ -60,7 +59,7 @@
      else:
          if "peca_movida_defendida" in depois:
              defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
-@@ -233,25 +250,38 @@
+@@ -233,25 +249,38 @@
          escolhas = {}
          selecao = {}
          instrucao_tema = _prompt("sistema") + "\n" + _prompt("tema")
@@ -106,6 +105,17 @@
                  tema = "outro"
          except Exception as erro:
              LOGGER.warning("Preparação da explicação falhou (%s)", type(erro).__name__)
+@@ -278,7 +307,9 @@
+         escolhas = estado.get("escolhas_fatuais") or {}
+         if escolhas:
+             instrucoes += "\nCopie frases permitidas para aconteceu e motivo. Redija uma lição geral curta, sem afirmar outros fatos sobre esta posição."
+-            if estado["fatos"].get("garfo_com_xeque"):
++            if estado["fatos"].get("mate_em"):
++                instrucoes += "\nNa lição, ensine o jogador a conferir as ameaças de mate do adversário antes de decidir o lance."
++            elif estado["fatos"].get("garfo_com_xeque"):
+                 instrucoes += "\nNa lição, ensine o jogador a procurar xeques e ataques simultâneos do adversário antes de jogar."
+         try:
+             resposta = await _invocar(modelo, [
 --- a/agent/prompts/tema.md
 +++ b/agent/prompts/tema.md
 @@ -1,5 +1,3 @@

@@ -1,0 +1,9 @@
+esperado / previsto,ataque_descoberto,atracao,cravada,desvio,espeto,garfo,mate,outro,peca_pendurada
+ataque_descoberto,3,0,1,0,0,0,0,0,0
+atracao,0,2,1,0,0,0,0,0,0
+cravada,0,1,2,0,0,0,0,1,0
+desvio,0,1,0,2,0,0,0,0,0
+espeto,0,1,0,0,3,0,0,0,0
+garfo,0,1,0,1,0,2,0,0,0
+mate,0,0,0,0,0,0,4,0,0
+peca_pendurada,0,0,0,0,0,0,0,0,4
