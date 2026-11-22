@@ -1,0 +1,141 @@
+{
+  "id": "lichess:02ChS",
+  "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11",
+  "lance_jogado": "Bxd1",
+  "status": "explicacao_validada",
+  "etapa": "agente",
+  "ferramentas_preflight": [
+    {
+      "nome": "analisar_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11",
+        "profundidade": 18,
+        "multipv": 3
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11"
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP3/2N1B3/PPP2PPP/R2bK2R w KQkq - 0 12"
+      }
+    },
+    {
+      "nome": "validar_lances",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11",
+        "lances": [
+          "Bxd1",
+          "dxe5"
+        ]
+      }
+    },
+    {
+      "nome": "buscar_conceitos",
+      "argumentos": {
+        "pergunta": "mate",
+        "k": 4,
+        "tema": "mate"
+      }
+    }
+  ],
+  "motor": {
+    "avaliacao": {
+      "tipo": "cp",
+      "valor": -202
+    },
+    "linha_principal": [
+      "dxe5",
+      "Qxg4",
+      "Nxc2+",
+      "Ke2",
+      "Nc6",
+      "Rhd1",
+      "N2d4+",
+      "Bxd4",
+      "Nxd4+",
+      "Rxd4",
+      "exd4",
+      "Bb5+",
+      "Kf7",
+      "Bc4+",
+      "Ke8",
+      "Qh5+",
+      "g6",
+      "Qe5+",
+      "Qe7",
+      "Bb5+",
+      "Kf7",
+      "Qxh8",
+      "dxc3",
+      "bxc3",
+      "Qxe4+",
+      "Kf1"
+    ]
+  },
+  "fonte_preflight": {
+    "id": "mate",
+    "titulo": "Xeque-mate",
+    "arquivo": "knowledge_base/mate.md"
+  },
+  "explicacao": "O lance da partida deslocou um bispo das pretas. Na posição resultante, o Stockfish encontrou uma sequência forçada de xeque-mate para o lado a jogar. Conferir as ameaças de mate do adversário antes de decidir o lance é crucial para evitar quedas imprevistas. O Stockfish indicou `dxe5` como alternativa.",
+  "tema_identificado": "mate",
+  "melhor_lance": "dxe5",
+  "validada": true,
+  "fonte_agente": {
+    "id": "mate",
+    "titulo": "Xeque-mate",
+    "arquivo": "knowledge_base/mate.md"
+  },
+  "fallback": false,
+  "tentativas": 1,
+  "ferramentas_agente": [
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11"
+      }
+    },
+    {
+      "nome": "descrever_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP3/2N1B3/PPP2PPP/R2bK2R w KQkq - 0 12"
+      }
+    },
+    {
+      "nome": "analisar_posicao",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP3/2N1B3/PPP2PPP/R2bK2R w KQkq - 0 12",
+        "profundidade": 16,
+        "multipv": 1
+      }
+    },
+    {
+      "nome": "buscar_conceitos",
+      "argumentos": {
+        "pergunta": "Xeque-mate",
+        "tema": "mate",
+        "k": 4
+      }
+    },
+    {
+      "nome": "validar_lances",
+      "argumentos": {
+        "fen": "rn1qkb1r/pp4pp/3p4/2p1N3/2BnP1b1/2N1B3/PPP2PPP/R2QK2R b KQkq - 0 11",
+        "lances": [
+          "dxe5"
+        ]
+      }
+    }
+  ],
+  "erros": [],
+  "chamadas_llm": 2,
+  "tokens_entrada": 2397,
+  "tokens_saida": 104,
+  "rascunhos_invalidos": 0
+}

@@ -123,16 +123,11 @@ def test_api_grafos_com_modelo_fixture_e_ferramentas_reais(cliente, tmp_path, mo
                 assert fatos["lado_a_jogar"] == "black"
                 return AIMessage(content="As pretas têm a vez.")
             dados = json.loads(mensagens[-1].content)
-            if "temas_permitidos" in dados:
-                assert dados["fatos"]["antes"]["lado_a_jogar"] == "black"
-                assert dados["fatos"]["depois"]["lado_a_jogar"] == "white"
-                return AIMessage(content="garfo")
             if "ficha" in dados:
-                assert dados["ficha"]["arquivo"] == "knowledge_base/garfo.md"
-                return AIMessage(content=json.dumps({
-                    "aconteceu": "A torre mudou de casa", "motivo": "A jogada alterou as ameaças",
-                    "licao": "Confira ameaças simultâneas antes de jogar",
-                }))
+                assert dados["ficha"]["arquivo"] == f"knowledge_base/{dados['ficha']['id']}.md"
+                assert dados["tema"] == graph.TEMAS[dados["ficha"]["id"]]
+                assert "torre das pretas" in dados["frases_permitidas"]["aconteceu"][0]
+                return AIMessage(content=json.dumps({k: v[0] for k, v in dados["frases_permitidas"].items()}))
             return AIMessage(content="", tool_calls=[
                 {"name": "descrever_posicao", "args": {"fen": dados["fen"]}, "id": "descricao-fixture"},
             ])
@@ -142,7 +137,7 @@ def test_api_grafos_com_modelo_fixture_e_ferramentas_reais(cliente, tmp_path, mo
     entrada = {"fen": item["fen"], "lance_jogado": item["lance_jogado"]}
     explicacao = cliente.post("/api/explicar", json=entrada).json()
     assert explicacao["validada"] and not explicacao["fallback"]
-    assert explicacao["ficha"]["id"] == "garfo" and "validar_lances" in explicacao["ferramentas_usadas"]
+    assert explicacao["ficha"]["id"] == explicacao["tema"] and "validar_lances" in explicacao["ferramentas_usadas"]
     assert cliente.post("/api/explicar", json=entrada).json()["cache"]
     chat = cliente.post("/api/chat", json={"fen": item["fen"], "pergunta": "Quem tem a vez?"}).json()
     assert chat["validada"] and chat["resposta"] == "As pretas têm a vez."

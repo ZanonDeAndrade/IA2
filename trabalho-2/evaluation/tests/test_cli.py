@@ -45,12 +45,9 @@ def test_piloto_abc_retomavel_com_grafo_existente(tmp_path, monkeypatch):
         async def ainvoke(self, mensagens):
             self.chamadas += 1
             dados = json.loads(mensagens[-1].content)
-            if "temas_permitidos" in dados:
-                texto = "garfo"
-            elif "fatos" in dados:
+            if "frases_permitidas" in dados:
                 texto = json.dumps({
-                    "aconteceu": "A jogada mudou a posição",
-                    "motivo": "É preciso comparar as alternativas",
+                    **{k: v[0] for k, v in dados["frases_permitidas"].items()},
                     "licao": "Confira as ameaças antes de jogar",
                 }, ensure_ascii=False)
             else:
@@ -90,7 +87,7 @@ def test_piloto_abc_retomavel_com_grafo_existente(tmp_path, monkeypatch):
     invocar(monkeypatch, *argumentos, "--limite", "2", "--versoes", "A")
     assert modelo.chamadas == 2
     invocar(monkeypatch, *argumentos, "--limite", "2", "--versoes", "A", "B", "C")
-    assert modelo.chamadas == 8
+    assert modelo.chamadas == 6
 
     arquivo = pasta / "checkpoint.jsonl"
     checkpoint = run_eval.ler_checkpoint(arquivo)
@@ -101,7 +98,7 @@ def test_piloto_abc_retomavel_com_grafo_existente(tmp_path, monkeypatch):
     assert all(r["tokens_total"] is None and r["custo_usd"] is None for r in checkpoint.values())
     original = arquivo.read_bytes()
     invocar(monkeypatch, *argumentos, "--somente-relatorio")
-    assert arquivo.read_bytes() == original and modelo.chamadas == 8
+    assert arquivo.read_bytes() == original and modelo.chamadas == 6
     with (pasta / "por_posicao.csv").open() as arquivo:
         assert len(list(csv.DictReader(arquivo))) == 6
     with (pasta / "amostra_cega.csv").open() as arquivo:

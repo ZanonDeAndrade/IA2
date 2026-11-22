@@ -12,7 +12,7 @@ Uma peça ameaça dois alvos de uma só vez.
 
 ## Como reconhecer
 
-Procure uma casa de onde um cavalo ataque o rei e uma peça valiosa.
+Procure uma casa de onde a mesma peça ataque dois alvos, como um cavalo que ameaça o rei e uma torre ou uma dama que dá xeque e ataca outra peça.
 
 ## Por que é importante
 
@@ -20,7 +20,7 @@ Um alvo precisa sair do perigo e o outro pode ficar disponível para captura.
 
 ## Como evitar
 
-Antes de mover o rei ou a dama, confira quais casas de salto do cavalo inimigo ficarão disponíveis.
+Antes de jogar, confira se alguma peça adversária pode atacar o rei e outra peça ao mesmo tempo.
 
 ## Exemplo
 

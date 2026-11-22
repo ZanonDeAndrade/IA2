@@ -6,7 +6,8 @@ agente explica os erros em português com fatos verificáveis e fichas táticas.
 
 [Documentação acadêmica](docs/lance-a-lance-documentacao-do-projeto.pdf) ·
 [Integração com o frontend e contratos HTTP](docs/integracao-frontend.md) ·
-[Protocolo experimental](evaluation/README.md)
+[Protocolo experimental](evaluation/README.md) ·
+[Auditoria de qualidade da versão C](evaluation/QUALIDADE.md)
 
 ## Arquitetura
 
@@ -152,8 +153,8 @@ na repetição, com Stockfish 11 e profundidade 12. Foram usados os primeiros
 
 No Compose com Stockfish 15.1 e profundidade 12, outra partida pública
 levou **4,664 s** na primeira análise de 80 meios-lances e **0,002 s**
-na repetição. A suíte final registrou 119 testes aprovados e o teste HTTP
-confirmou a persistência de lances e tarefas ao reiniciar os serviços.
+na repetição. Na rodada anterior, a suíte registrou 119 testes aprovados.
+O teste HTTP confirmou a persistência de lances e tarefas ao reiniciar os serviços.
 [Partida usada no benchmark Docker](https://www.chess.com/game/live/187698565326)
 
 ### Validação da IA local
@@ -163,10 +164,11 @@ O pré-teste e a geração real para `lichess:00ldC` passaram com Ollama
 confirmou `e5` na análise ao vivo do Stockfish 11 e publicou a explicação em
 português sem fallback. Na rodada inicial da API, a segunda solicitação
 recuperou a explicação do SQLite. Quatro erros de uma partida pública foram
-explicados, e o relatório retornou cinco puzzles reais. O chat foi exercitado
-por HTTP com cinco perguntas sobre o tabuleiro e um teste adversarial.
-A regressão final teve **122 testes aprovados**, sem falhas ou testes ignorados.
-[Piloto revisado](evaluation/results/qwen3-local/piloto-revisado.json) · [Verificação HTTP](evaluation/results/qwen3-local/http.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
+explicados novamente após a revisão. O relatório contou duas cravadas e dois
+garfos e retornou cinco puzzles reais. O chat foi exercitado por HTTP com
+cinco perguntas sobre o tabuleiro e um teste adversarial.
+A regressão final teve **123 testes aprovados**, sem falhas ou testes ignorados.
+[Piloto revisado](evaluation/results/qwen3-local/piloto-revisado.json) · [Verificação HTTP](evaluation/results/qwen3-local/http-revisado.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
 
 O Compose também passou pela geração e pelo chat com o Ollama do host. Com
 Stockfish 15.1, o contêiner retornou `Rd7` e persistiu a explicação. A segunda
@@ -181,8 +183,11 @@ vivo do piloto separada da referência congelada do experimento A/B/C.
 O dataset efetivo tem **70 de 100 posições**. A rodada principal produziu 208
 explicações completas em 210 tentativas. C obteve 0% de lances ilegais e 100%
 de acordo com a melhor alternativa fornecida pelo motor. O acerto de tema
-de 11,59% motivou uma revisão no perfil estruturado. A fidelidade RAGAS foi
-0,175 em dez respostas do perfil original. [Relatório da rodada](evaluation/results/qwen3-70/relatorio.md)
+de 11,59% motivou uma revisão no perfil estruturado. C revisada completou
+70/70 posições, com 0% de lances ilegais e 28,57% de acerto temático. A
+fidelidade RAGAS foi 0,175 em dez respostas do perfil original e 0,25 em
+três respostas da revisão. As duas amostras têm coberturas diferentes.
+[Relatório A/B/C](evaluation/results/qwen3-70/relatorio.md) · [C revisada](evaluation/results/qwen3-c-final/relatorio.md)
 
 Faltam 30 posições rotuladas de
 PGNs da equipe ou colegas e as avaliações cegas dos três participantes. O

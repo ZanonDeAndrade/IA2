@@ -1,0 +1,71 @@
+id,grupo,esperado,anterior,novo,pv,solucao_publica,evidencias_pv,evidencias_solucao,diagnostico,ficha_anterior,ficha_nova
+lichess:00ldC,validacao,garfo,garfo,desvio,Rxg6+ fxg6 Qe7+ Kh6 Qxf8+ Qg7 Qf4+ Kh7 Qxd2 Qe7,Rxg6+ fxg6 Qe7+ Kh6 Qxf8+ Qg7 Qf4+ Kh7 Qxd2,"desvio, garfo","desvio, garfo",evidencias concorrentes na PV,garfo,desvio
+lichess:04Ov0,desenvolvimento,garfo,garfo,garfo,Qa8+ Kf7 Ne5+ Kf6 Nxc4 Bxc4 Qd8+ Ke5 Qxb6 Be6,Qa8+ Kf7 Ne5+ Kf6 Nxc4,garfo,garfo,acerto,garfo,garfo
+lichess:06uwS,validacao,garfo,garfo,garfo,Ne3+ Ke5 Nxd1 f5 h5 e3 fxe3 Ke4 Kf2 f4,Ne3+ Ke6 Nxd1,garfo,garfo,acerto,garfo,garfo
+lichess:06DMD,desenvolvimento,garfo,garfo,atracao,Qxc4+ Nxc4 Bd5+ Kf8 Bxc4 Ke7 Kf1 a5 Nf3 a4,Qxc4+ Nxc4 Bd5+ Kf8 Bxc4,"atracao, garfo","atracao, garfo",evidencias concorrentes na PV,garfo,atracao
+lichess:07dsN,validacao,garfo,cravada,atracao,Rxe2+ Rxe2 Rxe2+ Kxe2 Nf4+ Ke3 Nxg6 b3 Kf7 a4,Rxe2+ Rxe2 Rxe2+ Kxe2 Nf4+ Kd1 Nxg6,"atracao, garfo","atracao, garfo",evidencias concorrentes na PV,cravada,atracao
+lichess:05mC3,desenvolvimento,garfo,garfo,garfo,Ng5+ Kg8 Nxe6 Qc8 Nxf8 Bxf8 Ng6 Nf6 Re7 Qd8,Ng5+ Kg8 Nxe6,garfo,garfo,acerto,garfo,garfo
+lichess:04eXD,desenvolvimento,garfo,garfo,garfo,Nd2+ Kc2 Nxe4 Rxe4 Qxd5 Nc5 f3 Rae1 Qa2+ Kd1,Nd2+ Kb2 Nxe4,garfo,garfo,acerto,garfo,garfo
+lichess:09lzX,desenvolvimento,garfo,cravada,peca_pendurada,Bxd6 Ba6 Qxa6 Qa8 Ra1 Qxa6 Rxa6 Rc8 Kf1 Kh7,Bxd6 Rd8 Bxb8 Rxd1+ Kg2,peca_pendurada,"peca_pendurada, garfo",motivo detectado apenas na solução pública,cravada,peca_pendurada
+lichess:013h1,validacao,garfo,garfo,garfo,Qa4+ Bd7 Qxb4 Bc6 Be2 Ne7 O-O h6 Rf4 a5,Qa4+ Bd7 Qxb4,garfo,garfo,acerto,garfo,garfo
+lichess:08un8,validacao,cravada,sobrecarga,cravada,Qh7+ Kd8 Qh4 Kc8 Qxg5 Rc5 b4 Rd5 a4 Kc7,Qh7+ Kd8 Qh4 Kc7 Qxg5,cravada,cravada,acerto,sobrecarga,cravada
+lichess:045gE,validacao,cravada,cravada,atracao,Rxd5+ Qxd5 Rb5 Ke4 Rxd5 Kxd5 Kg6 Kc4 Kxg5 Kd3,Rxd5+ Qxd5 Rb5 Qxb5 axb5,"atracao, cravada","cravada, atracao",evidencias concorrentes na PV,cravada,atracao
+lichess:00C8e,desenvolvimento,cravada,ataque_duplo,cravada,Kb1 Qd1+ Bc1 Qb3+ Ka1 Qa4+ Kb2 Qa3+ Kb1,Kb1 Qd1+ Bc1,cravada,cravada,acerto,ataque_duplo,cravada
+lichess:06tA5,desenvolvimento,cravada,garfo,cravada,Rb7 Qxb7 Nxd6+ Kg8 Nxb7 Nf4 Rg1 Rb2 Nc5 Rxa2,Rb7 Qxb7 Nxd6+ Kg8 Nxb7,"cravada, atracao, garfo","cravada, atracao, garfo",acerto,garfo,cravada
+lichess:09lre,desenvolvimento,cravada,ataque_duplo,cravada,Rf1 Qxf1+ Kxf1 Ne7 Rf3+ Kg7 Rf2 Nc8 a5 Nd6,Rf1 Qxf1+ Kxf1,"cravada, atracao","cravada, atracao",acerto,ataque_duplo,cravada
+lichess:00eak,validacao,cravada,cravada,outro,Ng4+ Kg1 Nxf2 Rxe3 Rxe3 Qb8+ Kh7 Ra4 Rexg3+ Kxf2,Ng4+ Kg2 Nxf2,,,motivo de referência sem evidência nas regras atuais,cravada,outro
+lichess:08QRR,validacao,cravada,ataque_duplo,cravada,Rxd5 Rxd5 Bc4 Rd8 Rd1 Kf8 Rxd5 Rxd5 Bxd5 b6,Rxd5 Rxd5 Bc4 Rd8 Rd1,"cravada, atracao",cravada,acerto,ataque_duplo,cravada
+lichess:09i3g,desenvolvimento,cravada,cravada,cravada,Rbe8+ Kd6 Rd8 Qxd8+ Rxd8+ Kc7 Rd4 a5 Rc4+ Kb6,Rbe8+ Kd6 Rd8 Qxd8+ Rxd8+,"cravada, atracao","cravada, atracao",acerto,cravada,cravada
+lichess:05428,desenvolvimento,cravada,cravada,desvio,Nxf3+ Qxf3 Qxd2 a3 Nxe5 Qd1 Qxd1 Rexd1 Nc4 g3,Nxf3+ Qxf3 Qxd2,"desvio, cravada","desvio, cravada",evidencias concorrentes na PV,cravada,desvio
+lichess:012ee,validacao,espeto,cravada,espeto,Qxh2+ Kf1 Qh1+ Ke2 Qxa1 Qe7 Bh2 Qxe6+ Kh8 Nb4,Qxh2+ Kf1 Qh1+ Ke2 Qxa1,espeto,espeto,acerto,cravada,espeto
+lichess:08HWn,desenvolvimento,espeto,outro,espeto,Rh3+ Kg2 Rxa3 Rf2 Rc3 Rf1 Rxc4 f5+ Kf7 Rh1,Rh3+ Kg2 Rxa3,espeto,espeto,acerto,outro,espeto
+lichess:07kgw,desenvolvimento,espeto,outro,espeto,Rh6+ Kd5 Rxb6 Rh7 Kg2 f4 g4 e4 Rb5+ Kd4,Rh6+ Kd5 Rxb6,espeto,espeto,acerto,outro,espeto
+lichess:02Ps5,desenvolvimento,espeto,outro,espeto,Rg2+ Ke3 Re8+ Kxd3 Rxe1 f4 Re7 Ba3 Rc7 Nd6+,Rg2+ Ke3 Re8+ Kxd3 Rxe1,espeto,espeto,acerto,outro,espeto
+lichess:074ux,desenvolvimento,espeto,cravada,espeto,Qxh2+ Kf1 Qh1+ Ke2 Qxc1 Qxg4 Qxb2+ Nd2 Qb5+ Ke3,Qxh2+ Kf1 Qh1+ Ke2 Qxc1,espeto,espeto,acerto,cravada,espeto
+lichess:09orT,desenvolvimento,espeto,outro,espeto,Qh8+ Ke7 Qxb8 Nc8 Rxe6+ Kxe6 Qxc8+ Kf6 Qh8+ Ke7,Qh8+ Ke7 Qxb8,"espeto, atracao",espeto,acerto,outro,espeto
+lichess:071SG,validacao,espeto,cravada,espeto,Rh4+ Kxe3 Rxa4 hxg2 Kxg2 Kd3 Ra3+ Kd2 Ra2+ Kd3,Rh4+ Kxe3 Rxa4,espeto,espeto,acerto,cravada,espeto
+lichess:05393,validacao,espeto,cravada,atracao,Qb7+ Kg1 Rf1+ Kxf1 Qxh1+ Kf2 Qxc1 e6 Qb2+ Kf3,Qb7+ Kg1 Rf1+ Kxf1 Qxh1+ Ke2 Qxc1 e6 Qb2+,"atracao, desvio, espeto","atracao, desvio, espeto",evidencias concorrentes na PV,cravada,atracao
+lichess:04eUN,validacao,espeto,cravada,espeto,Qh1+ Kf2 Qxh2+ Ke1 Qxc2 Ne2 b4 Rf2 bxc3 Ra7,Qh1+ Kf2 Qxh2+ Ke1 Qxc2,"espeto, desvio","espeto, desvio",acerto,cravada,espeto
+lichess:04GtP,desenvolvimento,ataque_descoberto,cravada,atracao,Nf3+ Qxf3 Bxf3 Nc4 Rac8 Ne5 Rc2 Bd4 b6 a4,Nf3+ Kh1 Nd4+ Nxd5 Nxe2,atracao,ataque_descoberto,motivo detectado apenas na solução pública,cravada,atracao
+lichess:00E29,validacao,ataque_descoberto,cravada,ataque_descoberto,Bxh7+ Kxh7 Qxd5 Bb7 Nd4 Bf6 Nxc6 Bxc6 Qxc6 Bxb2,Bxh7+ Kxh7 Qxd5,"ataque_descoberto, atracao",ataque_descoberto,acerto,cravada,ataque_descoberto
+lichess:06SZH,desenvolvimento,ataque_descoberto,cravada,ataque_descoberto,Re4+ Kb7 Rxb4 c6 Qe6 Rg7 Rg4 Rh7 Rxg5 Rc7,Re4+ Kb7 Rxb4,ataque_descoberto,ataque_descoberto,acerto,cravada,ataque_descoberto
+lichess:08zBJ,desenvolvimento,ataque_descoberto,mate,ataque_descoberto,Be2+ Ne1 Qxe1#,Be2+ Ne1 Qxe1#,"ataque_descoberto, mate","ataque_descoberto, mate",acerto,mate,ataque_descoberto
+lichess:05wQw,desenvolvimento,ataque_descoberto,cravada,ataque_descoberto,Nxe7 Rxe7 Rxf8 Rxf8 a3 a5 axb4 axb4 Ra6 Rf6,Nxe7 Rxe7 Rxf8,"ataque_descoberto, desvio","ataque_descoberto, desvio",acerto,cravada,ataque_descoberto
+lichess:0951y,validacao,ataque_descoberto,ataque_duplo,ataque_descoberto,Ba4+ Kd2 Rxf8 Be2 Rf2 e4 Rh2 Ke3 Kxg6 Bg4,Ba4+ Kd2 Rxf8,"ataque_descoberto, cravada",ataque_descoberto,acerto,ataque_duplo,ataque_descoberto
+lichess:08OYU,validacao,ataque_descoberto,cravada,cravada,Qxd1 Rxd1 Bxe4 c4 Bg6 Nc3 Rd8 Rxd8+ Kxd8 Rd1+,Qxd1 Rxd1 Bxe4,"cravada, ataque_descoberto, desvio, atracao","cravada, ataque_descoberto, desvio",evidencias concorrentes na PV,cravada,cravada
+lichess:08WhI,validacao,ataque_descoberto,ataque_duplo,ataque_descoberto,Re7+ Kh2 Rxd7 Rg1 a5 Rad1 b4 Rgf1 Kg7 Rf4,Re7+ Kh2 Rxd7,ataque_descoberto,ataque_descoberto,acerto,ataque_duplo,ataque_descoberto
+lichess:05f8h,desenvolvimento,ataque_descoberto,cravada,ataque_descoberto,gxh6+ Kh8 Rg8+ Rxg8 Qxe5+ Kh7 Qc7+ Kxh6 Qxb7 Rg7,gxh6+ Kh8 Rg8+ Rxg8 Qxe5+,"ataque_descoberto, desvio, garfo","ataque_descoberto, desvio",acerto,cravada,ataque_descoberto
+lichess:08tTe,validacao,peca_pendurada,ataque_duplo,peca_pendurada,Rxf2 Rxe4 Bxe4 b5 Re2 f5 Bc2 Rh4 Bd3 bxc4,Rxf2 Rxe4 Bxe4,peca_pendurada,peca_pendurada,acerto,ataque_duplo,peca_pendurada
+lichess:02lVn,validacao,peca_pendurada,cravada,peca_pendurada,Rxe7 Rc8+ Re8 Rxe8+ Kf7 Rf8+ Ke7 Kh2 Qxa2 f3,Rxe7 Rc8+ Re8,peca_pendurada,peca_pendurada,acerto,cravada,peca_pendurada
+lichess:02jkj,desenvolvimento,peca_pendurada,outro,peca_pendurada,Nxa2 Qxe1+ Nxe1 Rxc2 Nxc2 Nxe4 f3 Nf6 Bd4 Re8,Nxa2 Qxe1+ Nxe1 Rxc2 Nxc2,peca_pendurada,peca_pendurada,acerto,outro,peca_pendurada
+lichess:02Smp,desenvolvimento,peca_pendurada,cravada,cravada,Bxd5 Qe2 Rxc1 Rxc1 Ndf6 a3 Re8 Ne5 Nd6 Bd3,Bxd5 Qxc8 Rxc8 Rxc8+ Nf8,"cravada, desvio, peca_pendurada",peca_pendurada,evidencias concorrentes na PV,cravada,cravada
+lichess:007OE,validacao,peca_pendurada,cravada,peca_pendurada,Qxd1+ Ka2 Rh1 Nc5+ Kb6 Na4+ Ka6 Qd3+ Qxd3 Nc5+,Qxd1+ Ka2 Rh1 Nc5+ Kb6,peca_pendurada,peca_pendurada,acerto,cravada,peca_pendurada
+lichess:01Wci,desenvolvimento,peca_pendurada,cravada,peca_pendurada,Qxa8+ Rd8 Rxd8+ Bxd8 Qxd8+ Kh7 Qd3+ Kg8 f3 Qf6,Qxa8+ Rd8 Rxd8+,"peca_pendurada, atracao",peca_pendurada,acerto,cravada,peca_pendurada
+lichess:06e0K,desenvolvimento,peca_pendurada,ataque_duplo,peca_pendurada,Qxf5 Re8 Nf6 Rb8 Qb1+ Kg2 Qxb2+ Kh3 Qa3+ Kh4,Qxf5 d7 Qb1+,peca_pendurada,peca_pendurada,acerto,ataque_duplo,peca_pendurada
+lichess:09Xpo,desenvolvimento,peca_pendurada,cravada,peca_pendurada,Kxg3 Nh5+ Kf2 Qe5 Rbd1 Qh2+ Ke3 Ng3 Bd3 Nxf1+,Kxg3 Qh3+ Kf2,peca_pendurada,peca_pendurada,acerto,cravada,peca_pendurada
+lichess:07eHq,validacao,peca_pendurada,outro,peca_pendurada,dxc7 Rc6 Rd6+ Rxd6 c8=Q Rd4+ Ka3 Rxe4 Qxa6 Kf5,dxc7 Rc6 Rd6+ Rxd6 c8=Q,peca_pendurada,peca_pendurada,acerto,outro,peca_pendurada
+lichess:02ChS,validacao,mate,mate,mate,Bf7+ Ke7 Nd5#,Bf7+ Ke7 Bg5#,mate,mate,acerto,mate,mate
+lichess:01za4,desenvolvimento,mate,mate,mate,Qa1#,Qa1#,mate,mate,acerto,mate,mate
+lichess:00pmn,validacao,mate,mate,mate,Qe1#,Qe1#,mate,mate,acerto,mate,mate
+lichess:02Uju,desenvolvimento,mate,mate,mate,Rh7+ Kf8 Rh8+ Ke7 Re8#,Rh7+ Kf8 Rh8+ Ke7 Re8#,mate,mate,acerto,mate,mate
+lichess:082c2,validacao,mate,mate,mate,Qf7#,Qf7#,mate,mate,acerto,mate,mate
+lichess:09NJG,validacao,mate,mate,mate,Rf1+ Rd1 Rxd1#,Rf1+ Rd1 Rxd1#,mate,mate,acerto,mate,mate
+lichess:01tZ5,desenvolvimento,mate,mate,mate,Rxg7+ Rxg7 Qh6+ Kg8 Qxg7#,Rxg7+ Rxg7 Qh6+ Kg8 Qxg7#,"mate, garfo, atracao","mate, garfo, atracao",acerto,mate,mate
+lichess:06LI3,desenvolvimento,mate,mate,mate,Rxh3+ Kg1 Rh1#,Rxh3+ gxh3 Rxh3#,mate,mate,acerto,mate,mate
+lichess:04Idj,desenvolvimento,mate,mate,mate,Qxf2+ Kh1 Qf1+ Rxf1 Rxf1#,Qxf2+ Kh1 Qf1+ Rxf1 Rxf1#,"mate, atracao","mate, atracao",acerto,mate,mate
+lichess:07dVd,desenvolvimento,desvio,cravada,desvio,Qe8+ Qf8 Bxh7+ Kxh7 Qxf8 Bh4 Qf5+ Kg8 Qxd5+ Kf8,Qe8+ Qf8 Bxh7+ Kxh7 Qxf8,"desvio, cravada","desvio, cravada",acerto,cravada,desvio
+lichess:054S8,validacao,desvio,mate,desvio,Qxf2+ Rxf2 Rxe1+ Rf1 Rfxf1#,Qxf2+ Rxf2 Rxe1+ Rf1 Rexf1#,"desvio, mate","desvio, mate",acerto,mate,desvio
+lichess:03ZQd,validacao,desvio,cravada,atracao,Qe8+ Qf8 Rxg7+ Kxg7 Rg1+ Kf6 Qxf8 Rd5 Qxb8 b3,Qe8+ Qf8 Rxg7+ Kxg7 Rg1+ Kf6 Qxf8,"atracao, desvio","atracao, desvio",evidencias concorrentes na PV,cravada,atracao
+lichess:0068B,desenvolvimento,desvio,cravada,desvio,Rxd7 Qxd7 Qxa8+ Qd8 Qxa6 Qd2 Qe2 Qc1+ Nd1 b5,Rxd7 Qxd7 Qxa8+,desvio,desvio,acerto,cravada,desvio
+lichess:09KJR,desenvolvimento,desvio,cravada,desvio,Qd1+ Rg1 Qxf3+ Qg2 Rxg2 Rxg2 Qd1+ Rg1 Qxa4 Kg2,Qd1+ Rg1 Qxf3+,desvio,desvio,acerto,cravada,desvio
+lichess:02JZv,validacao,desvio,cravada,desvio,Rd1+ Rxd1 Qxc6 g3 Qc2 Rd7+ Kh6 Ra7 Qb1+ Kg2,Rd1+ Rxd1 Qxc6,desvio,desvio,acerto,cravada,desvio
+lichess:00H87,desenvolvimento,desvio,cravada,desvio,Qc8+ Kh7 Rxf7+ Kxh6 Qf8+ Ng7 Qxg7+ Kh5 Rf5+ gxf5,Qc8+ Kh7 Rxf7+ Ng7 Rxg7+ Kxh6 Qh8+ Kg5 Rxg6+ Kxg6 Qg8+ Kf6 Qxg3,desvio,desvio,acerto,cravada,desvio
+lichess:03726,desenvolvimento,desvio,cravada,desvio,Nxg6+ Qxg6 Qxc8+ Rf8 Qe6 Rf6 Qe8+ Qxe8 Rxe8+ Kh7,Nxg6+ Qxg6 Qxc8+,"desvio, atracao",desvio,acerto,cravada,desvio
+lichess:096U9,desenvolvimento,atracao,garfo,atracao,Qxc8 Qxc8 Nxe7+ Kg7 Nxc8 Rxc8 Rxd6 Rc2 b4 b6,Qxc8 Qxc8 Nxe7+ Kg7 Nxc8,"atracao, garfo","atracao, garfo",acerto,garfo,atracao
+lichess:02SQK,validacao,atracao,mate,atracao,Qxh7+ Kxh7 Rh5+ Kg8 Rh8#,Qxh7+ Kxh7 Rh5+ Kg8 Rh8#,"atracao, mate","atracao, mate",acerto,mate,atracao
+lichess:00vjg,desenvolvimento,atracao,garfo,atracao,Rxc2 Rxc2 Qd1+ Kh2 Qxc2 Qb7 Qa4 Qb8+ Bd8 Bc5,Rxc2 Rxc2 Qd1+ Kh2 Qxc2,"atracao, garfo","atracao, garfo",acerto,garfo,atracao
+lichess:06gYP,desenvolvimento,atracao,cravada,atracao,Bxh2+ Kxh2 Qh4+ Kg1 Qxf2+ Kh2 Qh4+ Kg1 Qxe1+ Kh2,Bxh2+ Kxh2 Qh4+,"atracao, garfo",atracao,acerto,cravada,atracao
+lichess:07LBQ,desenvolvimento,atracao,mate,atracao,Rh8+ Kxh8 Qh6+ Kg8 Qxg7#,Rh8+ Kxh8 Qh6+ Kg8 Qxg7#,"atracao, mate","atracao, mate",acerto,mate,atracao
+lichess:06Bop,validacao,atracao,cravada,cravada,Rxf5 gxf5 Bxg7 Kxg7 Qxh7+ Kf6 Ncxe4+ Ke7 Qxf5 Qd4+,Rxf5 gxf5 Bxg7 Kxg7 Qxh7+,"cravada, atracao, desvio","cravada, atracao",evidencias concorrentes na PV,cravada,cravada
+lichess:08Lna,desenvolvimento,atracao,mate,atracao,Qxg1+ Kxg1 Rc1+ Qd1 Rxd1#,Qxg1+ Kxg1 Rc1+ Qd1 Rxd1#,"atracao, mate","atracao, mate",acerto,mate,atracao
+lichess:07ThY,validacao,atracao,espeto,atracao,Bxh7+ Kxh7 Qh5+ Kg8 Bxg7 f5 gxf6 Bxf6 Qh8+ Kf7,Bxh7+ Kxh7 Qh5+,atracao,atracao,acerto,espeto,atracao

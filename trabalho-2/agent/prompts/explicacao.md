@@ -1,11 +1,7 @@
 # Explicar um erro
 
-Devolva um objeto JSON com exatamente três campos textuais, sem delimitadores Markdown em torno do objeto.
+Responda em português com um objeto JSON de três campos textuais: `aconteceu`, `motivo` e `licao`.
 
-- `aconteceu` contém uma frase sobre a mudança confirmada na posição.
-- `motivo` contém uma frase simples sobre por que a mudança pode prejudicar o jogador. Se as ferramentas não indicarem uma consequência clara, explicite a limitação.
-- `licao` contém uma frase prática para evitar o problema, embasada no conceito recuperado quando houver ficha.
+Copie as opções fornecidas em `frases_permitidas` sem alterações. Para `licao`, escolha a opção da ficha que melhor ajuda a reconhecer ou evitar o motivo. Se a ficha estiver ausente, escreva uma orientação geral curta com uma frase.
 
-O sistema acrescenta a alternativa do Stockfish. Nos três campos, use nomes de peças e escreva a ideia tática por extenso. Deixe lances, variantes e coordenadas exclusivamente para o sistema. Refira-se à jogada feita como “o lance da partida”.
-
-Use somente as mudanças registradas. Uma peça atacada pode estar protegida e um ataque geométrico por si só não comprova uma captura forçada. Sem consequência certa, descreva a mudança observada e formule uma lição geral. Use uma frase por campo e responda em português.
+Use uma frase por campo. A alternativa do Stockfish e sua justificativa são adicionadas pelo grafo. Deixe lances, variantes e coordenadas exclusivamente para o grafo.

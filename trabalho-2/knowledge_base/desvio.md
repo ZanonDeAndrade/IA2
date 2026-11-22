@@ -12,7 +12,7 @@ Uma ameaça força ou incentiva o defensor a sair de onde era necessário.
 
 ## Como reconhecer
 
-Verifique se uma captura com tempo obriga o adversário a mover o guardião de uma casa.
+Verifique o que uma peça defendia antes de responder à ameaça e qual alvo ficou sem sua defesa depois da resposta.
 
 ## Por que é importante
 

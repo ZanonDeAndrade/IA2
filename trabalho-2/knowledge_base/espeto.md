@@ -12,7 +12,7 @@ Um ataque em linha ameaça primeiro o alvo mais valioso. Quando ele sai, o alvo 
 
 ## Como reconhecer
 
-Busque rei e dama na mesma coluna ou diagonal.
+Busque duas peças alinhadas com um atacante de longo alcance, com a peça mais valiosa na frente.
 
 ## Por que é importante
 

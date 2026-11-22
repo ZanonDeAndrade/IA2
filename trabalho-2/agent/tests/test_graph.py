@@ -66,21 +66,22 @@ def configurar(monkeypatch):
     return configurar
 
 
-def _explicacao(motivo):
+def _explicacao(licao):
     return json.dumps({
-        "aconteceu": "A posição mudou", "motivo": motivo, "licao": "Confira as respostas do adversário",
+        "aconteceu": "O lance da partida mudou a posição.",
+        "motivo": "A variante analisada não confirma um motivo tático específico para o lance.", "licao": licao,
     })
 
 
 def test_explicacao_recupera_fatos_e_ficha_e_corrige(configurar):
-    ficha = {"id": "garfo", "titulo": "Garfo", "arquivo": "knowledge_base/garfo.md", "texto": "Conceito."}
+    ficha = {"id": "outro", "titulo": "Revisão", "arquivo": "knowledge_base/outro.md", "texto": "Conceito."}
     posicoes = []
 
     def descrever(fen):
         posicoes.append(fen)
         return {"turno": chess.Board(fen).turn}
 
-    modelo = ModeloDeTeste("garfo", _explicacao("O motor recomendou d4"), _explicacao("O motor recomendou e4"))
+    modelo = ModeloDeTeste(_explicacao("O motor recomendou d4"), _explicacao("O motor recomendou e4"))
     configurar(modelo, conceitos=[ficha], descrever=descrever)
     resultado = graph.explicar_erro(FEN, "d4", "e4", LINHA)
     depois = chess.Board()
@@ -105,11 +106,8 @@ def test_modo_json_rejeita_frase_factual_fora_do_esquema(monkeypatch):
         async def ainvoke(self, mensagens, **opcoes):
             dados = json.loads(mensagens[-1].content)
             propriedades = opcoes["response_format"]["json_schema"]["schema"]["properties"]
-            if "temas_permitidos" in dados:
-                temas = propriedades["tema"]["enum"]
-                assert "outro" in temas and "garfo" not in temas and "mate" not in temas
-                return AIMessage(content='{"tema":"garfo"}')
             frases = dados["frases_permitidas"]
+            assert dados["tema"] == "Outro"
             assert propriedades["aconteceu"]["enum"] == frases["aconteceu"]
             texto = frases["aconteceu"][0] if dados["erros"] else "A dama das brancas se moveu."
             return AIMessage(content=json.dumps({
@@ -122,16 +120,25 @@ def test_modo_json_rejeita_frase_factual_fora_do_esquema(monkeypatch):
     }))
     assert estado["pronto"] and estado["validada"] and estado["tentativas"] == 2
     assert estado["tema"] == "outro" and estado["ficha"]["id"] == "outro"
-    assert "peao das brancas" in estado["texto"] and "dama" not in estado["texto"]
+    assert "peão das brancas" in estado["texto"] and "dama" not in estado["texto"]
 
 
 def test_garfo_com_xeque_exige_captura_do_outro_alvo_na_variante():
     fen = "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32"
     tabuleiro = chess.Board(fen)
     linha = ["Rxg6+", "fxg6", "Qe7+", "Kh6", "Qxf8+"]
-    assert graph._garfo_com_xeque(tabuleiro, linha[:-1]) is None
-    assert graph._garfo_com_xeque(tabuleiro, linha) == {"atacante": "dama das brancas", "alvo": "torre"}
+    assert all(e.tema != "garfo" for e in graph.candidatos_taticos(tabuleiro, {"linha_principal": linha[:-1]}))
+    assert any(e.tema == "garfo" and "dama" in e.frase and "torre" in e.frase
+               for e in graph.candidatos_taticos(tabuleiro, {"linha_principal": linha}))
     assert tabuleiro.fen() == fen
+
+
+def test_frase_verificada_de_mate_respeita_o_formato_da_explicacao():
+    tabuleiro = chess.Board("7k/8/5KQ1/8/8/8/8/8 w - - 0 1")
+    evidencia = graph.candidatos_taticos(tabuleiro, {"linha_principal": ["Qg7#"], "avaliacao": {"tipo": "mate", "valor": 1}})[0]
+    assert evidencia.tema == "mate"
+    motivo = evidencia.frase
+    assert "xeque-mate" in motivo and graph._AVALIACAO_NUMERICA.search(motivo) is None
 
 
 def test_chat_rejeita_descricao_que_contradiz_a_vez(monkeypatch):
@@ -162,17 +169,17 @@ def test_chat_rejeita_descricao_que_contradiz_a_vez(monkeypatch):
 
 def test_tres_tentativas_e_fallback_deterministico(configurar):
     tentativa = _explicacao("O motor recomenda Qz9")
-    modelo = ModeloDeTeste("inventado", tentativa, tentativa, tentativa)
+    modelo = ModeloDeTeste(tentativa, tentativa, tentativa)
     configurar(modelo)
     resultado = graph.explicar_erro(FEN, "d4", "e4", LINHA)
     assert resultado["validada"] and resultado["tentativas"] == 3
     assert resultado["tema"] == "outro" and resultado["ficha"] is None
     assert "Qz9" not in resultado["texto"] and "`e4 e5 Nf3`" in resultado["texto"]
-    assert len(modelo.chamadas) == 4
+    assert len(modelo.chamadas) == 3
 
 
 def test_resposta_incompleta_e_base_vazia(configurar):
-    configurar(ModeloDeTeste("garfo", "{}", _explicacao("É preciso comparar as opções")))
+    configurar(ModeloDeTeste("{}", _explicacao("É preciso comparar as opções")))
     resultado = graph.explicar_erro(FEN, "d4", "e4", LINHA)
     assert resultado["validada"] and resultado["tentativas"] == 2 and resultado["ficha"] is None
 
