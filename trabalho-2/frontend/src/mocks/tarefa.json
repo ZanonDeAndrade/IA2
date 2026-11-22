@@ -1,12 +1,13 @@
 {
-  "id": "tarefa-123",
-  "partida_id": "a1b2c3",
-  "status": "em_andamento",
+  "id": "4ed798fdb5414fa48df0c0ce163d34ad",
+  "partida_id": "7339c59c2643773a8312b857",
+  "status": "concluida",
   "progresso": {
-    "lance_atual": 12,
-    "total_lances": 38,
-    "percentual": 31.6
+    "lance_atual": 4,
+    "total_lances": 4,
+    "percentual": 100.0
   },
-  "iniciada_em": "2026-11-04T15:00:00-03:00",
-  "erro": null
+  "iniciada_em": "2026-11-21T20:24:56.127280+00:00",
+  "erro": null,
+  "resultado": "/api/partidas/7339c59c2643773a8312b857"
 }

@@ -4,6 +4,48 @@ Treinador de xadrez do Trabalho 2 de Inteligência Artificial II. O Stockfish
 identifica alternativas, o classificador mede a perda de chance de vitória e o
 agente explica os erros em português com fatos verificáveis e fichas táticas.
 
+![Demonstração didática da interface Lance a Lance](docs/img/demo.gif)
+
+O GIF mostra a demonstração offline com dados ilustrativos. A interface também
+consome a API real para importar, analisar, explicar lances, conversar sobre a
+posição e consultar o relatório.
+
+[Guia da interface](frontend/README.md) ·
+[Tarefas restantes do Milton](docs/pendencias-milton.md) ·
+[Registro do teste SUS](docs/sus.html) ·
+[Roteiro do pitch](docs/roteiro-pitch.md)
+
+## Aplicativo no Windows
+
+Com Python 3.11+ e Node.js 22+, na pasta `trabalho-2`:
+
+```powershell
+.\preparar.ps1
+.\iniciar.ps1
+```
+
+Acesse `http://127.0.0.1:5173`. O preparo mínimo instala a API, baixa o Stockfish
+oficial e prepara os puzzles. Para explicações com RAG e chat, use
+`.\preparar.ps1 -ComRag` e configure o provedor/modelo autorizado no `.env`.
+Configure também o contato real em `CHESSCOM_USER_AGENT` para importar pelo
+Chess.com. O `.env` é local e não deve ser versionado.
+
+### Telas
+
+![Início e importação de partidas](docs/img/inicio.png)
+![Análise no modo de demonstração didática](docs/img/analise-demo.png)
+![Relatório no modo de demonstração didática](docs/img/relatorio-demo.png)
+
+Há modos claro e escuro e layout para celular. O teste de usabilidade SUS com
+cinco participantes ainda precisa ser aplicado. O formulário em `docs/sus.html`
+registra as respostas e calcula as notas, sem resultados fictícios.
+
+A [verificação local da interface](docs/verificacao-interface.md) registrou 12
+testes de desktop/celular e um fluxo real com Stockfish/MCP aprovados. A suíte
+de backend, ferramentas e agente registrou 102 aprovados e três ignorados por
+dependências opcionais. A inferência com LLM e a execução Docker ainda dependem
+da configuração do ambiente da equipe.
+
 [Documentação acadêmica](docs/lance-a-lance-documentacao-do-projeto.pdf) ·
 [Integração com o frontend e contratos HTTP](docs/integracao-frontend.md) ·
 [Protocolo experimental](evaluation/README.md)
@@ -28,7 +70,7 @@ React → FastAPI → cliente MCP → FastMCP
   Sentence Transformers. O modelo padrão é MiniLM multilíngue.
 - `data/` contém a preparação e os índices de puzzles e o benchmark HTTP.
 - `evaluation/` contém dataset, métricas, exportações e avaliação cega.
-- `frontend/` contém o trabalho visual do Milton. A interface acessará apenas
+- `frontend/` contém o trabalho visual do Milton. A interface acessa apenas
   a API HTTP.
 
 ## Ferramentas MCP
@@ -75,7 +117,7 @@ cp -n .env.example .env
 docker compose up --build
 ```
 
-A API fica em `http://localhost:8000`, o Swagger em
+A interface fica em `http://localhost:5173`. A API fica em `http://localhost:8000`, o Swagger em
 `http://localhost:8000/docs` e o OpenAPI em `http://localhost:8000/openapi.json`.
 O backend e o MCP têm health checks. A API aguarda o MCP também após
 reinício. Entre contêineres, o MCP usa Streamable HTTP com respostas JSON
