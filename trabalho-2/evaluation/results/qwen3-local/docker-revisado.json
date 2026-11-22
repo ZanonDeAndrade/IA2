@@ -1,0 +1,59 @@
+{
+  "modelo": "qwen3:1.7b",
+  "motor": "Stockfish 15.1",
+  "endpoint_explica": 200,
+  "explicacao": {
+    "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+    "lance_jogado": "Rd2",
+    "melhor_lance": "Rd7",
+    "melhor_lance_uci": "d8d7",
+    "classe": "erro_grave",
+    "queda": 68.03127481446464,
+    "tema": "garfo",
+    "tema_label": "Garfo",
+    "texto": "O lance da partida deslocou uma torre das pretas. Na variante analisada, uma dama das brancas dá xeque e depois captura uma torre. Procurar xeques e ataques simultâneos do adversário antes de jogar é uma estratégia importante para evitar perdas e manter a posição em equilíbrio. O Stockfish indicou `Rd7` como alternativa.",
+    "ficha": {
+      "id": "garfo",
+      "titulo": "Garfo",
+      "arquivo": "knowledge_base/garfo.md"
+    },
+    "ferramentas_usadas": [
+      "descrever_posicao",
+      "analisar_posicao",
+      "buscar_conceitos",
+      "validar_lances"
+    ],
+    "tentativas": 1,
+    "validada": true,
+    "fallback": false,
+    "cache": false
+  },
+  "cache": true,
+  "endpoint_chat": 200,
+  "chat": {
+    "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+    "pergunta": "Consulte o Stockfish. Qual é o melhor lance para o lado a jogar? Diga o lance em SAN.",
+    "resposta": "O melhor lance para o lado a jogar é **Rd7**.",
+    "ferramentas_usadas": [
+      {
+        "nome": "analisar_posicao",
+        "argumentos": {
+          "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+          "profundidade": 18,
+          "multipv": 3
+        }
+      },
+      {
+        "nome": "validar_lances",
+        "argumentos": {
+          "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+          "lances": [
+            "Rd7"
+          ]
+        }
+      }
+    ],
+    "validada": true,
+    "status": "ok"
+  }
+}

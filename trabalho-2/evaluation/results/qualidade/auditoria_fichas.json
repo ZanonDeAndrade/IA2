@@ -1,0 +1,752 @@
+[
+  {
+    "id": "ataque_descoberto",
+    "titulo": "Ataque descoberto",
+    "tema": "discoveredAttack",
+    "tema_pt": "ataque_descoberto",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/ataque_descoberto.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "ataque_descoberto"
+    ],
+    "livre": [
+      "ataque_descoberto",
+      "espeto",
+      "peca_pendurada",
+      "raio_x"
+    ]
+  },
+  {
+    "id": "ataque_duplo",
+    "titulo": "Ataque duplo",
+    "tema": "fork",
+    "tema_pt": "ataque_duplo",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/ataque_duplo.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "ataque_duplo"
+    ],
+    "livre": [
+      "ataque_duplo",
+      "peca_pendurada",
+      "ataque_descoberto",
+      "espeto"
+    ]
+  },
+  {
+    "id": "atracao",
+    "titulo": "Atração",
+    "tema": "attraction",
+    "tema_pt": "atracao",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/atracao.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "atracao"
+    ],
+    "livre": [
+      "peca_pendurada",
+      "raio_x",
+      "ataque_descoberto",
+      "espeto"
+    ]
+  },
+  {
+    "id": "cravada",
+    "titulo": "Cravada",
+    "tema": "pin",
+    "tema_pt": "cravada",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/cravada.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "cravada"
+    ],
+    "livre": [
+      "cravada",
+      "roque",
+      "mate_corredor",
+      "espeto"
+    ]
+  },
+  {
+    "id": "desvio",
+    "titulo": "Desvio",
+    "tema": "deflection",
+    "tema_pt": "desvio",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/desvio.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "desvio"
+    ],
+    "livre": [
+      "peao_passado",
+      "liberacao",
+      "desvio",
+      "xeque_duplo"
+    ]
+  },
+  {
+    "id": "en_passant",
+    "titulo": "Captura en passant",
+    "tema": "enPassant",
+    "tema_pt": "en_passant",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/en_passant.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "en_passant"
+    ],
+    "livre": [
+      "en_passant",
+      "remocao_defensor",
+      "peca_pendurada",
+      "raio_x"
+    ]
+  },
+  {
+    "id": "espeto",
+    "titulo": "Espeto",
+    "tema": "skewer",
+    "tema_pt": "espeto",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/espeto.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "espeto"
+    ],
+    "livre": [
+      "espeto",
+      "raio_x",
+      "peao_passado",
+      "mate"
+    ]
+  },
+  {
+    "id": "garfo",
+    "titulo": "Garfo",
+    "tema": "fork",
+    "tema_pt": "garfo",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/garfo.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "garfo"
+    ],
+    "livre": [
+      "zugzwang",
+      "roque",
+      "garfo",
+      "mate"
+    ]
+  },
+  {
+    "id": "interferencia",
+    "titulo": "Interferência",
+    "tema": "interference",
+    "tema_pt": "interferencia",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/interferencia.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "interferencia"
+    ],
+    "livre": [
+      "interferencia",
+      "lance_intermediario",
+      "liberacao",
+      "raio_x"
+    ]
+  },
+  {
+    "id": "lance_intermediario",
+    "titulo": "Lance intermediário",
+    "tema": "intermezzo",
+    "tema_pt": "lance_intermediario",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/lance_intermediario.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "lance_intermediario"
+    ],
+    "livre": [
+      "lance_intermediario",
+      "sacrificio",
+      "remocao_defensor",
+      "raio_x"
+    ]
+  },
+  {
+    "id": "liberacao",
+    "titulo": "Liberação de linha",
+    "tema": "clearance",
+    "tema_pt": "liberacao",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/liberacao.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "liberacao"
+    ],
+    "livre": [
+      "liberacao",
+      "interferencia",
+      "mate_corredor",
+      "cravada"
+    ]
+  },
+  {
+    "id": "mate",
+    "titulo": "Xeque-mate",
+    "tema": "mate",
+    "tema_pt": "mate",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/mate.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "mate"
+    ],
+    "livre": [
+      "raio_x",
+      "zugzwang",
+      "interferencia",
+      "mate"
+    ]
+  },
+  {
+    "id": "mate_abafado",
+    "titulo": "Mate abafado",
+    "tema": "smotheredMate",
+    "tema_pt": "mate_abafado",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/mate_abafado.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "mate_abafado"
+    ],
+    "livre": [
+      "mate",
+      "peao_passado",
+      "mate_abafado",
+      "xeque_duplo"
+    ]
+  },
+  {
+    "id": "mate_corredor",
+    "titulo": "Mate de corredor",
+    "tema": "backRankMate",
+    "tema_pt": "mate_corredor",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/mate_corredor.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "mate_corredor"
+    ],
+    "livre": [
+      "mate_corredor",
+      "peao_passado",
+      "espeto",
+      "xeque_duplo"
+    ]
+  },
+  {
+    "id": "oposicao",
+    "titulo": "Oposição dos reis",
+    "tema": "oposicao",
+    "tema_pt": "oposicao",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/oposicao.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "oposicao"
+    ],
+    "livre": [
+      "oposicao",
+      "rei_exposto",
+      "mate",
+      "xeque_duplo"
+    ]
+  },
+  {
+    "id": "outro",
+    "titulo": "Revisão sem tema tático claro",
+    "tema": "outro",
+    "tema_pt": "outro",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/outro.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "outro"
+    ],
+    "livre": [
+      "outro",
+      "peao_passado",
+      "mate",
+      "subpromocao"
+    ]
+  },
+  {
+    "id": "peao_isolado",
+    "titulo": "Peão isolado",
+    "tema": "peao_isolado",
+    "tema_pt": "peao_isolado",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/peao_isolado.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "peao_isolado"
+    ],
+    "livre": [
+      "peao_isolado",
+      "liberacao",
+      "ataque_duplo",
+      "interferencia"
+    ]
+  },
+  {
+    "id": "peao_passado",
+    "titulo": "Peão passado",
+    "tema": "peao_passado",
+    "tema_pt": "peao_passado",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/peao_passado.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "peao_passado"
+    ],
+    "livre": [
+      "peao_passado",
+      "promocao",
+      "mate_corredor",
+      "cravada"
+    ]
+  },
+  {
+    "id": "peca_pendurada",
+    "titulo": "Peça pendurada",
+    "tema": "hangingPiece",
+    "tema_pt": "peca_pendurada",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/peca_pendurada.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "peca_pendurada"
+    ],
+    "livre": [
+      "remocao_defensor",
+      "ataque_duplo",
+      "peca_pendurada",
+      "lance_intermediario"
+    ]
+  },
+  {
+    "id": "peca_presa",
+    "titulo": "Peça presa",
+    "tema": "trappedPiece",
+    "tema_pt": "peca_presa",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/peca_presa.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "peca_presa"
+    ],
+    "livre": [
+      "remocao_defensor",
+      "peca_pendurada",
+      "ataque_duplo",
+      "en_passant"
+    ]
+  },
+  {
+    "id": "promocao",
+    "titulo": "Promoção",
+    "tema": "promotion",
+    "tema_pt": "promocao",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/promocao.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "promocao"
+    ],
+    "livre": [
+      "promocao",
+      "sacrificio",
+      "peao_passado",
+      "subpromocao"
+    ]
+  },
+  {
+    "id": "raio_x",
+    "titulo": "Ataque de raio X",
+    "tema": "xRayAttack",
+    "tema_pt": "raio_x",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/raio_x.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "raio_x"
+    ],
+    "livre": [
+      "raio_x",
+      "ataque_descoberto",
+      "peca_pendurada",
+      "espeto"
+    ]
+  },
+  {
+    "id": "rei_exposto",
+    "titulo": "Rei exposto",
+    "tema": "exposedKing",
+    "tema_pt": "rei_exposto",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/rei_exposto.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "rei_exposto"
+    ],
+    "livre": [
+      "mate",
+      "rei_exposto",
+      "oposicao",
+      "xeque_duplo"
+    ]
+  },
+  {
+    "id": "remocao_defensor",
+    "titulo": "Remoção do defensor",
+    "tema": "capturingDefender",
+    "tema_pt": "remocao_defensor",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/remocao_defensor.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "remocao_defensor"
+    ],
+    "livre": [
+      "remocao_defensor",
+      "desvio",
+      "sobrecarga",
+      "peao_passado"
+    ]
+  },
+  {
+    "id": "roque",
+    "titulo": "Roque",
+    "tema": "castling",
+    "tema_pt": "roque",
+    "nivel": "iniciante",
+    "arquivo": "knowledge_base/roque.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "roque"
+    ],
+    "livre": [
+      "roque",
+      "garfo",
+      "zugzwang",
+      "peao_passado"
+    ]
+  },
+  {
+    "id": "sacrificio",
+    "titulo": "Sacrifício",
+    "tema": "sacrifice",
+    "tema_pt": "sacrificio",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/sacrificio.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "sacrificio"
+    ],
+    "livre": [
+      "sacrificio",
+      "atracao",
+      "mate_abafado",
+      "remocao_defensor"
+    ]
+  },
+  {
+    "id": "sobrecarga",
+    "titulo": "Sobrecarga",
+    "tema": "sobrecarga",
+    "tema_pt": "sobrecarga",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/sobrecarga.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "sobrecarga"
+    ],
+    "livre": [
+      "raio_x",
+      "peao_passado",
+      "peca_presa",
+      "liberacao"
+    ]
+  },
+  {
+    "id": "subpromocao",
+    "titulo": "Subpromoção",
+    "tema": "underPromotion",
+    "tema_pt": "subpromocao",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/subpromocao.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "subpromocao"
+    ],
+    "livre": [
+      "subpromocao",
+      "peao_passado",
+      "promocao",
+      "outro"
+    ]
+  },
+  {
+    "id": "xeque_duplo",
+    "titulo": "Xeque duplo",
+    "tema": "doubleCheck",
+    "tema_pt": "xeque_duplo",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/xeque_duplo.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "xeque_duplo"
+    ],
+    "livre": [
+      "xeque_duplo",
+      "ataque_duplo",
+      "zugzwang",
+      "garfo"
+    ]
+  },
+  {
+    "id": "zugzwang",
+    "titulo": "Zugzwang",
+    "tema": "zugzwang",
+    "tema_pt": "zugzwang",
+    "nivel": "intermediario",
+    "arquivo": "knowledge_base/zugzwang.md",
+    "secoes": [
+      "Definição",
+      "Como reconhecer",
+      "Por que é importante",
+      "Como evitar",
+      "Exemplo",
+      "Referências"
+    ],
+    "filtrado": [
+      "zugzwang"
+    ],
+    "livre": [
+      "zugzwang",
+      "roque",
+      "espeto",
+      "raio_x"
+    ]
+  }
+]

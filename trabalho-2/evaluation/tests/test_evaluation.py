@@ -139,7 +139,7 @@ def test_c_executa_grafo_e_preserva_contexto_recuperado(exemplo, monkeypatch):
             return ToolMessage(content=json.dumps(self.funcao(**entrada["args"])),
                                tool_call_id=entrada["id"], name=self.name)
 
-    tema = exemplo["tema_esperado"]
+    tema = "outro"
     ficha = {"id": tema, "titulo": "Ficha", "arquivo": "ficha.md", "texto": "Contexto entregue."}
 
     @asynccontextmanager
@@ -151,17 +151,18 @@ def test_c_executa_grafo_e_preserva_contexto_recuperado(exemplo, monkeypatch):
         ]
 
     monkeypatch.setattr(mcp, "sessao_mcp", sessao)
-    bruto = json.dumps({"aconteceu": "A posição mudou", "motivo": "Compare com a alternativa",
+    bruto = json.dumps({"aconteceu": "O lance da partida mudou a posição.",
+                        "motivo": "A variante analisada não confirma um motivo tático específico para o lance.",
                         "licao": "Confira as ameaças antes de jogar"}, ensure_ascii=False)
-    invalido = bruto.replace("A posição mudou", "Jogue Qz9")
-    resultado = asyncio.run(run_eval.rodar_versao(exemplo, "C", ModeloTeste(tema, invalido, bruto), 5))
+    invalido = bruto.replace("Confira as ameaças antes de jogar", "Jogue Qz9")
+    resultado = asyncio.run(run_eval.rodar_versao(exemplo, "C", ModeloTeste(invalido, bruto), 5))
     assert resultado["status"] == "ok" and resultado["validada_agente"]
     assert resultado["contextos_rag"] == [ficha["texto"]] and resultado["ragas_status"] == "pendente"
-    assert resultado["melhor_correto"] and resultado["tema_correto"]
+    assert resultado["melhor_correto"] and resultado["tema"] == "outro"
     assert resultado["rascunhos_invalidos"] == 1 and resultado["rascunhos_n"] == 2
     assert not resultado["tem_lance_invalido"] and resultado["tentativas"] == 2
 
-    fallback = asyncio.run(run_eval.rodar_versao(exemplo, "C", ModeloTeste(tema, "{}", "{}", "{}"), 5))
+    fallback = asyncio.run(run_eval.rodar_versao(exemplo, "C", ModeloTeste("{}", "{}", "{}"), 5))
     assert fallback["status"] == "incompleta" and fallback["fallback"] and fallback["validada_agente"]
     assert fallback["contextos_rag"] == []
 
@@ -182,9 +183,9 @@ def test_piloto_interrompe_se_ficha_sumir_depois_da_classificacao(exemplo, monke
         )]
 
     monkeypatch.setattr(mcp, "sessao_mcp", sessao)
-    modelo = ModeloTeste(exemplo["tema_esperado"])
+    modelo = ModeloTeste()
     resultado = asyncio.run(run_eval.rodar_versao(exemplo, "C", modelo, 5, exigir_mcp=True))
-    assert resultado["bloqueio_mcp"] == "buscar_conceitos" and resultado["chamadas_llm"] == 1
+    assert resultado["bloqueio_mcp"] == "buscar_conceitos" and resultado["chamadas_llm"] == 0
     assert not resultado["avaliavel"] and not resultado["fallback"]
     assert [chamada["nome"] for chamada in resultado["ferramentas_usadas"]] == [
         "descrever_posicao", "descrever_posicao", "buscar_conceitos",

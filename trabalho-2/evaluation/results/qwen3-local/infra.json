@@ -145,5 +145,37 @@
         "status": "ok"
       }
     }
+  },
+  "regressao_final": {
+    "pytest_aprovados": 123,
+    "falhas": 0,
+    "ignorados": 0,
+    "motor_real": true,
+    "mcp_rag_real": true,
+    "embeddings_reais": true
+  },
+  "api_final": {
+    "persistidas": 4,
+    "cache": true,
+    "temas": [
+      {
+        "tema": "pin",
+        "tema_label": "Cravada",
+        "erros": 2
+      },
+      {
+        "tema": "fork",
+        "tema_label": "Garfo",
+        "erros": 2
+      }
+    ],
+    "puzzles": 5,
+    "registro": "http-revisado.json"
+  },
+  "compose_final": {
+    "explicacao": 200,
+    "chat": 200,
+    "cache": true,
+    "registro": "docker-revisado.json"
   }
 }

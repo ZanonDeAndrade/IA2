@@ -1,6 +1,7 @@
 """Fluxos LangGraph de explicação e chat, com validação antes da publicação."""
 
 import asyncio
+from dataclasses import asdict
 import json
 import logging
 import os
@@ -14,6 +15,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, Tool
 from langgraph.graph import END, START, StateGraph
 
 from agent.mcp import RAIZ, Ferramentas, carregar_ferramentas_mcp as carregar_ferramentas_mcp, sessao_mcp
+from agent.taticas import candidatos_taticos, justificar_alternativa
 from agent.validator import explicacao_padrao, extrair_lances, ler_fen, validar_resposta_async
 
 LOGGER = logging.getLogger(__name__)
@@ -41,8 +43,9 @@ class Estado(TypedDict, total=False):
     linha_motor: list[str]
     tema: str
     ficha: dict | None
-    fatos: dict
     escolhas_fatuais: dict[str, list[str]]
+    evidencias_taticas: list[dict]
+    justificativa: str
     respostas_fatuais_chat: list[str]
     pergunta: str
     historico: list[dict]
@@ -91,7 +94,8 @@ def _fatos_do_lance(antes: dict, depois: dict, origem: str, destino: str) -> tup
     """Resume as descrições MCP para o modelo comparar somente fatos pertinentes."""
     def nome(peca: dict) -> str:
         lado = "brancas" if peca["cor"] == "white" else "pretas"
-        return f"{peca['tipo']} das {lado}"
+        tipo = "peão" if peca["tipo"] == "peao" else peca["tipo"]
+        return f"{tipo} das {lado}"
 
     campos = ("lado_a_jogar", "em_xeque", "xeque_mate", "afogamento")
     anterior, posterior = ({k: dados[k] for k in campos if k in dados} for dados in (antes, depois))
@@ -113,59 +117,33 @@ def _fatos_do_lance(antes: dict, depois: dict, origem: str, destino: str) -> tup
     return anterior, posterior
 
 
-def _garfo_com_xeque(tabuleiro: chess.Board, linha: list[str]) -> dict[str, str] | None:
-    """Confirma que a peça que deu xeque captura o outro alvo na mesma variante."""
-    nomes = {chess.PAWN: "peão", chess.QUEEN: "dama", chess.ROOK: "torre", chess.BISHOP: "bispo", chess.KNIGHT: "cavalo"}
-    copia = tabuleiro.copy(stack=False)
-    for indice, san in enumerate(linha[:4]):
-        try:
-            lance = copia.parse_san(san)
-        except ValueError:
-            return None
-        copia.push(lance)
-        if copia.turn == tabuleiro.turn or not copia.is_check() or copia.king(copia.turn) not in copia.attacks(lance.to_square):
-            continue
-        if indice + 2 >= len(linha):
-            break
-        resposta = copia.copy(stack=False)
-        try:
-            defesa = resposta.push_san(linha[indice + 1])
-            captura = resposta.parse_san(linha[indice + 2])
-        except ValueError:
-            return None
-        alvo = copia.piece_at(captura.to_square)
-        atacante = copia.piece_at(lance.to_square)
-        if (alvo and alvo.color == copia.turn and alvo.piece_type not in {chess.PAWN, chess.KING}
-                and atacante and atacante.piece_type in nomes and defesa.from_square != captura.to_square
-                and captura.from_square == lance.to_square and resposta.is_capture(captura)
-                and captura.to_square in copia.attacks(lance.to_square)):
-            cor = "brancas" if atacante.color == chess.WHITE else "pretas"
-            return {"atacante": f"{nomes[atacante.piece_type]} das {cor}", "alvo": nomes[alvo.piece_type]}
-    return None
-
-
-def _escolhas_fatuais(fatos: dict) -> dict[str, list[str]]:
+def _escolhas_fatuais(fatos: dict, motivo: str | None) -> dict[str, list[str]]:
     depois = fatos["depois"]
-    peca = depois["peca_movida"]
+    peca = fatos["antes"]["peca_movida"]
     artigo = "uma" if (peca or "").startswith(("torre", "dama")) else "um"
     aconteceu = f"O lance da partida deslocou {artigo} {peca}." if peca else "O lance da partida mudou a posição."
-    motivos = []
-    if mate := fatos.get("mate_em"):
-        unidade = "lance" if mate == 1 else "lances"
-        motivos.append(f"Na posição resultante, o Stockfish indicou mate em {mate} {unidade} para o lado a jogar.")
-    elif garfo := fatos.get("garfo_com_xeque"):
-        alvo = garfo["alvo"]
-        artigo = "uma" if alvo in {"torre", "dama"} else "um"
-        artigo_atacante = "uma" if garfo["atacante"].startswith(("torre", "dama")) else "um"
-        motivos.append(f"Na variante analisada, {artigo_atacante} {garfo['atacante']} dá xeque e depois captura {artigo} {alvo}.")
+    if motivo:
+        motivos = [motivo]
+    elif "peca_movida_defendida" in depois:
+        defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
+        motivos = [f"Na posição resultante, a peça movida está sob ataque e {defesa}."]
+    elif depois["quantidade_de_xeques_legais"]:
+        motivos = ["Na posição resultante, o lado a jogar dispõe de pelo menos um xeque legal."]
     else:
-        if "peca_movida_defendida" in depois:
-            defesa = "tem defesa" if depois["peca_movida_defendida"] else "ficou sem defesa"
-            motivos.append(f"Na posição resultante, a peça movida está sob ataque e {defesa}.")
-        if depois["quantidade_de_xeques_legais"]:
-            motivos.append("Na posição resultante, o lado a jogar dispõe de pelo menos um xeque legal.")
-    return {"aconteceu": [aconteceu],
-            "motivo": motivos or ["Compare as ameaças da posição resultante com a alternativa analisada."]}
+        motivos = ["A variante analisada não confirma um motivo tático específico para o lance."]
+    return {"aconteceu": [aconteceu], "motivo": motivos}
+
+
+def _licoes_da_ficha(ficha: dict | None) -> list[str]:
+    if not ficha:
+        return []
+    secoes = dict(re.findall(r"^## ([^\n]+)\n(.*?)(?=^## |\Z)", ficha["texto"], flags=re.M | re.S))
+    frases = []
+    for secao in ("Como evitar", "Como reconhecer"):
+        texto = secoes.get(secao, "").strip()
+        if texto:
+            frases.append(re.split(r"(?<=[.!?])\s+|\n", texto, maxsplit=1)[0])
+    return frases
 
 
 def _texto_conceitual(texto: str) -> str:
@@ -233,8 +211,9 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
 
     async def preparar(estado: Estado) -> dict:
         fen, jogado = estado["fen"], estado["lance_jogado"]
-        tabuleiro = ler_fen(fen)
-        movimento = tabuleiro.parse_san(jogado)
+        raiz = ler_fen(fen)
+        movimento = raiz.parse_san(jogado)
+        tabuleiro = raiz.copy(stack=False)
         tabuleiro.push(movimento)
         if modelo is None:
             return {"pronto": False}
@@ -247,45 +226,16 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
             return {"pronto": False, **({"bloqueio_mcp": "descrever_posicao"} if exigir_mcp else {})}
         antes, depois = _fatos_do_lance(antes, depois, movimento.uci()[:2], movimento.uci()[2:4])
         fatos = {"antes": antes, "depois": depois}
-        escolhas = {}
-        selecao = {}
-        instrucao_tema = _prompt("sistema") + "\n" + _prompt("tema")
-        temas_permitidos = TEMAS
-        if os.getenv("LLM_JSON_MODE") == "1":
-            if "analisar_posicao" in ferramentas.disponiveis:
-                try:
-                    analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
-                    avaliacao = analise.get("avaliacao", {})
-                    if avaliacao.get("tipo") == "mate" and avaliacao["valor"] > 0:
-                        fatos["mate_em"] = avaliacao["valor"]
-                    elif garfo := _garfo_com_xeque(tabuleiro, analise["linha_principal"]):
-                        fatos["garfo_com_xeque"] = garfo
-                except (RuntimeError, KeyError, TypeError):
-                    LOGGER.info("Não foi possível conferir a variante após o lance.")
-            escolhas = _escolhas_fatuais(fatos)
-            if fatos.get("mate_em"):
-                temas_permitidos = {"mate": TEMAS["mate"]}
-            elif fatos.get("garfo_com_xeque"):
-                temas_permitidos = {"garfo": TEMAS["garfo"]}
-            else:
-                temas_permitidos = {"outro": TEMAS["outro"], **{
-                    tema: titulo for tema, titulo in TEMAS.items() if tema not in {"garfo", "mate", "outro"}
-                }}
-            selecao = {"tema": list(temas_permitidos)}
-            instrucao_tema += "\nRetorne um objeto JSON com a chave tema."
-        else:
-            instrucao_tema += "\nDevolva apenas o identificador, sem aspas, pontuação ou Markdown."
-        try:
-            resposta = await _invocar(modelo, [
-                SystemMessage(content=instrucao_tema),
-                _contexto({"temas_permitidos": temas_permitidos, "fatos": fatos}),
-            ], campos=("tema",) if selecao else (), escolhas=selecao)
-            tema = json.loads(resposta.text)["tema"] if selecao else resposta.text.strip().lower()
-            if not isinstance(tema, str) or tema not in temas_permitidos:
-                tema = "outro"
-        except Exception as erro:
-            LOGGER.warning("Preparação da explicação falhou (%s)", type(erro).__name__)
-            return {"pronto": False}
+        evidencias = []
+        if "analisar_posicao" in ferramentas.disponiveis:
+            try:
+                analise = await ferramentas.chamar("analisar_posicao", fen=tabuleiro.fen(), profundidade=16, multipv=1)
+                evidencias = candidatos_taticos(tabuleiro, analise)
+            except (RuntimeError, KeyError, TypeError):
+                LOGGER.info("Não foi possível conferir a variante após o lance.")
+        principal = evidencias[0] if evidencias else None
+        tema = principal.tema if principal else "outro"
+        escolhas = _escolhas_fatuais(fatos, principal.frase if principal else None)
         ficha = None
         try:
             trechos = await ferramentas.chamar("buscar_conceitos", pergunta=TEMAS[tema], tema=tema, k=4)
@@ -299,23 +249,23 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
             ficha = {**ficha, "texto": conceitual} if conceitual else None
         if exigir_mcp and ficha is None:
             return {"pronto": False, "tema": tema, "bloqueio_mcp": "buscar_conceitos"}
-        return {"pronto": True, "tema": tema, "ficha": ficha, "fatos": fatos, "escolhas_fatuais": escolhas}
+        if licoes := _licoes_da_ficha(ficha):
+            escolhas["licao"] = licoes
+        justificativa = justificar_alternativa(raiz, estado["melhor_lance"], estado["linha_motor"])
+        return {"pronto": True, "tema": tema, "ficha": ficha,
+                "escolhas_fatuais": escolhas, "evidencias_taticas": [asdict(e) for e in evidencias],
+                "justificativa": justificativa}
 
     async def gerar(estado: Estado) -> dict:
-        instrucoes = _prompt("sistema") + "\n" + _prompt("explicacao")
+        instrucoes = "\n".join(_prompt(nome) for nome in ("sistema", "tema", "explicacao"))
         if estado.get("erros"):
             instrucoes += "\n" + _prompt("correcao")
-        escolhas = estado.get("escolhas_fatuais") or {}
-        if escolhas:
-            instrucoes += "\nCopie frases permitidas para aconteceu e motivo. Redija uma lição geral curta, sem afirmar outros fatos sobre esta posição."
-            if estado["fatos"].get("garfo_com_xeque"):
-                instrucoes += "\nNa lição, ensine o jogador a procurar xeques e ataques simultâneos do adversário antes de jogar."
+        escolhas = estado["escolhas_fatuais"]
         try:
             resposta = await _invocar(modelo, [
                 SystemMessage(content=instrucoes),
-                _contexto({"fatos": estado["fatos"], "tema": TEMAS[estado["tema"]],
-                           "ficha": estado["ficha"], "erros": estado.get("erros", []),
-                           **({"frases_permitidas": escolhas} if escolhas else {})}),
+                _contexto({"tema": TEMAS[estado["tema"]], "ficha": estado["ficha"],
+                           "frases_permitidas": escolhas, "erros": estado.get("erros", [])}),
             ], campos=("aconteceu", "motivo", "licao"), escolhas=escolhas)
             texto = resposta.text.strip()
         except Exception as erro:
@@ -342,7 +292,7 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
         resultado = await validar_resposta_async(
             texto, estado["fen"], estado["linha_motor"], validar_lances=ferramentas.validar,
         )
-        alternativa = f"O Stockfish indicou `{estado['melhor_lance']}` como alternativa."
+        alternativa = f"O Stockfish indicou `{estado['melhor_lance']}` como alternativa{estado.get('justificativa', '')}."
         if resultado["valida"]:
             resultado = await validar_resposta_async(
                 alternativa, estado["fen"], estado["linha_motor"], validar_lances=ferramentas.validar,

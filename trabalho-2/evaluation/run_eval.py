@@ -186,7 +186,7 @@ async def _rodar_c(item: dict, observado: ModeloMedido, *, exigir_mcp: bool = Fa
         ragas_status = "inaplicavel_fallback" if validada and not estado.get("pronto") else "sem_contexto"
     respostas = [resposta.text for resposta in observado.respostas]
     rascunhos = []
-    for bruto in respostas[1:]:
+    for bruto in respostas:
         partes = _objeto(bruto)
         rascunhos.append(". ".join(_texto(partes, k).rstrip(".!?")
                                   for k in ("aconteceu", "motivo", "licao")) if partes else bruto)
@@ -209,6 +209,7 @@ async def _rodar_c(item: dict, observado: ModeloMedido, *, exigir_mcp: bool = Fa
             "tentativas": estado.get("tentativas", 0), "fallback": bool(validada and not estado.get("pronto")),
             "ferramentas_usadas": ferramentas.usadas, "contextos_rag": contextos, "ragas_status": ragas_status,
             "fonte_rag": fonte_rag, "bloqueio_mcp": bloqueio_mcp,
+            "evidencias_taticas": estado.get("evidencias_taticas", []),
             "rascunhos_n": len(rascunhos), "rascunhos_invalidos": invalidos, "erros": erros}
 
 

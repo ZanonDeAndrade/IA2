@@ -124,5 +124,7 @@
   "fichas_sha256": "022374b736380a02e91e58c5b2d5a91e6a91899e066ee51471a24e02d3f9db04",
   "embeddings_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
   "mcp_transporte": "http",
-  "preflight": {}
+  "preflight": {
+    "C": "Disponível."
+  }
 }

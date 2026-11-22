@@ -12,7 +12,7 @@ Um lance convida ou força uma peça adversária a ir para uma casa desfavoráve
 
 ## Como reconhecer
 
-Veja se uma captura oferecida colocaria rei ou dama ao alcance de uma ameaça decisiva.
+Veja se uma captura oferecida leva a peça que a aceita a uma casa onde ela própria ficaria exposta à próxima ameaça.
 
 ## Por que é importante
 
