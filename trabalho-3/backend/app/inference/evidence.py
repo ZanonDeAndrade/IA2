@@ -27,6 +27,9 @@ class SearchHit:
     compatibility: str
     available_ingredients: tuple[str, ...]
     missing_ingredients: tuple[str, ...]
+    distance: float | None = None  # melhor distância semântica (None = candidato só do critério estruturado)
+    topic_label: str | None = None
+    subcategory: str | None = None
 
 
 class EvidenceSet:
@@ -60,6 +63,9 @@ class EvidenceSet:
                         compatibility=r.get("compatibility") or "NOT_EVALUATED",
                         available_ingredients=tuple(r.get("available_ingredients") or ()),
                         missing_ingredients=tuple(r.get("missing_ingredients") or ()),
+                        distance=r.get("distance") if isinstance(r.get("distance"), int | float) else None,
+                        topic_label=r.get("topic_label"),
+                        subcategory=r.get("subcategory"),
                     ),
                 )
         elif result.name == "get_document" and data.get("found") and isinstance(data.get("recipe"), Mapping):
@@ -113,7 +119,8 @@ class EvidenceSet:
         if hit is None:
             return None
         return {"recipe_id": hit.recipe_id, "document_id": hit.document_id, "title": hit.title,
-                "topic_key": hit.topic_key, "source_url": hit.source_url}
+                "topic_key": hit.topic_key, "topic_label": hit.topic_label, "subcategory": hit.subcategory,
+                "source_url": hit.source_url}
 
     @property
     def allowed_urls(self) -> frozenset[str]:

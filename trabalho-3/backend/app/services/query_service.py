@@ -53,6 +53,8 @@ def build_cards(evidence: EvidenceSet, recipe_ids: tuple[str, ...]) -> tuple[lis
                 document_id=src["document_id"],
                 title=src["title"],
                 topic_key=src["topic_key"],
+                topic_label=src.get("topic_label") or (hit.topic_label if hit else None),
+                subcategory=src.get("subcategory") or (hit.subcategory if hit else None),
                 compatibility=hit.compatibility if hit else "NOT_EVALUATED",  # type: ignore[arg-type]
                 available_ingredients=list(hit.available_ingredients) if hit else [],
                 missing_ingredients=list(hit.missing_ingredients) if hit else [],
@@ -124,13 +126,14 @@ class QueryService:
 
         cards, sources = build_cards(result.evidence, result.recipe_ids)
         status = result.status
-        if status == "FOUND" and not cards and not result.evidence.topics:
-            status = "INSUFFICIENT"  # resposta sem fonte vira INSUFFICIENT
+        if status == "FOUND" and not cards and not (result.intent == "list_categories" and result.evidence.topics):
+            status = "INSUFFICIENT"  # resposta sem fonte vira INSUFFICIENT; categorias só respondem a pergunta de categorias
         answer = result.answer
         if status == "INSUFFICIENT":
             cards, sources = [], []
         duration = round((time.perf_counter() - started) * 1000)
-        self._remember(rid, {"status": status, "origin": result.origin, "violations": list(result.violations),
+        self._remember(rid, {"status": status, "origin": result.origin, "intent": result.intent,
+                             "situation": result.situation, "violations": list(result.violations),
                              "steps": result.trace, "duration_ms": duration,
                              "mcp_calls": [e for e in self.mcp.trace_for(rid) if e.get("event") == "call_tool"]})
         logger.info("request_id=%s status=%s origin=%s recipes=%s violations=%d ms=%d", rid, status, result.origin,

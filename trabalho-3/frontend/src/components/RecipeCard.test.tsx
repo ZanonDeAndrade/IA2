@@ -7,7 +7,7 @@ import { RecipeCard } from "./RecipeCard";
 describe("RecipeCard", () => {
   it("mostra compatibilidade, disponíveis e faltantes", () => {
     render(<RecipeCard recipe={recipe({ compatibility: "PARTIAL", available_ingredients: ["ovo"], missing_ingredients: ["leite", "farinha"] })} />);
-    expect(screen.getByText("Faltam ingredientes")).toBeInTheDocument();
+    expect(screen.getByText("Faltam 2 ingredientes")).toBeInTheDocument();
     expect(screen.getByText("leite, farinha")).toBeInTheDocument();
     expect(screen.getByText("ovo")).toBeInTheDocument();
   });
@@ -36,6 +36,17 @@ describe("RecipeCard", () => {
     expect(screen.getByText("queijo (opcional) — ralado")).toBeInTheDocument();
     expect(screen.getByText("Tempo: 10 minutos")).toBeInTheDocument();
     expect(screen.queryByText(/Rendimento/)).not.toBeInTheDocument();
+  });
+
+  it("mostra a categoria documentada e o selo de receita completa", () => {
+    render(<RecipeCard recipe={recipe({ topic_label: "Doces", subcategory: "Pudins" })} />);
+    expect(screen.getByText("Doces › Pudins")).toBeInTheDocument();
+    expect(screen.getByText("Tem todos os ingredientes")).toBeInTheDocument();
+  });
+
+  it("quantidade 'a gosto' aparece depois do nome", () => {
+    render(<RecipeCard recipe={recipe({ ingredients: [{ name: "Sal", quantity_text: "a gosto", required: false, notes: null }] })} />);
+    expect(screen.getByText("Sal a gosto (opcional)")).toBeInTheDocument();
   });
 
   it("sem ingredientes informados não mostra Tenho/Faltam", () => {

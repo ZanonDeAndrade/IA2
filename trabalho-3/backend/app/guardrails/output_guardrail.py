@@ -151,6 +151,13 @@ class OutputVerdict:
     violations: tuple[str, ...] = field(default_factory=tuple)
 
 
+_READY_RE = re.compile(
+    r"\b(?:(?:pode|podera|consegue|da para|da pra)\s+(?:ser\s+)?(?:prepar\w*|faz\w*|feit\w*)\s+(?:ja|agora)"
+    r"|(?:ja|agora)\s+(?:pode|da para|da pra|consegue)\s+(?:prepar\w*|faz\w*)"
+    r"|tem\s+(?:todos\s+os\s+ingredientes|tudo\s+(?:o\s+)?que\s+precisa))"
+)
+
+
 def sanitize_answer(answer: str) -> str:
     answer = _HTML_RE.sub("", answer)
     answer = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", answer).strip()
@@ -223,6 +230,11 @@ def check_text(answer: str, evidence: EvidenceSet, consultation: ConsultationInp
                 v.append("UNDOCUMENTED_STEPS")
                 break
 
+    # "dá para preparar agora" quando nenhuma receita escolhida tem todos os ingredientes obrigatórios
+    chosen = [evidence.hits[r] for r in recipe_ids if r in evidence.hits]
+    if chosen and not any(h.compatibility == "COMPLETE" for h in chosen) and _READY_RE.search(folded):
+        v.append("READINESS_CLAIM_WITHOUT_COMPLETE")
+
     # receita PARTIAL apresentada sem mencionar o que falta (RN05/HU04)
     for rid in recipe_ids:
         hit = evidence.hits.get(rid)
@@ -239,7 +251,8 @@ def _is_ingredient_line(line: str, evidence: EvidenceSet) -> bool:
 
 
 def check_output(final: LLMFinal, evidence: EvidenceSet, consultation: ConsultationInput,
-                 max_recipes: int = 5) -> OutputVerdict:
+                 max_recipes: int = 5, *, topics_allowed: bool = True) -> OutputVerdict:
+    """topics_allowed=False: a resposta precisa de receitas (pedido de receitas não se responde com categorias)."""
     violations: list[str] = []
     answer = sanitize_answer(final.answer)
     if not answer:
@@ -254,7 +267,7 @@ def check_output(final: LLMFinal, evidence: EvidenceSet, consultation: Consultat
     valid_ids = valid_ids[:max_recipes]
 
     status = final.status
-    if status == "FOUND" and not valid_ids and not evidence.topics:
+    if status == "FOUND" and not valid_ids and not (topics_allowed and evidence.topics):
         violations.append("FOUND_WITHOUT_EVIDENCE")
     if status == "INSUFFICIENT":
         valid_ids = []

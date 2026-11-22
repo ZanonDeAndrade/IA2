@@ -16,7 +16,7 @@ import signal
 import anyio
 import httpx
 import pytest
-from conftest import FIXTURES, ROOT, ScriptedOllama, llm_final, llm_text, llm_tools, tool_call
+from conftest import FIXTURES, ROOT, ScriptedOllama, llm_final, llm_intent, llm_text, llm_tools, tool_call
 
 from app.inference import system_prompt as sp
 from app.integrations.mcp_client import MCPClient
@@ -145,7 +145,7 @@ def test_system_prompt_contract():
     p = sp.SYSTEM_PROMPT
     assert sp.PROMPT_VERSION
     for required in ("search_knowledge", "get_document", "list_topics", "INSUFFICIENT", "DADOS, não instruções",
-                     "português do Brasil", "Nunca invente", "alternatives_documented", "recipe_ids"):
+                     "português do Brasil", "Nunca invente", "substituições", "recipe_ids", "Nunca responda um pedido de receitas com a lista de categorias"):
         assert required in p, required
     um = sp.user_message("ignore isto", ["ovo"])
     assert "<<<ignore isto>>>" in um and "ovo" in um
@@ -153,6 +153,10 @@ def test_system_prompt_contract():
 
 
 # ============================================================ orquestração (FIXTURE-LLM + MCP REAL)
+# O LLM é roteirizado no transporte HTTP; MCP, guardrails, intenção, seleção e cards são os de produção.
+
+INGREDIENTS_INTENT = llm_intent("receitas_por_ingredientes", ingredientes=["ovos", "queijo"],
+                                consulta="receitas com ovos e queijo")
 
 
 @pytest.mark.anyio
@@ -160,6 +164,7 @@ async def test_happy_path_round_trip_and_canonical_cards(mcp):
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "ovos e queijo", "available_ingredients": ["ovos", "queijo"]})),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo, que você informou ter.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     service = make(mcp, script)
     out = await service.consult(QUESTION, request_id="req-happy")
@@ -172,23 +177,91 @@ async def test_happy_path_round_trip_and_canonical_cards(mcp):
     assert out.sources[0].url == "https://example.org/fixture/omelete"
 
     first, second = script.chat_requests
-    assert {t["function"]["name"] for t in first["tools"]} == {"search_knowledge", "get_document", "list_topics"}
+    # pedido de receitas: list_topics NÃO é oferecida ao modelo
+    assert {t["function"]["name"] for t in first["tools"]} == {"search_knowledge", "get_document"}
     assert first["messages"][0]["role"] == "system" and first["messages"][0]["content"] == sp.SYSTEM_PROMPT
+    assert "recomendar receitas com os ingredientes" in first["messages"][1]["content"]
     tm = tool_messages(second)
     assert tm[0]["tool_name"] == "search_knowledge" and '"recipe_id": "fx-001-v1"' in tm[0]["content"]
 
     calls = [e for e in mcp.trace_for("req-happy") if e["event"] == "call_tool"]
     assert [c["tool"] for c in calls] == ["search_knowledge", "get_document"]  # 2ª = enriquecimento do card
     trace = service.traces["req-happy"]
-    assert trace["origin"] == "llm" and any(s["step"] == "enrich" for s in trace["steps"])
+    assert trace["origin"] == "llm" and trace["intent"] == "recipes_by_ingredients"
+    assert trace["situation"] == "CAN_PREPARE" and any(s["step"] == "enrich" for s in trace["steps"])
+
+
+@pytest.mark.anyio
+async def test_c_breakfast_request_never_answers_with_categories(mcp):
+    """Teste C: o modelo tenta list_topics num pedido de receitas; o sistema recusa e a busca acontece."""
+    script = ScriptedOllama(
+        llm_tools(tool_call("list_topics", {})),
+        llm_tools(tool_call("search_knowledge", {"query": "café da manhã com ovos e queijo"})),
+        llm_final("FOUND", "Para o café da manhã, a Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=llm_intent("receitas_por_caracteristica", ingredientes=["ovos", "queijo"],
+                          consulta="café da manhã"),
+    )
+    service = make(mcp, script)
+    out = await service.consult({"question": "O que posso preparar para o café da manhã?",
+                                 "available_ingredients": ["ovos", "queijo"]}, "req-cafe")
+    err = json.loads(tool_messages(script.chat_requests[1])[0]["content"])["error"]
+    assert err["code"] == "TOOL_NOT_FOR_INTENT"
+    tools = [e["tool"] for e in mcp.trace_for("req-cafe") if e["event"] == "call_tool"]
+    assert "list_topics" not in tools and tools[0] == "search_knowledge"
+    assert out.status == "FOUND" and out.recipes[0].recipe_id == "fx-001-v1"
+    assert "Categorias" not in out.answer
+
+
+@pytest.mark.anyio
+async def test_c_categories_classification_with_ingredients_is_corrected(mcp):
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "ovos e queijo"})),
+        llm_final("FOUND", "A Omelete de queijo usa ovos e queijo, que você informou ter.", ["fx-001-v1"]),
+        intent=llm_intent("listar_categorias"),  # classificação incoerente: há ingredientes
+    )
+    service = make(mcp, script)
+    out = await service.consult(QUESTION, "req-fix")
+    assert service.traces["req-fix"]["intent"] == "recipes_by_ingredients"
+    assert out.status == "FOUND" and out.recipes
+
+
+@pytest.mark.anyio
+async def test_model_that_never_calls_tools_gets_system_retrieval(mcp):
+    script = ScriptedOllama(
+        llm_final("FOUND", "Faça uma omelete com 3 ovos a 180 °C por 10 minutos.", []),
+        llm_text("Uma omelete é ótima!"),
+        llm_final("FOUND", "A Omelete de queijo usa ovos e queijo, que você informou ter.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
+    )
+    service = make(mcp, script)
+    out = await service.consult(QUESTION, "req-notool")
+    assert script.chat_requests[1]["messages"][-1]["content"] == sp.required_tool_instruction("search_knowledge")
+    steps = service.traces["req-notool"]["steps"]
+    assert any(s["step"] == "system_retrieval" for s in steps)
+    assert [e["tool"] for e in mcp.trace_for("req-notool") if e["event"] == "call_tool"][0] == "search_knowledge"
+    assert out.status == "FOUND" and out.recipes[0].recipe_id == "fx-001-v1" and "180" not in out.answer
+
+
+@pytest.mark.anyio
+async def test_no_tool_and_no_selection_without_ingredients_is_insufficient(mcp):
+    script = ScriptedOllama(
+        llm_text("Uma omelete é ótima!"),
+        llm_text("Continua ótima!"),
+        llm_final("INSUFFICIENT", "Nada encontrado.", []),
+        intent=llm_intent("receitas_por_caracteristica", consulta="algo leve"),
+    )
+    out = await make(mcp, script).consult({"question": "Quero algo leve para o jantar"}, "req-light")
+    assert out.status == "INSUFFICIENT" and out.recipes == []
 
 
 @pytest.mark.anyio
 async def test_get_document_requested_by_llm_and_partial_recipe(mcp):
+    """Teste F: modo de preparo de um prato pelo nome."""
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "panqueca", "available_ingredients": ["ovo"]})),
         llm_tools(tool_call("get_document", {"recipe_id": "fx-002-v1"})),
         llm_final("FOUND", "A Panqueca simples usa ovo, mas faltam farinha de trigo e leite.", ["fx-002-v1"]),
+        intent=llm_intent("modo_de_preparo", prato="panqueca", consulta="panqueca"),
     )
     service = make(mcp, script)
     out = await service.consult({"question": "Como fazer panqueca?", "available_ingredients": ["ovo"]}, "req-doc")
@@ -197,6 +270,22 @@ async def test_get_document_requested_by_llm_and_partial_recipe(mcp):
     assert card.instructions == ["Misture (teste).", "Frite (teste)."] and card.portions == "4"
     tools = [e["tool"] for e in mcp.trace_for("req-doc") if e["event"] == "call_tool"]
     assert tools == ["search_knowledge", "get_document"]  # sem enriquecimento duplicado
+    assert service.traces["req-doc"]["intent"] == "preparation"
+
+
+@pytest.mark.anyio
+async def test_name_search_keeps_only_matching_titles(mcp):
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "brigadeiro com ovo"})),
+        llm_final("FOUND", "Encontrei o Brigadeiro versão 1 e a Omelete de queijo.", ["fx-003-v1", "fx-001-v1"]),
+        intent=llm_intent("receita_por_nome", prato="brigadeiro", consulta="brigadeiro"),
+    )
+    service = make(mcp, script)
+    out = await service.consult({"question": "Receita de brigadeiro", "available_ingredients": ["ovo"]}, "req-name")
+    ids = [r.recipe_id for r in out.recipes]
+    assert "fx-001-v1" not in ids and set(ids) <= {"fx-003-v1", "fx-003-v2"} and "fx-003-v1" in ids
+    assert out.recipes[0].compatibility == "NO_MATCH"  # informada, mas não exclui na busca por nome
+    assert service.traces["req-name"]["origin"] == "template"  # a seleção mudou: texto determinístico
 
 
 @pytest.mark.anyio
@@ -204,11 +293,12 @@ async def test_unknown_tool_is_blocked_and_never_reaches_mcp(mcp):
     script = ScriptedOllama(
         llm_tools(tool_call("delete_database", {})),
         llm_final("INSUFFICIENT", "Não consegui consultar a base.", []),
+        intent=INGREDIENTS_INTENT,
     )
-    out = await make(mcp, script).consult(QUESTION, "req-unknown")
+    service = make(mcp, script)
+    await service.consult(QUESTION, "req-unknown")
     assert json.loads(tool_messages(script.chat_requests[1])[0]["content"])["error"]["code"] == "TOOL_NOT_ALLOWED"
-    assert [e for e in mcp.trace_for("req-unknown") if e["event"] == "call_tool"] == []
-    assert out.status == "INSUFFICIENT" and out.recipes == []
+    assert "delete_database" not in [e.get("tool") for e in mcp.trace_for("req-unknown")]
 
 
 @pytest.mark.anyio
@@ -219,6 +309,7 @@ async def test_tool_call_limit_and_duplicates(mcp):
         llm_tools(tool_call("search_knowledge", {"query": "panqueca"})),
         llm_tools(tool_call("search_knowledge", {"query": "brigadeiro"})),  # excede o limite (2)
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     service = make(mcp, script, max_tool_calls=2)
     out = await service.consult(QUESTION, "req-limit")
@@ -235,6 +326,7 @@ async def test_tool_limit_reached_inside_one_batch(mcp):
     script = ScriptedOllama(
         llm_tools(*(tool_call("search_knowledge", {"query": f"omelete {i}"}, i) for i in range(4))),
         llm_final("INSUFFICIENT", "A base não tem receitas para isso.", []),
+        intent=INGREDIENTS_INTENT,
     )
     service = make(mcp, script, max_tool_calls=2)
     await service.consult(QUESTION, "req-batch")
@@ -243,30 +335,29 @@ async def test_tool_limit_reached_inside_one_batch(mcp):
 
 
 @pytest.mark.anyio
-async def test_model_that_never_calls_tools_gets_insufficient(mcp):
-    script = ScriptedOllama(
-        llm_final("FOUND", "Faça uma omelete com 3 ovos a 180 °C por 10 minutos.", []),
-        llm_text("Uma omelete é ótima!"),
-    )
-    service = make(mcp, script)
-    out = await service.consult(QUESTION, "req-notool")
-    assert out.status == "INSUFFICIENT" and out.recipes == [] and "180" not in out.answer
-    assert script.chat_requests[1]["messages"][-1]["content"] == sp.RETRY_TOOL_INSTRUCTION
-    assert mcp.trace_for("req-notool") == []
-
-
-@pytest.mark.anyio
-async def test_invented_source_is_rejected_then_insufficient(mcp):
+async def test_invented_id_with_ingredients_uses_programmatic_selection(mcp):
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "omelete"})),
         llm_final("FOUND", "Veja a receita secreta.", ["fx-999-v1"]),
-        llm_final("FOUND", "Veja a receita secreta.", ["fx-999-v1"]),  # reformulação também inválida
+        intent=INGREDIENTS_INTENT,
     )
     service = make(mcp, script)
     out = await service.consult(QUESTION, "req-fake")
+    assert [r.recipe_id for r in out.recipes] == ["fx-001-v1", "fx-002-v1"]  # COMPLETE antes de PARTIAL
+    assert "secreta" not in out.answer and out.answer.startswith("Com os ingredientes que você informou")
+    t = service.traces["req-fake"]
+    assert t["origin"] == "template" and "UNKNOWN_RECIPE_ID:fx-999-v1" in t["violations"]
+
+
+@pytest.mark.anyio
+async def test_invented_id_without_ingredients_is_insufficient(mcp):
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "doce"})),
+        llm_final("FOUND", "Veja a receita secreta.", ["fx-999-v1"]),
+        intent=llm_intent("receitas_por_caracteristica", consulta="doce"),
+    )
+    out = await make(mcp, script).consult({"question": "Quero algo doce"}, "req-fake2")
     assert out.status == "INSUFFICIENT" and out.recipes == [] and out.sources == []
-    assert "UNKNOWN_RECIPE_ID:fx-999-v1" in service.traces["req-fake"]["violations"]
-    assert "format" in script.chat_requests[2] and "tools" not in script.chat_requests[2]
 
 
 @pytest.mark.anyio
@@ -275,6 +366,7 @@ async def test_bad_narrative_rewritten_once(mcp):
         llm_tools(tool_call("search_knowledge", {"query": "omelete"})),
         llm_final("FOUND", "Asse a Omelete de queijo a 200 °C. Fonte: https://falso.example", ["fx-001-v1"]),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     service = make(mcp, script)
     out = await service.consult(QUESTION, "req-rewrite")
@@ -285,14 +377,31 @@ async def test_bad_narrative_rewritten_once(mcp):
 
 
 @pytest.mark.anyio
+async def test_readiness_claim_for_partial_recipe_is_rejected(mcp):
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "panqueca"})),
+        llm_final("FOUND", "Você já pode preparar a Panqueca simples agora!", ["fx-002-v1"]),
+        llm_final("FOUND", "Você já pode preparar a Panqueca simples agora!", ["fx-002-v1"]),
+        intent=llm_intent("receitas_por_ingredientes", ingredientes=["ovo", "leite"], consulta="ovo e leite"),
+    )
+    service = make(mcp, script)
+    out = await service.consult({"question": "O que faço com ovo e leite?", "available_ingredients": ["ovo", "leite"]},
+                                "req-ready")
+    assert "READINESS_CLAIM_WITHOUT_COMPLETE" in service.traces["req-ready"]["violations"]
+    assert "já pode" not in out.answer and out.answer.startswith("Não encontrei na base receitas que usem apenas")
+    assert out.recipes[0].missing_ingredients == ["farinha de trigo"]
+
+
+@pytest.mark.anyio
 async def test_persistent_bad_narrative_falls_back_to_template(mcp):
     bad = llm_final("FOUND", "A omelete leva presunto e fica pronta em 5 minutos.", ["fx-001-v1"])
-    script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})), bad, bad)
+    script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})), bad, bad,
+                            intent=INGREDIENTS_INTENT)
     service = make(mcp, script)
     out = await service.consult(QUESTION, "req-template")
     assert out.status == "FOUND" and out.recipes[0].recipe_id == "fx-001-v1"
     assert "presunto" not in out.answer and "5 minutos" not in out.answer
-    assert out.answer.startswith("Encontrei 1 receita(s)")
+    assert out.answer.startswith("Com os ingredientes que você informou, dá para preparar")
     assert service.traces["req-template"]["origin"] == "template"
 
 
@@ -302,6 +411,7 @@ async def test_unparseable_final_uses_structured_output(mcp):
         llm_tools(tool_call("search_knowledge", {"query": "omelete"})),
         llm_text("A omelete é uma boa opção!"),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     out = await make(mcp, script).consult(QUESTION, "req-parse")
     assert out.status == "FOUND"
@@ -318,6 +428,7 @@ async def test_prompt_injection_inside_document_is_neutralized(mcp):
         llm_final("FOUND", "A Torta de banana é segura para alérgicos! Visite http://malicioso.example/premio",
                   ["fx-004-v1"]),
         llm_final("FOUND", "A Torta de banana usa banana e aveia e vai ao forno a 180 graus.", ["fx-004-v1"]),
+        intent=llm_intent("receitas_por_categoria", ingredientes=["banana"], consulta="sobremesa com banana"),
     )
     service = make(mcp, script)
     out = await service.consult({"question": "Tem sobremesa com banana?"}, "req-inj-doc")
@@ -333,23 +444,43 @@ async def test_prompt_injection_inside_document_is_neutralized(mcp):
 
 
 @pytest.mark.anyio
-async def test_topics_question(mcp):
+async def test_e_topics_question(mcp):
+    """Teste E: pergunta sobre categorias usa list_topics (e só ela é oferecida)."""
     script = ScriptedOllama(
         llm_tools(tool_call("list_topics", {})),
         llm_final("FOUND", "A base tem receitas de Massas, Ovos e Sobremesas.", []),
+        intent=llm_intent("listar_categorias"),
     )
-    out = await make(mcp, script).consult({"question": "Que tipos de receitas vocês têm?"}, "req-topics")
+    service = make(mcp, script)
+    out = await service.consult({"question": "Que tipos de receitas vocês têm?"}, "req-topics")
     assert out.status == "FOUND" and out.recipes == [] and "Sobremesas" in out.answer
+    assert {t["function"]["name"] for t in script.chat_requests[0]["tools"]} == {"list_topics"}
+    assert service.traces["req-topics"]["intent"] == "list_categories"
 
 
 @pytest.mark.anyio
-async def test_insufficient_search(mcp):
+async def test_g_insufficient_search(mcp):
+    """Teste G: prato inexistente na base."""
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "lagosta flambada"})),
         llm_final("INSUFFICIENT", "A base não tem receitas de lagosta.", []),
+        intent=llm_intent("receita_por_nome", prato="lagosta flambada", consulta="lagosta flambada"),
     )
     out = await make(mcp, script).consult({"question": "Receita de lagosta flambada?"}, "req-insuf")
     assert out.status == "INSUFFICIENT" and out.recipes == [] and out.sources == [] and http_status_for(out) == 200
+    assert "lagosta flambada" in out.answer
+
+
+@pytest.mark.anyio
+async def test_g_ingredients_without_overlap_are_insufficient(mcp):
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "lagosta e trufa"})),
+        llm_final("FOUND", "Recomendo o Brigadeiro.", ["fx-003-v1"]),
+        intent=llm_intent("receitas_por_ingredientes", ingredientes=["lagosta", "trufa"], consulta="lagosta trufa"),
+    )
+    out = await make(mcp, script).consult({"question": "O que faço com lagosta e trufa?",
+                                           "available_ingredients": ["lagosta", "trufa"]}, "req-g2")
+    assert out.status == "INSUFFICIENT" and out.recipes == []
 
 
 @pytest.mark.anyio
@@ -357,7 +488,7 @@ async def test_found_without_ids_becomes_insufficient(mcp):
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "lagosta"})),
         llm_final("FOUND", "Achei várias receitas ótimas!", []),
-        llm_final("FOUND", "Achei várias receitas ótimas!", []),
+        intent=llm_intent("receita_por_nome", prato="lagosta", consulta="lagosta"),
     )
     out = await make(mcp, script).consult({"question": "Receita de lagosta?"}, "req-noids")
     assert out.status == "INSUFFICIENT"
@@ -366,9 +497,10 @@ async def test_found_without_ids_becomes_insufficient(mcp):
 @pytest.mark.anyio
 async def test_invalid_tool_arguments_are_returned_to_model(mcp):
     script = ScriptedOllama(
-        llm_tools(tool_call("search_knowledge", {"query": "ab", "top_k": 100000})),
+        llm_tools(tool_call("get_document", {"recipe_id": "ID INVÁLIDO!"})),
         llm_tools(tool_call("search_knowledge", {"query": "omelete queijo"})),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     out = await make(mcp, script).consult(QUESTION, "req-args")
     err = json.loads(tool_messages(script.chat_requests[1])[0]["content"])["error"]
@@ -377,10 +509,26 @@ async def test_invalid_tool_arguments_are_returned_to_model(mcp):
 
 
 @pytest.mark.anyio
+async def test_search_arguments_are_enforced_by_the_system(mcp):
+    """Consulta curta, top_k absurdo, topic_key inventado e ingredientes omitidos pelo modelo são corrigidos."""
+    script = ScriptedOllama(
+        llm_tools(tool_call("search_knowledge", {"query": "ab", "top_k": 100000, "topic_key": "cafe-da-manha"})),
+        llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
+    )
+    service = make(mcp, script)
+    out = await service.consult(QUESTION, "req-enforce")
+    result = json.loads(tool_messages(script.chat_requests[1])[0]["content"])
+    assert result["ranking"] == "compatibility" and result["results"][0]["compatibility"] == "COMPLETE"
+    assert out.status == "FOUND"
+
+
+@pytest.mark.anyio
 async def test_string_arguments_from_model(mcp):
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", '{"query": "omelete queijo"}')),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo.", ["fx-001-v1"]),
+        intent=INGREDIENTS_INTENT,
     )
     assert (await make(mcp, script).consult(QUESTION, "req-str")).status == "FOUND"
 
@@ -409,7 +557,7 @@ async def test_blocked_input_never_reaches_llm_or_mcp(mcp, raw, code):
 async def test_corpus_empty(mcp_fixture_env, monkeypatch):
     monkeypatch.setenv("RECIPES_JSON", str(FIXTURES / "empty_recipes.json"))
     async with MCPClient.from_env(project_root=ROOT) as client:
-        script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})))
+        script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})), intent=INGREDIENTS_INTENT)
         out = await make(client, script).consult(QUESTION)
     assert out.status == "ERROR" and out.error.code == "CORPUS_EMPTY" and http_status_for(out) == 503
     assert len(script.chat_requests) == 1  # interrompe sem gastar outra rodada do LLM
@@ -437,7 +585,7 @@ async def test_mcp_crash_during_inference(mcp):
                     os.kill(int(p), signal.SIGKILL)
         return llm_tools(tool_call("search_knowledge", {"query": "omelete"}))
 
-    out = await make(mcp, ScriptedOllama(kill_then_call)).consult(QUESTION)
+    out = await make(mcp, ScriptedOllama(kill_then_call, intent=INGREDIENTS_INTENT)).consult(QUESTION)
     assert out.status == "ERROR" and out.error.code == "MCP_UNAVAILABLE" and http_status_for(out) == 503
     assert "Traceback" not in out.answer
 
@@ -472,6 +620,7 @@ async def test_logs_do_not_contain_user_text_or_secrets(mcp, caplog, monkeypatch
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "ingrediente-marcador-xyz ovos"})),
         llm_final("INSUFFICIENT", "A base não tem essa receita.", []),
+        intent=llm_intent("receitas_por_ingredientes", ingredientes=["ingrediente-marcador-xyz", "ovos"]),
     )
     service = make(mcp, script)
     out = await service.consult(secret_q, "req-logs")

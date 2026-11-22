@@ -24,7 +24,9 @@ POST body ─▶ input_guardrail ─▶ Orchestrator ──▶ OllamaClient (/ap
 | `app/integrations/ollama_client.py` | novo | cliente `/api/chat` (httpx): tools, `format`, `think`, erros tipados, `check()` |
 | `app/inference/system_prompt.py` | novo | system prompt versionado (`PROMPT_VERSION`), instruções de recuperação e reformulação, schema da resposta final |
 | `app/inference/evidence.py` | novo | `EvidenceSet` append-only e imutável com o que o MCP devolveu no turno |
-| `app/inference/orchestrator.py` | novo | loop LLM ⇄ MCP, limites, neutralização de injeção em documentos, reformulação e fallback |
+| `app/inference/orchestrator.py` | novo | intenção → loop LLM ⇄ MCP (ferramentas por intenção, parâmetros de busca garantidos, recuperação obrigatória), limites, neutralização de injeção, reformulação |
+| `app/inference/intent.py` | novo | classificação da intenção (saída estruturada) e validação do plano contra a consulta |
+| `app/inference/recommend.py` | novo | elegibilidade, ordem documentada, situação A/B/C e texto determinístico |
 | `app/guardrails/lexicon.py` | novo | vocabulários e padrões (alimentos, fora do domínio, injection com desofuscação) |
 | `app/guardrails/input_guardrail.py` | novo | formato, limites, injection e escopo |
 | `app/guardrails/output_guardrail.py` | novo | parse do JSON final e verificação de IDs, URLs, fatos, nutrição, segurança alimentar, substituições, ingredientes, passos e vazamento |
@@ -39,6 +41,10 @@ POST body ─▶ input_guardrail ─▶ Orchestrator ──▶ OllamaClient (/ap
 Nada em `mcp-server/` foi alterado.
 
 ## Decisões
+
+- **Recomendação (16/11, noite).** Intenção explícita antes das ferramentas, `list_topics` só para perguntas sobre
+  categorias, compatibilidade calculada no MCP e seleção/ordem programáticas no backend. Critérios, diagnóstico e
+  limitações em [`../docs/recomendacao.md`](../docs/recomendacao.md). `PROMPT_VERSION=2026-11-16.2`.
 
 - **O LLM não monta cards.** A resposta final do modelo é só `{status, answer, recipe_ids}`. Ingredientes,
   passos, campos opcionais e `source_url` vêm do objeto canônico do `get_document`. Quando o modelo escolhe
@@ -132,6 +138,11 @@ backend/.venv/bin/python scripts/llm_smoke.py --fixtures   # exige Ollama + mode
 | `test_inference_real.py` | integração real | **Ollama real** | **real** | retriever de fixture |
 | `test_mcp_integration.py` | integração | — | **real** | fixture |
 | `test_api.py` | HTTP (TestClient + lifespan real) | falso no transporte, ou porta fechada real | **real**, ou servidor que não sobe | fixture |
+| `test_intent_and_selection.py` | unitário (validação de intenção, seleção, situações) | — | — | — |
+| `../scripts/real_eval.py` | **avaliação real** (casos A–H + exemplos) | **Ollama real** | **real** | **Chroma + corpus Wikilivros** |
+
+O `ScriptedOllama` exige a resposta da etapa de intenção (`intent=llm_intent(...)`): um roteiro que a esqueça
+falha, em vez de passar por acaso.
 
 ## Limitações conhecidas (medidas por `scripts/security_eval.py`)
 

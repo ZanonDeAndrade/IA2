@@ -90,7 +90,6 @@ export function IngredientInput({ id, items, draft, onItemsChange, onDraftChange
         onChange={(e) => onDraftChange(e.target.value)}
         onKeyDown={onKeyDown}
         onPaste={onPaste}
-        onBlur={() => draft.trim() && commit(draft)}
         disabled={disabled}
         maxLength={LIMITS.ingredientMaxChars * 4}
         placeholder="ovo, queijo, tomate"

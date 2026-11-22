@@ -1,0 +1,1020 @@
+{
+ "fonte": "pt.wikibooks.org, Livro de receitas",
+ "licenca": "CC BY-SA 4.0 (Wikilivros)",
+ "criterio": "páginas-semente + amostra uniforme de categorias 'X, receitas com' (SEED_CATEGORIES)",
+ "categorias": {
+  "Ovo, receitas com": 45,
+  "Queijo, receitas com": 35,
+  "Tomate, receitas com": 30,
+  "Frango, receitas com": 35,
+  "Arroz, receitas com": 25,
+  "Batata, receitas com": 30,
+  "Cenoura, receitas com": 20,
+  "Pão, receitas com": 20,
+  "Leite condensado, receitas com": 25,
+  "Manteiga, receitas com": 20,
+  "Leite, receitas com": 20,
+  "Farinha de trigo, receitas com": 25,
+  "Carne moída, receitas com": 15,
+  "Macarrão, receitas com": 15,
+  "Feijão, receitas com": 10,
+  "Banana, receitas com": 10
+ },
+ "paginas": {
+  "Livro de receitas/Brigadeiro": [
+   "semente",
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Panqueca simples": [
+   "semente"
+  ],
+  "Livro de receitas/Omelete com queijo": [
+   "semente"
+  ],
+  "Livro de receitas/Arroz-doce": [
+   "semente"
+  ],
+  "Livro de receitas/Bolo de cenoura": [
+   "semente",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Pudim de leite": [
+   "semente"
+  ],
+  "Livro de receitas/Bolinhos de queijo": [
+   "semente"
+  ],
+  "Livro de receitas/Pão de queijo mineiro": [
+   "semente"
+  ],
+  "Livro de receitas/Bolo de fubá": [
+   "semente"
+  ],
+  "Livro de receitas/Bolo de chocolate": [
+   "semente"
+  ],
+  "Livro de receitas/Abobrinha refogada": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Barquetes saborosas": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Biscoito amanteigado": [
+   "Ovo, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Biscoito com tempero": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Biscoito de leite": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Biscoito jagunço": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolacha de coco": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolinhas de queijo de Bomjepe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolinho de fubá à Bomjepe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo São João": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo da Vó": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo de banana à Bomjepe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo de fubá com coalhada": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo de laranja light": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo de nata": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo escaldado": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo mamãe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bolo recortado": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Bomba de chocolate": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Broa de melado de cana": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Broinha de fubá": [
+   "Ovo, receitas com",
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Cartuchos à moda de Cernache": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Chimanguinho": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Creme de leite": [
+   "Ovo, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Docinho de queijo - tipo ameixa": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Escalope de lombo - empanado": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Fatias de coco saborosa": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Fricassê de frango com ervas": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Maionese no liquidificador": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Massa para coxinha": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Merengue com creme": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Nhoque": [
+   "Ovo, receitas com",
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Ovos com abobrinha": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Panqueca de sal": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pastel de nata recheado": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pizza enrolada": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pudim de ovos": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pães caseiros": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pão de cebola à Bomjepe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pão de minuto": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pão de queijo à Bomjepe": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Pãozinho do sertão": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Rocambole": [
+   "Ovo, receitas com"
+  ],
+  "Livro de receitas/Rocamboles de doce de leite": [
+   "Ovo, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Tropeirão mineiro": [
+   "Ovo, receitas com",
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Amável sorriso": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Arroz à americana": [
+   "Queijo, receitas com",
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Biscoito chimango": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Biscoito de mandioca": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Biscoitão inteiro": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Bolinho de queijo frito": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Bolo cremoso de fubá de canjica": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Bolo de macarrão": [
+   "Queijo, receitas com",
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Bolo de queijo": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Bombocado simples": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Broa na lata": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Carne deliciosa": [
+   "Queijo, receitas com",
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Caçarola italiana de macarrão": [
+   "Queijo, receitas com",
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Costeletas especiais": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Croquetes de cenoura": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Empadinha de queijo": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Farofa simples": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Lanche mineiro": [
+   "Queijo, receitas com",
+   "Frango, receitas com",
+   "Leite, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Massa de nhoques": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Massa para rocambole salgado": [
+   "Queijo, receitas com",
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Molho branco": [
+   "Queijo, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Ovos na cumbuca": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Pizza de mussarela": [
+   "Queijo, receitas com",
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Pudim de pão": [
+   "Queijo, receitas com",
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Pudim segura marido": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Pão de queijo com iogurte": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Pão de queijo doido": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Pão de queijo tradição": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Queijadinhas de coco": [
+   "Queijo, receitas com",
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Requeijão simples": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Rosquinha frita": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Sobras de carne - aproveitamento": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Torta com legumes": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Torta paulista": [
+   "Queijo, receitas com"
+  ],
+  "Livro de receitas/Zepelado": [
+   "Queijo, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Abobrinha suculenta": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Arroz de forno": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Bacalhau à cardeal": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Bolinhos de bacalhau": [
+   "Tomate, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Bruschetta": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Canja especial": [
+   "Tomate, receitas com",
+   "Frango, receitas com",
+   "Batata, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Casquinha de siri": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Croquetes de bacalhau": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Empadão de mãe": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Espetinho na frigideira": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Feijão tropeiro especial": [
+   "Tomate, receitas com",
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Filé de frango – grelhado, e legumes": [
+   "Tomate, receitas com",
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Gaspacho": [
+   "Tomate, receitas com",
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Lasanha bolonhesa com molho branco": [
+   "Tomate, receitas com",
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarronada três queijos": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Macarrão fusili com legumes": [
+   "Tomate, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Molho ao sugo": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Muamba de galinha": [
+   "Tomate, receitas com",
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Patê de salsicha": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Pizza frita": [
+   "Tomate, receitas com",
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Pizza à Bomjepe": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Recheios para empadas": [
+   "Tomate, receitas com",
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Rocambole à portuguesa": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Salpicão de frango": [
+   "Tomate, receitas com",
+   "Frango, receitas com",
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Sopa de tomate com manjericão": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Suã de porco e serralha": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Torta de atum": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Torta de sardinha": [
+   "Tomate, receitas com"
+  ],
+  "Livro de receitas/Tortas de Palmito": [
+   "Tomate, receitas com",
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Arroz de cabidela": [
+   "Frango, receitas com",
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz dourado": [
+   "Frango, receitas com",
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Bolinhos de catupiri": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Coxinha de frango com batata": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Creme de legumes com sonhos": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Empada do Rio": [
+   "Frango, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Empadinha": [
+   "Frango, receitas com",
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Empadão ligeiro": [
+   "Frango, receitas com",
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Filé de frango grelhado com maçã verde": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango ao creme": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango ao molho pardo": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango com batata palha e requeijão": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango com mussarela": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango com quiabo": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango frito igual KFC": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Frango nobreza": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Fricassê de frango": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Macarrão com peito de frango": [
+   "Frango, receitas com",
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Massa podre para empadas": [
+   "Frango, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Peito de frango com melaço de uvaia e sementes de papoula": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Rocambole de frango e queijo": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Rocambole à Bomjepe": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Salada de queijo com arroz integral": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Sopa rápida": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Strogonoff de peito de frango": [
+   "Frango, receitas com"
+  ],
+  "Livro de receitas/Torta de batata": [
+   "Frango, receitas com",
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Torta de palmito e frango": [
+   "Frango, receitas com",
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Yakissoba": [
+   "Frango, receitas com",
+   "Cenoura, receitas com",
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Arroz Colorido": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz básico": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz caipira": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz carreteiro de frescal": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz com ervilhas": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz com presunto": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz da galera": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz de forno -- cru": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz doce à Bomjepe": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz e champignon": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz mineiro": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz soltinho": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Arroz à moda estradeiro": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Bolinho de arroz": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Charuto de repolho": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Creme de tomate": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Mexido bão": [
+   "Arroz, receitas com",
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Pastel cozido na coalhada": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Risoto a piamontese": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Risoto de palmito": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Risoto verde": [
+   "Arroz, receitas com"
+  ],
+  "Livro de receitas/Torta de arroz": [
+   "Arroz, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Bacalhau ao leite": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Batata ao forno": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Batata corada no forno": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Batatas defumadas tipo Hickory": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Bolinho de bacalhau apetitoso": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Bolinho de batata com carne moída": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Bolinho de batata ou mandioca": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Buchada de porco - recheada": [
+   "Batata, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Caldo verdejante": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Coxinha de galinha": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Croquetes de sardinha": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Pastel português": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Pirão de legumes": [
+   "Batata, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Purê de batata": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Pão de queijo de batata": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Pãozinho para sanduíche": [
+   "Batata, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Rocambole de carne moída ao molho de café": [
+   "Batata, receitas com",
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Salada de atum": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Salada de maçã com bacalhau": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Sonhos": [
+   "Batata, receitas com",
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Strogonoff de legumes": [
+   "Batata, receitas com",
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Surubim no espeto": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Torta de batata com repolho e queijo": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Torta fria de frango": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Vichyssoise": [
+   "Batata, receitas com"
+  ],
+  "Livro de receitas/Arroz com pato": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Bife de batata": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Cozido de trigo": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Doce de leite com cenoura": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Filé de frango - cozido": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Pão de cenoura": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Rosca de cenoura": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Salada de batata no repolho": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Salada diferente": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Sanduíche primavera": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Sopa de cenoura": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Surubim empanado à mineira": [
+   "Cenoura, receitas com"
+  ],
+  "Livro de receitas/Açorda à alentejana": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Bombocado diferente": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Gaspacho à Andaluza": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Mozarela empanada na frigideira": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Pezinhos de coentrada": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Pão com 4 queijos": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Sopa de cebola": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Torricado": [
+   "Pão, receitas com"
+  ],
+  "Livro de receitas/Arroz doce de leite condensado": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Batida de pêssego, sem álcool": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Bolo amigo": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Bolo fofo": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Bombocado de mandioca": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Cocada": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Congelado de iogurte": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Creme para recheios e coberturas": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Dois a dois": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Iogurtes de morango": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Mosaico de gelatina": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pavê J K": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pavê delícia": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pudim de coco": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pudim de queijo": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pudim sabor gelado": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Pé-de-moleque achocolatado": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Rocambole de chocolate à Bomjepe": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Rosca de leite condensado": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Torta alemã": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Torta de sonho de valsa": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Tortinha de frutas": [
+   "Leite condensado, receitas com"
+  ],
+  "Livro de receitas/Cigarretes em geral": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Doce de leite esculpido": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Glacê de manteiga": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Língua-de-sogra à moda Bomjepe": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Massa francesa para empadas": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Massas para pastéis": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Molho madeira": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Rocambole de chocolate e beijinho": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Sopa de caranguejos": [
+   "Manteiga, receitas com"
+  ],
+  "Livro de receitas/Ambrósia": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Brigadeiro de café solúvel": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Coalhada seca": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Croquetes de carne moída": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Esfirras para festas": [
+   "Leite, receitas com",
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Massa para pastel português": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Olhos de perdizes": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Pastel de massa cozida": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Pizzas em geral": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Pãezinhos de cebola": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Queijos catupiri caseiros": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Risoles de carne moída": [
+   "Leite, receitas com",
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Salgadinho de queijo": [
+   "Leite, receitas com"
+  ],
+  "Livro de receitas/Baba de chocolate": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Biscoito chuvisco": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Blanquete": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolinho de carne moída": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolo bom": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolo de canela": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolo de mandioca": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolo fofão": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Bolo suculento": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Broas de Fubá de Canjica": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Cavacas caipira": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Molho roty": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Panqueca americana": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Pastelão frito": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Pudim de batata doce": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Pão caseiro à Bomjepe": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Pão de ló pobre": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Pão italiano": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Rosca natalina": [
+   "Farinha de trigo, receitas com"
+  ],
+  "Livro de receitas/Almôndegas deliciosas": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Bolinho caipira": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Bolo salgado": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Carne moída – três em um": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Lagarto recheado": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Macarrão assado": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Molho à bolonhesa": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Pastel de fubá": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Quibe assado": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Quibes em geral": [
+   "Carne moída, receitas com"
+  ],
+  "Livro de receitas/Caldo à Bomjepe": [
+   "Macarrão, receitas com",
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Espaguete à Carbonara": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão ao alho e óleo": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão ao forno": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão com brócolis": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão com legumes e carne": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão gratinado": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Macarrão na panela de pressão": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Omelete com espaguetinho": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Salada de macarrão": [
+   "Macarrão, receitas com"
+  ],
+  "Livro de receitas/Caldo de feijão": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Cozido de feijão e vinho": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Feijoada brasileira completa": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Feijoada à moda do Ibo": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Feijão tropeiro": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Sopa de feijão à grega": [
+   "Feijão, receitas com"
+  ],
+  "Livro de receitas/Banana caramelada": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Bananas flambadas com suco de laranja": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Bolinhos de Banana": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Bolo de banana": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Bolo tropical": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Doce de banana vegano": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Pizza de banana": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Sorvete de banana vegano": [
+   "Banana, receitas com"
+  ],
+  "Livro de receitas/Torta de banana": [
+   "Banana, receitas com"
+  ]
+ },
+ "atualizado_em": "2026-11-17T02:24:07Z"
+}

@@ -31,8 +31,10 @@ describe("App", () => {
     render(<App />);
     await ask("O que posso fazer?", "ovo, queijo");
     expect(await screen.findByRole("heading", { name: "[TESTE] Omelete" })).toBeInTheDocument();
-    expect(screen.getByText("Faltam ingredientes")).toBeInTheDocument();
+    expect(screen.getByText("Falta 1 ingrediente")).toBeInTheDocument();
     expect(screen.getByText("leite")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Com ingredientes adicionais/ })).toBeInTheDocument();
+    expect(screen.getByRole("note")).toHaveTextContent("Nenhuma receita totalmente compatível");
     expect(screen.getByRole("heading", { name: "Fontes consultadas" })).toBeInTheDocument();
     expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toEqual({
       question: "O que posso fazer?",

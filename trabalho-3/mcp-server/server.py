@@ -10,7 +10,7 @@ import logging
 import os
 import sys
 import time
-from typing import Annotated
+from typing import Annotated, Literal
 
 # Logs SEMPRE em stderr, configurados antes de importar qualquer outra coisa.
 logging.basicConfig(
@@ -27,7 +27,7 @@ from pydantic import Field  # noqa: E402
 
 import tools  # noqa: E402
 from models import GetDocumentOutput, ListTopicsOutput, SearchKnowledgeOutput  # noqa: E402
-from store import IngredientNormalizer, RecipeStore, RetrieverAdapter, Settings  # noqa: E402
+from store import IngredientNormalizer, RecipeStore, RetrieverAdapter, Settings, UserIngredientKeys  # noqa: E402
 
 logger = logging.getLogger("mcp_server")
 
@@ -36,10 +36,12 @@ settings = Settings.from_env()
 if str(settings.project_root) not in sys.path:
     sys.path.append(str(settings.project_root))
 
+_normalize = IngredientNormalizer(settings.normalizer_ref)
 ctx = tools.ToolContext(
     store=RecipeStore(settings.recipes_json),
     retriever=RetrieverAdapter(settings.retriever_ref),
-    normalize=IngredientNormalizer(settings.normalizer_ref),
+    normalize=_normalize,
+    user_keys=UserIngredientKeys(settings.user_keys_ref, _normalize),
 )
 
 mcp = MCPServer(
@@ -76,9 +78,11 @@ def _run(name: str, fn, *args):
     name="search_knowledge",
     title="Buscar receitas na base documental",
     description=(
-        "Busca semântica nas receitas documentadas e confere, de forma determinística, quais ingredientes "
-        "obrigatórios de cada receita o usuário informou. Use para qualquer pergunta sobre o que cozinhar ou "
-        "sobre uma receita. Retorna até 5 receitas com recipe_id, document_id, source_url, trecho da fonte, "
+        "Busca receitas documentadas (semântica + conferência determinística dos ingredientes obrigatórios). "
+        "Use para qualquer pedido de receita: por ingredientes, por nome de prato, por característica ou para "
+        "achar o recipe_id antes de get_document. Com available_ingredients, ordena por compatibilidade "
+        "(COMPLETE antes de PARTIAL, menos faltantes primeiro) e só devolve receitas que usam algum ingrediente "
+        "informado (até 8 candidatas). Sem ingredientes retorna até 5. Cada receita traz recipe_id, título, categoria, source_url, trecho da fonte, "
         "ingredientes disponíveis/faltantes e compatibilidade (COMPLETE, PARTIAL, NO_MATCH ou NOT_EVALUATED). "
         "evidence_status=INSUFFICIENT significa que a base não sustenta uma resposta: não invente receitas. "
         "Compatibilidade indica presença, não quantidade suficiente."
@@ -102,13 +106,19 @@ async def search_knowledge(
             description="Filtrar por categoria; use apenas valores retornados por list_topics.",
         ),
     ] = None,
-    top_k: Annotated[int, Field(ge=1, le=10, description="Quantidade de trechos a recuperar do índice (1 a 10).")] = (
+    top_k: Annotated[int, Field(ge=1, le=10, description="Quantidade mínima de trechos a recuperar do índice (1 a 10).")] = (
         settings.default_top_k
     ),
+    ranking: Annotated[
+        Literal["compatibility", "relevance"] | None,
+        Field(description="Ordenação: 'compatibility' (padrão com ingredientes) prioriza o que dá para preparar com "
+                          "os ingredientes informados; 'relevance' ordena pela semelhança com a consulta (ex.: busca "
+                          "por nome de prato)."),
+    ] = None,
 ) -> SearchKnowledgeOutput:
     # O retriever é CPU-bound (embeddings); roda em thread para não travar o loop do protocolo.
     return await anyio.to_thread.run_sync(
-        _run, "search_knowledge", tools.search_knowledge, ctx, query, available_ingredients, topic_key, top_k
+        _run, "search_knowledge", tools.search_knowledge, ctx, query, available_ingredients, topic_key, top_k, ranking
     )
 
 

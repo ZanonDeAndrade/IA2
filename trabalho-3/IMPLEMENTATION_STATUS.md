@@ -8,18 +8,34 @@ A busca cita o PDF e a página física. A unidade recuperada é uma página, por
 - Relatório local de avaliação em `tests/evidence/rag-evaluation.json`.
 - A integração do formato PDF com o servidor MCP está pendente.
 
-## Aplicação integrada (16/11/2026)
+## Aplicação integrada (atualizado em 17/11/2026: revisão do sistema de recomendação)
 
 | Componente | Situação | Evidência |
 |---|---|---|
-| Corpus estruturado | **10 páginas reais do Wikilivros** (Livro de receitas, CC BY-SA 4.0, revid registrado) → **34 receitas** (uma por variante) | `data/raw/wikibooks/`, `data/normalized/recipes.json` |
-| Embeddings + ChromaDB | 68 chunks (ingredientes e preparo por receita), MiniLM multilíngue 384d, persistente | `data/chroma_wikibooks/report.json` (`python -m rag.wikibooks build`) |
-| Retriever do MCP | `rag.wikibooks:retrieve`: top-k cosseno + filtro híbrido (o trecho precisa citar um termo da consulta; sem isso o MiniLM trazia receitas sem relação) | `rag/wikibooks.py`, `rag/tests/test_wikibooks.py` |
-| Servidor MCP + 3 tools | Real, stdio, com o corpus acima (`corpus_ready=true`) | `/ready` |
-| LLM | **Ollama 0.40.16 + `qwen3:1.7b`** (CPU, 12 núcleos, ~6 GB livres); function calling real | `tests/evidence/real_e2e_*.json`, logs `tool=search_knowledge`/`get_document` |
-| API FastAPI | `POST /api/v1/consultations`, `/health`, `/ready`, CORS | `backend/tests/test_api.py` + `scripts/real_e2e.py` |
-| Frontend | React/TS/Vite; consulta só com ingredientes; cards, faltantes, preparo, fontes, estados | `npm test`, `npm run build`, Chromium headless contra a API real |
+| Corpus estruturado | **312 páginas reais do Wikilivros** (10 sementes + amostra uniforme de 16 categorias "X, receitas com"; CC BY-SA 4.0, revid registrado) → **470 receitas** (uma por variante), 10 categorias da navegação do próprio Wikilivros | `data/raw/wikibooks/` (+ `_manifest.json`), `data/normalized/recipes.json` |
+| Embeddings + ChromaDB | 940 chunks (ingredientes com categoria; preparo), MiniLM multilíngue 384d, persistente | `data/chroma_wikibooks/report.json` |
+| Normalização de ingredientes | plural, acentos, modificadores de estado/tamanho, sinônimos; partes (ovo→gema) e variedades (parmesão→queijo) sem substituições | `rag/ingredients.py`, `rag/tests/test_culinary_normalization.py` |
+| Servidor MCP | compatibilidade com chaves culinárias; recuperação híbrida (semântica ∪ critério estruturado) e ranking lexicográfico documentado; parâmetro opcional `ranking` | `mcp-server/tools.py`, `mcp-server/tests/test_recommendation.py` |
+| Intenção e seleção | intenção classificada pelo LLM e validada; `list_topics` só para perguntas de categorias; seleção/ordem programáticas; situações A/B/C | `backend/app/inference/intent.py`, `recommend.py`, `tests/test_intent_and_selection.py` |
+| LLM | **Ollama 0.40.16 + `qwen3:1.7b`** (CPU); function calling real | `tests/evidence/real_eval_*.json` |
+| API e frontend | contrato preservado (+ `topic_label`/`subcategory` opcionais); resultados agrupados em "Você pode preparar agora" / "Com ingredientes adicionais" | `backend/tests/test_api.py`, `frontend/src/**/*.test.tsx` |
 
-Pendências e limitações: latência de 1 a 4 min por consulta em CPU; o parser de ingredientes do wikitext é
-heurístico (alguns nomes ruidosos, ex. "(sopa) achocolatado em pó"); o RAG de PDFs (`rag.retrieve`) não está ligado
-ao MCP (não expõe `retrieve()` e não tem receitas estruturadas); design visual de referência não aplicado.
+Diagnóstico, critérios e limitações: [docs/recomendacao.md](docs/recomendacao.md).
+
+### Testes (17/11/2026)
+
+| Suíte | Tipo | Resultado |
+|---|---|---|
+| backend `pytest -m "not real_llm"` | LLM **roteirizado** + MCP real + corpus de fixture | 210 aprovados |
+| mcp-server `pytest` | protocolo real + lógica de ranking/compatibilidade com **fixture** | 40 aprovados |
+| rag `pytest` | parser e normalização (sem rede) | 52 aprovados |
+| frontend `npm test` + `npm run build` | componentes com fetch **simulado** | 38 aprovados, build ok |
+| `scripts/real_eval.py` | **REAL**: Ollama + MCP stdio + Chroma + corpus Wikilivros, casos A–H + 3 exemplos | 12/12 (`tests/evidence/real_eval_20261117_000953.json`) |
+| `scripts/real_frontend_check.py` | **REAL** no Chromium: café da manhã com pão, manteiga, ovo e queijo | aprovado (receitas agrupadas, sem categorias) |
+
+A avaliação real revelou e corrigiu: receita falsamente `COMPLETE` ("se quiser" da alternativa tornava a sardinha
+opcional), nomes perdidos no modelo `{{w|...}}` e ruído de unidades.
+
+Limitações: sem metadado de refeição/tempo no corpus (adequação ao café da manhã depende do LLM); ~2,5% de nomes
+de ingrediente com ruído; "pão" não satisfaz "pão francês" (regra conservadora); 1 a 2 min por consulta em CPU;
+o RAG de PDFs (`rag.retrieve`) continua fora do MCP; design visual de referência não aplicado.
