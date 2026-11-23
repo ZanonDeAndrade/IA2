@@ -277,7 +277,7 @@ def test_mcp_real_stdio(monkeypatch, tmp_path):
         async with graph.sessao_mcp() as ferramentas:
             assert {f.name for f in ferramentas} == {
                 "analisar_partida", "analisar_posicao", "validar_lances", "descrever_posicao",
-                "buscar_partidas", "buscar_puzzles", "buscar_conceitos",
+                "buscar_partidas", "buscar_puzzles", "buscar_conceitos", "jogar_stockfish",
             }
             mcp = graph.Ferramentas(ferramentas)
             assert await mcp.chamar("buscar_conceitos", pergunta="garfo", tema="garfo") == []

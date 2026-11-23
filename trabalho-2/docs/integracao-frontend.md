@@ -4,6 +4,10 @@ A interface consome apenas HTTP/JSON. A base local é `http://127.0.0.1:8000`.
 A documentação interativa fica em `/docs` e os modelos de entrada e saída
 descrevem-se em `/openapi.json`.
 
+A API de partidas interativas tem um contrato próprio, com operação
+versionada por turno. [Contratos do modo Jogar contra IA](JOGAR_CONTRA_IA.md#api-http) ·
+[Fila de explicações, dicas, chat e relatório do treinador](TREINADOR.md#api-do-treinador)
+
 A interface está em `frontend/`. No desenvolvimento, o Vite em
 `http://127.0.0.1:5173` encaminha `/api` e `/healthz` para essa API. No Compose,
 o Nginx do serviço `frontend` encaminha para `backend:8000`. Para a execução
@@ -40,7 +44,7 @@ quando `MCP_URL` está vazio. Para um processo separado, execute
 | `GET /api/tarefas/{id}` | ID da tarefa | 200, progresso e referência do resultado | 404 tarefa ausente |
 | `POST /api/explicar` | FEN e lance jogado | 200, explicação ou fallback com status de validação | 422 FEN/lance inválido, 503 motor, 504 prazo |
 | `POST /api/chat` | FEN, pergunta, histórico e referência opcional ao lance | 200, resposta e status | 422 corpo, FEN ou referência inválida, 504 prazo |
-| `GET /api/relatorio/{usuario}` | Usuário importado ou associado ao PGN | 200, contagens, evolução e puzzles | 422 identificador inválido |
+| `GET /api/relatorio/{usuario}` | Usuário importado, associado ao PGN ou perfil de treino retornado ao iniciar a partida | 200, contagens, evolução e puzzles | 422 identificador inválido |
 
 Erros operacionais retornam `{"detail":"mensagem"}`. Em validações de esquema,
 o FastAPI devolve `detail` com uma lista de campos. Todo POST acima de

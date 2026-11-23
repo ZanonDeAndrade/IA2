@@ -25,6 +25,17 @@ def _casas(quadrados) -> list[str]:
     return [chess.square_name(casa) for casa in quadrados]
 
 
+def reproduzir_lances(fen_inicial: str, lances: list[str]) -> chess.Board:
+    """Mantém a pilha de lances necessária às regras de repetição."""
+    tabuleiro = _ler_fen(fen_inicial)
+    for uci in lances:
+        lance = tabuleiro.parse_uci(uci)
+        if not tabuleiro.is_legal(lance):
+            raise ValueError("O histórico contém um lance ilegal.")
+        tabuleiro.push(lance)
+    return tabuleiro
+
+
 def _notacao(tabuleiro: chess.Board, lance: chess.Move) -> dict[str, str]:
     return {"san": tabuleiro.san(lance), "uci": tabuleiro.uci(lance)}
 

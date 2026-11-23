@@ -13,6 +13,8 @@ from fastapi.responses import JSONResponse
 
 from agent.graph import responder_chat_async
 from backend import db, services
+from backend.jogo import treinador
+from backend.jogo.api import router as jogo_router, router_treinador
 from backend.schemas import (
     Chat, Erro, Explicacao, Importacao, Importadas, Lance, Partida, Pergunta, Relatorio, Tarefa, TarefaCriada,
 )
@@ -58,7 +60,7 @@ class LimiteCorpo:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    for nome in ("agent.mcp", "agent.graph"):
+    for nome in ("agent.mcp", "agent.graph", "agent.treinador", "backend.jogo.treinador"):
         logger = logging.getLogger(nome)
         if not logger.hasHandlers():
             logger.addHandler(logging.StreamHandler())
@@ -68,7 +70,11 @@ async def lifespan(app: FastAPI):
         db.interromper_tarefas(conn)
     app.state.fila_motor = asyncio.Lock()
     app.state.fila_llm = asyncio.Semaphore(2)
-    yield
+    app.state.treinador = await treinador.iniciar_fila(app.state.fila_llm)
+    try:
+        yield
+    finally:
+        await treinador.encerrar_fila()
 
 
 app = FastAPI(title="Lance a Lance API", version="0.2.0", lifespan=lifespan,
@@ -77,7 +83,9 @@ app.add_middleware(LimiteCorpo)
 app.add_middleware(CORSMiddleware, allow_origins=[
     origem.strip() for origem in (os.getenv("CORS_ORIGENS") or "http://localhost:5173,http://127.0.0.1:5173").split(",")
     if origem.strip()
-], allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
+], allow_methods=["GET", "POST"], allow_headers=["Content-Type", "X-Sessao-Jogo"])
+app.include_router(jogo_router)
+app.include_router(router_treinador)
 
 
 @app.exception_handler(Exception)

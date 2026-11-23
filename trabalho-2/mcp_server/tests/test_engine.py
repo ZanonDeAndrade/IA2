@@ -134,7 +134,7 @@ def test_ferramentas_reais_via_fastmcp_com_cliente_do_agente(stockfish, monkeypa
             ferramentas = Ferramentas(disponiveis)
             assert set(ferramentas.disponiveis) == {
                 "analisar_posicao", "analisar_partida", "validar_lances", "descrever_posicao",
-                "buscar_partidas", "buscar_puzzles", "buscar_conceitos",
+                "buscar_partidas", "buscar_puzzles", "buscar_conceitos", "jogar_stockfish",
             }
             motor = await ferramentas.chamar("analisar_posicao", fen=fen_antes, profundidade=8, multipv=3)
             assert motor["perspectiva"] == "black"

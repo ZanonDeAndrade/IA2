@@ -45,3 +45,8 @@ export function safeTrainingUrl(url) {
     return null;
   }
 }
+
+export const BOARD_COLORS = {
+  darkSquareStyle: { backgroundColor: "#52766a" },
+  lightSquareStyle: { backgroundColor: "#e0e7df" },
+};
