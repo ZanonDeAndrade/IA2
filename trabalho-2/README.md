@@ -4,10 +4,53 @@ Treinador de xadrez do Trabalho 2 de Inteligência Artificial II. O Stockfish
 identifica alternativas, o classificador mede a perda de chance de vitória e o
 agente explica os erros em português com fatos verificáveis e fichas táticas.
 
+![Demonstração didática da interface Lance a Lance](docs/img/demo.gif)
+
+O GIF mostra a demonstração offline com dados ilustrativos. A interface também
+consome a API real para importar, analisar, explicar lances, conversar sobre a
+posição e consultar o relatório.
+
+[Guia da interface](frontend/README.md) ·
+[Guia de execução e demonstração](docs/EXECUCAO_COMPLETA.md) ·
+[Verificação da integração real](docs/verificacao-integracao.md) ·
+[Tarefas restantes do Milton](docs/pendencias-milton.md) ·
+[Registro do teste SUS](docs/sus.html) ·
+[Roteiro do pitch](docs/roteiro-pitch.md)
+
+## Aplicativo no Windows
+
+Com Python 3.11+ e Node.js 22+, na pasta `trabalho-2`:
+
+```powershell
+.\preparar.ps1
+.\iniciar.ps1
+```
+
+Acesse `http://127.0.0.1:5173`. O preparo mínimo instala a API, baixa o Stockfish
+oficial e prepara os puzzles. Para explicações com RAG e chat, use
+`.\preparar.ps1 -ComRag` e configure o provedor/modelo autorizado no `.env`.
+Configure também o contato real em `CHESSCOM_USER_AGENT` para importar pelo
+Chess.com. O `.env` é local e não deve ser versionado.
+
+### Telas
+
+![Início e importação de partidas](docs/img/inicio.png)
+![Análise no modo de demonstração didática](docs/img/analise-demo.png)
+![Relatório no modo de demonstração didática](docs/img/relatorio-demo.png)
+
+Há modos claro e escuro e layout para celular. O teste de usabilidade SUS com
+cinco participantes ainda precisa ser aplicado. O formulário em `docs/sus.html`
+registra as respostas e calcula as notas, sem resultados fictícios.
+
+A integração em Linux foi verificada no navegador contra o Compose com Stockfish,
+MCP, SQLite, ChromaDB e o Qwen3 1.7B já instalado no Ollama. Para abrir a
+demonstração real, execute os serviços e importe o PGN público da Lichess
+incluído no projeto. [PGN da demonstração](data/demos/xdFXCpYF.pgn) ·
+[Verificação inicial no Windows](docs/verificacao-interface.md)
+
 [Documentação acadêmica](docs/lance-a-lance-documentacao-do-projeto.pdf) ·
 [Integração com o frontend e contratos HTTP](docs/integracao-frontend.md) ·
-[Protocolo experimental](evaluation/README.md) ·
-[Auditoria de qualidade da versão C](evaluation/QUALIDADE.md)
+[Protocolo experimental](evaluation/README.md)
 
 ## Arquitetura
 
@@ -29,7 +72,7 @@ React → FastAPI → cliente MCP → FastMCP
   Sentence Transformers. O modelo padrão é MiniLM multilíngue.
 - `data/` contém a preparação e os índices de puzzles e o benchmark HTTP.
 - `evaluation/` contém dataset, métricas, exportações e avaliação cega.
-- `frontend/` contém o trabalho visual do Milton. A interface acessará apenas
+- `frontend/` contém o trabalho visual do Milton. A interface acessa apenas
   a API HTTP.
 
 ## Ferramentas MCP
@@ -58,7 +101,8 @@ MultiPV 3. Ao abrir um erro, a interface pode pedir `POST /api/explicar`.
 A explicação usa a análise gravada quando disponível. O LangGraph recupera
 fatos e ficha, gera texto e confere versões SAN na variante antes de publicá-lo.
 Um fallback determinístico também passa pelo validador. Explicações completas
-validadas são persistidas. O chat mantém o vínculo com o FEN e as ferramentas do grafo.
+validadas são persistidas. O chat mantém o vínculo com o FEN e o lance
+selecionado e consulta as ferramentas do grafo para a pergunta atual.
 
 O adaptador de LLM é compartilhado pela API e pelo executor experimental. Ele
 usa Chat Completions no Ollama e aceita provedores OpenAI compatíveis. O
@@ -76,15 +120,20 @@ cp -n .env.example .env
 docker compose up --build
 ```
 
-A API fica em `http://localhost:8000`, o Swagger em
+A interface fica em `http://localhost:5173`. A API fica em `http://localhost:8000`, o Swagger em
 `http://localhost:8000/docs` e o OpenAPI em `http://localhost:8000/openapi.json`.
-O backend e o MCP têm health checks. A API aguarda o MCP também após
+Frontend, backend e MCP têm health checks. O navegador usa a própria origem
+para `/api`, via proxy Nginx. A API aguarda o MCP também após
 reinício. Entre contêineres, o MCP usa Streamable HTTP com respostas JSON
 no endereço interno `http://mcp_server:8001/mcp`. A imagem instala
 Stockfish 15.1 do Debian. Na primeira inicialização, o MCP baixa o modelo de
 embeddings e indexa as 30 fichas. Os volumes `dados`, `chroma` e `modelos`
 preservam SQLite, o índice e os pesos. `docker compose down` preserva os
 volumes. Use um worker de API por banco para a recuperação das tarefas.
+
+Configure `CHESSCOM_USER_AGENT` com o contato da equipe e habilite Ollama
+local com `qwen3:1.7b` para geração e chat. O guia traz o perfil do modelo,
+o acesso a partir da bridge Docker e a sequência da demonstração. [Configurar o Ollama](docs/EXECUCAO_COMPLETA.md#habilitar-ollama-local)
 
 O Compose prepara automaticamente um recorte inicial de 73 puzzles rastreados
 na base oficial. Para preparar um recorte maior dentro do volume:
@@ -108,9 +157,37 @@ python -m knowledge_base.index
 python -m uvicorn backend.main:app --port 8000
 ```
 
+Em outro terminal, com Node.js 22.12+:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+O Vite encaminha `/api` e `/healthz` para `127.0.0.1:8000` por padrão. Se a API
+usar outra porta, defina `VITE_API_PROXY_TARGET` com o endereço do backend.
+
 Sem `MCP_URL`, o cliente abre um processo stdio. Para manter um servidor
 local compartilhado, rode em outro terminal `python -m mcp_server.server --http`
 e configure `MCP_URL=http://127.0.0.1:8001/mcp` na API.
+
+## Fluxo de uso e contratos
+
+| Tela | Ação | API |
+| --- | --- | --- |
+| Início | Buscar usuário, quantidade e ritmo ou colar um PGN | `POST /api/partidas/importar` |
+| Análise | Abrir a partida, iniciar ou recuperar a análise e acompanhar seus meios-lances | `GET /api/partidas/{id}`, `POST /api/partidas/{id}/analisar`, `GET /api/tarefas/{id}` |
+| Análise | Navegar no tabuleiro e no gráfico e pedir a explicação de um erro | `POST /api/explicar` |
+| Análise | Perguntar sobre a posição atual ou a consequência do lance selecionado | `POST /api/chat` |
+| Meu progresso | Ver erros, temas, evolução e puzzles da Lichess | `GET /api/relatorio/{usuario}` |
+
+O gráfico mostra avaliações das brancas e trata mates como marcações separadas.
+Cada puzzle exibe o rating do recorte, os temas e o endereço público na Lichess.
+Se o recorte atual ficar sem resultados, o relatório mantém as estatísticas e
+informa a faixa ou temas sem correspondência. [Contratos HTTP e códigos de erro](docs/integracao-frontend.md)
+
+## Configuração
 
 | Configuração | Uso |
 | --- | --- |
@@ -153,8 +230,8 @@ na repetição, com Stockfish 11 e profundidade 12. Foram usados os primeiros
 
 No Compose com Stockfish 15.1 e profundidade 12, outra partida pública
 levou **4,664 s** na primeira análise de 80 meios-lances e **0,002 s**
-na repetição. Na rodada anterior, a suíte registrou 119 testes aprovados.
-O teste HTTP confirmou a persistência de lances e tarefas ao reiniciar os serviços.
+na repetição. A suíte final registrou 119 testes aprovados e o teste HTTP
+confirmou a persistência de lances e tarefas ao reiniciar os serviços.
 [Partida usada no benchmark Docker](https://www.chess.com/game/live/187698565326)
 
 ### Validação da IA local
@@ -164,11 +241,10 @@ O pré-teste e a geração real para `lichess:00ldC` passaram com Ollama
 confirmou `e5` na análise ao vivo do Stockfish 11 e publicou a explicação em
 português sem fallback. Na rodada inicial da API, a segunda solicitação
 recuperou a explicação do SQLite. Quatro erros de uma partida pública foram
-explicados novamente após a revisão. O relatório contou duas cravadas e dois
-garfos e retornou cinco puzzles reais. O chat foi exercitado por HTTP com
-cinco perguntas sobre o tabuleiro e um teste adversarial.
-A regressão final teve **123 testes aprovados**, sem falhas ou testes ignorados.
-[Piloto revisado](evaluation/results/qwen3-local/piloto-revisado.json) · [Verificação HTTP](evaluation/results/qwen3-local/http-revisado.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
+explicados, e o relatório retornou cinco puzzles reais. O chat foi exercitado
+por HTTP com cinco perguntas sobre o tabuleiro e um teste adversarial.
+A regressão final teve **122 testes aprovados**, sem falhas ou testes ignorados.
+[Piloto revisado](evaluation/results/qwen3-local/piloto-revisado.json) · [Verificação HTTP](evaluation/results/qwen3-local/http.json) · [Chat](evaluation/results/qwen3-local/chat.json) · [MCP e Docker](evaluation/results/qwen3-local/infra.json)
 
 O Compose também passou pela geração e pelo chat com o Ollama do host. Com
 Stockfish 15.1, o contêiner retornou `Rd7` e persistiu a explicação. A segunda
@@ -183,11 +259,8 @@ vivo do piloto separada da referência congelada do experimento A/B/C.
 O dataset efetivo tem **70 de 100 posições**. A rodada principal produziu 208
 explicações completas em 210 tentativas. C obteve 0% de lances ilegais e 100%
 de acordo com a melhor alternativa fornecida pelo motor. O acerto de tema
-de 11,59% motivou uma revisão no perfil estruturado. C revisada completou
-70/70 posições, com 0% de lances ilegais e 28,57% de acerto temático. A
-fidelidade RAGAS foi 0,175 em dez respostas do perfil original e 0,25 em
-três respostas da revisão. As duas amostras têm coberturas diferentes.
-[Relatório A/B/C](evaluation/results/qwen3-70/relatorio.md) · [C revisada](evaluation/results/qwen3-c-final/relatorio.md)
+de 11,59% motivou uma revisão no perfil estruturado. A fidelidade RAGAS foi
+0,175 em dez respostas do perfil original. [Relatório da rodada](evaluation/results/qwen3-70/relatorio.md)
 
 Faltam 30 posições rotuladas de
 PGNs da equipe ou colegas e as avaliações cegas dos três participantes. O

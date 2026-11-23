@@ -170,11 +170,15 @@ async def explicar(entrada: Lance, request: Request) -> dict:
 
 @app.post("/api/chat", response_model=Chat, responses={504: {"model": Erro}})
 async def chat(entrada: Pergunta, request: Request) -> dict:
-    services.tabuleiro_valido(entrada.fen)
+    tabuleiro = services.tabuleiro_valido(entrada.fen)
+    contexto = {}
+    if referencia := entrada.lance_selecionado:
+        contexto["lance_selecionado"] = services.contexto_chat(tabuleiro.fen(), referencia.partida_id, referencia.indice)
     try:
         async with asyncio.timeout(150), request.app.state.fila_llm:
             resposta = await responder_chat_async(
                 entrada.fen, entrada.pergunta, [mensagem.model_dump() for mensagem in entrada.historico],
+                **contexto,
             )
     except TimeoutError as erro:
         raise HTTPException(504, "O prazo do chat foi excedido.") from erro

@@ -1,0 +1,412 @@
+{
+  "data": "2026-11-22",
+  "ambiente": {
+    "sistema": "Linux",
+    "compose": "5.3.1",
+    "node": "22.14.0",
+    "stockfish": "15.1",
+    "profundidade_partida": 12,
+    "ollama": "0.40.16",
+    "modelo": "qwen3:1.7b Q4_K_M"
+  },
+  "suites": {
+    "python": {
+      "aprovados": 132,
+      "falhas": 0,
+      "ignorados": 0
+    },
+    "playwright_contratos": {
+      "aprovados": 16,
+      "falhas": 0,
+      "ignorados": 0
+    },
+    "playwright_api_real": {
+      "aprovados": 3,
+      "falhas": 0,
+      "ignorados": 0
+    }
+  },
+  "chesscom": {
+    "id": "ea462c4fa9049b47082be479",
+    "url": "https://www.chess.com/game/live/187703101168",
+    "ritmo": "blitz",
+    "erros": []
+  },
+  "fluxo_real": {
+    "origem": "https://lichess.org/game/xdFXCpYF",
+    "viewport": [
+      {
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "width": 1280,
+        "height": 800
+      },
+      {
+        "width": 768,
+        "height": 1024
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "chat": [
+      {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Qual é a situação desta posição?",
+        "resposta": "É a vez das pretas. As peças pesadas são 1 dama e 2 torres das brancas e 1 dama e 2 torres das pretas.",
+        "ferramentas_usadas": [
+          {
+            "nome": "descrever_posicao",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31"
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 4.274675179999998
+      },
+      {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Existe alguma peça ameaçada?",
+        "resposta": "Na posição atual, peão das pretas na coluna g, linha seis está sob ataque de dama das brancas na coluna g, linha cinco e torre das brancas na coluna f, linha seis e tem defesa.",
+        "ferramentas_usadas": [
+          {
+            "nome": "descrever_posicao",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31"
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 6.418628227000001
+      },
+      {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Qual seria o melhor lance?",
+        "resposta": "O Stockfish indica `Rd7` como melhor lance.",
+        "ferramentas_usadas": [
+          {
+            "nome": "analisar_posicao",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+              "profundidade": 18,
+              "multipv": 3
+            }
+          },
+          {
+            "nome": "validar_lances",
+            "argumentos": {
+              "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+              "lances": [
+                "Rd7"
+              ]
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 2.8163727290000025
+      },
+      {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Por que esse movimento foi ruim?",
+        "resposta": "O tema identificado é desvio. Na variante, o rei deixa de defender a peça que acaba sendo capturada.",
+        "ferramentas_usadas": [
+          {
+            "nome": "analisar_posicao",
+            "argumentos": {
+              "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32",
+              "profundidade": 16,
+              "multipv": 1
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 3.7655767520000007
+      },
+      {
+        "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32",
+        "pergunta": "Quem ataca a torre preta em d2?",
+        "resposta": "Na posição atual, torre das pretas na coluna d, linha dois está sob ataque de dama das brancas na coluna g, linha cinco e tem defesa.",
+        "ferramentas_usadas": [
+          {
+            "nome": "descrever_posicao",
+            "argumentos": {
+              "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32"
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 4.279449957999997
+      },
+      {
+        "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32",
+        "pergunta": "Qual conceito tático está envolvido?",
+        "resposta": "O tema identificado é desvio. Na variante, o rei deixa de defender a peça que acaba sendo capturada.",
+        "ferramentas_usadas": [
+          {
+            "nome": "analisar_posicao",
+            "argumentos": {
+              "fen": "5r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q1r2PP/5R1K w - - 2 32",
+              "profundidade": 16,
+              "multipv": 1
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false,
+        "segundos": 4.146497474999997
+      }
+    ],
+    "frontend_ms": 95.30000000447035,
+    "partida": "22adcf954fc8fbbe7041a7a9",
+    "meios_lances": 81,
+    "grafico_meio_lance": 40,
+    "explicacao_segundos": 14.598387511,
+    "explicacao": {
+      "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+      "lance_jogado": "Rd2",
+      "melhor_lance": "Rd7",
+      "melhor_lance_uci": "d8d7",
+      "classe": "erro_grave",
+      "queda": 68.03127481446464,
+      "tema": "desvio",
+      "tema_label": "Desvio",
+      "texto": "O lance da partida deslocou uma torre das pretas. Na variante, o rei deixa de defender a peça que acaba sendo capturada. Pergunte o que deixa de ser defendido se você aceitar uma troca. O Stockfish indicou `Rd7` como alternativa e, na linha analisada, a resposta imediata do adversário vem sem captura ou xeque.",
+      "ficha": {
+        "id": "desvio",
+        "titulo": "Desvio",
+        "arquivo": "knowledge_base/desvio.md"
+      },
+      "ferramentas_usadas": [
+        "descrever_posicao",
+        "analisar_posicao",
+        "buscar_conceitos",
+        "validar_lances"
+      ],
+      "tentativas": 1,
+      "validada": true,
+      "fallback": false,
+      "cache": false
+    },
+    "relatorio": {
+      "temas": [
+        {
+          "tema": "deflection",
+          "tema_label": "Desvio",
+          "erros": 1
+        }
+      ],
+      "puzzles": [
+        "https://lichess.org/training/05393",
+        "https://lichess.org/training/00H87",
+        "https://lichess.org/training/00ldC",
+        "https://lichess.org/training/06tA5",
+        "https://lichess.org/training/04eUN"
+      ]
+    },
+    "erros": []
+  },
+  "medicao_analise_navegador": {
+    "partida": "22adcf954fc8fbbe7041a7a9",
+    "segundos": 12.594681274000003,
+    "progresso": {
+      "lance_atual": 81,
+      "total_lances": 81,
+      "percentual": 100
+    }
+  },
+  "benchmark_http": {
+    "origem_pgn": "https://www.chess.com/game/live/189600953117",
+    "partida_id": "363dce43d2548c68df0fcc95",
+    "meios_lances": 80,
+    "segundos": 4.565,
+    "segundos_cache": 0.002,
+    "cache_previo_partida": false
+  },
+  "persistencia": {
+    "igual_apos_reinicio": true,
+    "segundos_para_reiniciar": 12.163,
+    "partida": "22adcf954fc8fbbe7041a7a9",
+    "tarefa": "514cc2e0b3d74fc8868197bc539169ef",
+    "progresso": {
+      "lance_atual": 81,
+      "total_lances": 81,
+      "percentual": 100.0
+    },
+    "resumo": {
+      "imprecisoes": 3,
+      "erros": 0,
+      "erros_graves": 2,
+      "precisao": 93.4,
+      "lances_do_jogador_analisados": 40
+    },
+    "explicacao_cache": true,
+    "puzzles": 5,
+    "hash_partida": "b9b4861a8521ba964afa06cbb9e1cd73568378b6e6f26ff01f60c80d33a7ab16",
+    "hash_relatorio": "34cf5b2581e2f06d652f95504918e032a72331a0576cff78cf87f5010680b385"
+  },
+  "http": {
+    "usuario_ausente": {
+      "status": 404,
+      "resposta": {
+        "detail": "Usuário do Chess.com não encontrado."
+      }
+    },
+    "partida_ausente": {
+      "status": 404,
+      "resposta": {
+        "detail": "Partida não encontrada."
+      }
+    },
+    "tarefa_ausente": {
+      "status": 404,
+      "resposta": {
+        "detail": "Tarefa não encontrada."
+      }
+    },
+    "validador": {
+      "status": 422,
+      "resposta": {
+        "detail": "O lance não é legal no FEN informado."
+      }
+    },
+    "fen_invalido": {
+      "status": 422,
+      "resposta": {
+        "detail": "Posição FEN inválida."
+      }
+    },
+    "piloto_00ldC": {
+      "status": 200,
+      "resposta": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "lance_jogado": "Rd2",
+        "melhor_lance": "Rd7",
+        "melhor_lance_uci": "d8d7",
+        "classe": "erro_grave",
+        "queda": 68.03127481446464,
+        "tema": "desvio",
+        "tema_label": "Desvio",
+        "texto": "O lance da partida deslocou uma torre das pretas. Na variante, o rei deixa de defender a peça que acaba sendo capturada. Pergunte o que deixa de ser defendido se você aceitar uma troca. O Stockfish indicou `Rd7` como alternativa e, na linha analisada, a resposta imediata do adversário vem sem captura ou xeque.",
+        "ficha": {
+          "id": "desvio",
+          "titulo": "Desvio",
+          "arquivo": "knowledge_base/desvio.md"
+        },
+        "ferramentas_usadas": [
+          "descrever_posicao",
+          "analisar_posicao",
+          "buscar_conceitos",
+          "validar_lances"
+        ],
+        "tentativas": 1,
+        "validada": true,
+        "fallback": false,
+        "cache": true
+      }
+    },
+    "chat_rag": {
+      "status": 200,
+      "resposta": {
+        "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+        "pergunta": "Consulte o conceito desvio na base de conhecimentos e descreva o tema sem citar jogadas.",
+        "resposta": "O conceito de \"desvio\" refere-se a uma ameaça que força ou incentiva o defensor a sair de seu posição inicial, podendo levar a um alvo que parecia seguro a ser capturado. Este conceito é importante porque permite que o jogador analise se uma ameaça pode ser vantajosa, mesmo que o defensor tenha que se mover para outro lugar. O desvio pode ser reconhecido observando o que uma peça defendia antes da ameaça e qual alvo ficou sem sua defesa após a resposta.",
+        "ferramentas_usadas": [
+          {
+            "nome": "buscar_conceitos",
+            "argumentos": {
+              "pergunta": "Consulte o conceito desvio na base de conhecimentos e descreva o tema sem citar jogadas.",
+              "k": 4
+            }
+          }
+        ],
+        "validada": true,
+        "status": "ok",
+        "fallback": false
+      }
+    }
+  },
+  "http_sem_llm": {
+    "explicacao": {
+      "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+      "lance_jogado": "Rd2",
+      "melhor_lance": "Rd7",
+      "melhor_lance_uci": "d8d7",
+      "classe": "erro_grave",
+      "queda": 68.97865886885597,
+      "tema": "outro",
+      "tema_label": "Outro",
+      "texto": "O lance jogado foi `Rd2`. O Stockfish indicou `Rd7` como alternativa. A variante do motor segue com `Rd7 h3 b6 c5 Qd4 cxb6 axb6 a4 c5 R1f3 Qd5 Qf4 Qd1+ Kh2 Qd6 Qxd6 Rxd6`.",
+      "ficha": null,
+      "ferramentas_usadas": [
+        "analisar_posicao",
+        "validar_lances"
+      ],
+      "tentativas": 0,
+      "validada": true,
+      "fallback": true,
+      "cache": false
+    },
+    "chat": {
+      "fen": "3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31",
+      "pergunta": "Qual seria o melhor lance?",
+      "resposta": "Não foi possível confirmar uma resposta para esta posição.",
+      "ferramentas_usadas": [],
+      "validada": false,
+      "status": "indisponivel",
+      "fallback": false
+    }
+  },
+  "links_dos_puzzles": {
+    "pagina": {
+      "url": "https://lichess.org/training/05393",
+      "titulo": "Just a moment..."
+    },
+    "puzzles": [
+      {
+        "id": "05393",
+        "href": "https://lichess.org/training/05393",
+        "status": 200,
+        "rating_atual": 1801
+      },
+      {
+        "id": "00H87",
+        "href": "https://lichess.org/training/00H87",
+        "status": 200,
+        "rating_atual": 1875
+      },
+      {
+        "id": "00ldC",
+        "href": "https://lichess.org/training/00ldC",
+        "status": 200,
+        "rating_atual": 1691
+      },
+      {
+        "id": "06tA5",
+        "href": "https://lichess.org/training/06tA5",
+        "status": 200,
+        "rating_atual": 1648
+      },
+      {
+        "id": "04eUN",
+        "href": "https://lichess.org/training/04eUN",
+        "status": 200,
+        "rating_atual": 1621
+      }
+    ]
+  }
+}

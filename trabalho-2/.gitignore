@@ -5,3 +5,6 @@
 /data/*.db*
 /data/*.zst*
 /data/*.csv
+/.local/
+/frontend/dist/
+/frontend/test-results/

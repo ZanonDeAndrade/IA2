@@ -42,9 +42,15 @@ class Mensagem(Entrada):
     content: str = Field(min_length=1, max_length=2000)
 
 
+class ReferenciaLance(Entrada):
+    partida_id: str = Field(min_length=1, max_length=100)
+    indice: int = Field(ge=1, le=600)
+
+
 class Pergunta(Posicao):
     pergunta: str = Field(min_length=1, max_length=2000)
     historico: list[Mensagem] = Field(default_factory=list, max_length=12)
+    lance_selecionado: ReferenciaLance | None = None
 
 
 class Erro(BaseModel):
@@ -195,6 +201,7 @@ class Chat(BaseModel):
     ferramentas_usadas: list[FerramentaUsada]
     validada: bool
     status: Literal["ok", "indisponivel"]
+    fallback: bool = False
 
 
 class TemaFraco(BaseModel):

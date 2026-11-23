@@ -1,66 +1,232 @@
 {
-  "id": "a1b2c3",
-  "usuario": "jogador_exemplo",
-  "cor_do_jogador": "black",
-  "adversario": "oponente_exemplo",
+  "id": "7339c59c2643773a8312b857",
+  "url": null,
+  "data": "2026-11-20",
+  "ritmo": null,
+  "cor_do_jogador": "white",
+  "jogadores": {
+    "white": {
+      "nome": "alice",
+      "rating": 1200,
+      "resultado": null
+    },
+    "black": {
+      "nome": "bob",
+      "rating": 1300,
+      "resultado": null
+    }
+  },
+  "adversario": "bob",
   "resultado": "0-1",
-  "abertura": "Italian Game: Two Knights Defense",
-  "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nxd5 6. Nxf7 Kxf7 7. Qf3+ Ke6 8. Nc3 Ncb4 *",
+  "abertura": null,
+  "total_lances": 4,
+  "status_analise": "concluida",
+  "erros_graves": 1,
+  "usuario": "alice",
+  "pgn": "[White \"alice\"]\n[Black \"bob\"]\n[WhiteElo \"1200\"]\n[BlackElo \"1300\"]\n[Date \"2026.11.20\"]\n\n1. f3 e5 2. g4 Qh4# 0-1",
+  "fen_inicial": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "eco": null,
   "resumo": {
-    "imprecisoes": 2,
-    "erros": 1,
-    "erros_graves": 0,
-    "precisao": 82.5
+    "imprecisoes": 0,
+    "erros": 0,
+    "erros_graves": 1,
+    "precisao": 73.6,
+    "lances_do_jogador_analisados": 2
   },
   "lances": [
     {
-      "numero": 4,
-      "cor": "black",
-      "san": "d5",
-      "fen_antes": "r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R b KQkq - 5 4",
-      "fen_depois": "r1bqkb1r/ppp2ppp/2n2n2/3pp1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 5",
-      "cp_antes": 25,
-      "cp_depois": 20,
-      "chance_vitoria_antes": 52.3,
-      "chance_vitoria_depois": 51.8,
-      "queda": 0.5,
+      "indice": 1,
+      "numero": 1,
+      "cor": "white",
+      "san": "f3",
+      "uci": "f2f3",
+      "fen_antes": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "fen_depois": "rnbqkbnr/pppppppp/8/8/8/5P2/PPPPP1PP/RNBQKBNR b KQkq - 0 1",
+      "perspectiva": "white",
+      "avaliacao_antes": {
+        "tipo": "cp",
+        "valor": 32
+      },
+      "avaliacao_depois": {
+        "tipo": "cp",
+        "valor": -74
+      },
+      "cp_antes": 32,
+      "cp_depois": -74,
+      "chance_vitoria_antes": 52.94226081270875,
+      "chance_vitoria_depois": 43.22998523826144,
+      "queda": 9.712275574447311,
       "classe": "aceitavel",
-      "melhor_lance": "d5",
+      "melhor_lance": "e4",
+      "melhor_lance_uci": "e2e4",
+      "linha_motor": [
+        "e4",
+        "c5",
+        "Nf3",
+        "d6",
+        "Nc3",
+        "Bg4"
+      ],
       "explicacao": null
     },
     {
-      "numero": 5,
+      "indice": 2,
+      "numero": 1,
       "cor": "black",
-      "san": "Nxd5",
-      "fen_antes": "r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5",
-      "fen_depois": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6",
-      "cp_antes": 20,
-      "cp_depois": -250,
-      "chance_vitoria_antes": 51.8,
-      "chance_vitoria_depois": 28.5,
-      "queda": 23.4,
-      "classe": "erro",
-      "melhor_lance": "Na5",
-      "linha_motor": ["Na5", "Bb5+", "c6", "dxc6", "bxc6", "Bd3"],
-      "explicacao": {
-        "tema": "peca_pendurada",
-        "tema_label": "Peça pendurada",
-        "texto": "Ao recapturar com o cavalo em d5, o ponto f7 ficou defendido apenas pelo rei, e o cavalo em d5 fica sem proteção. As brancas jogam Nxf7 e, após Kxf7, Qf3+ ataca o cavalo e o rei ao mesmo tempo. O melhor era 5...Na5, atacando o bispo de c4 e ganhando tempo para consolidar. Lição: antes de recapturar, confira se a peça recapturada fica defendida.",
-        "ficha": {
-          "id": "peca_pendurada",
-          "titulo": "Peça pendurada",
-          "arquivo": "knowledge_base/peca_pendurada.md"
-        },
-        "ferramentas_usadas": ["descrever_posicao", "buscar_conceitos", "validar_lances"],
-        "validada": true
-      }
+      "san": "e5",
+      "uci": "e7e5",
+      "fen_antes": "rnbqkbnr/pppppppp/8/8/8/5P2/PPPPP1PP/RNBQKBNR b KQkq - 0 1",
+      "fen_depois": "rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2",
+      "perspectiva": "black",
+      "avaliacao_antes": {
+        "tipo": "cp",
+        "valor": 74
+      },
+      "avaliacao_depois": {
+        "tipo": "cp",
+        "valor": 75
+      },
+      "cp_antes": 74,
+      "cp_depois": 75,
+      "chance_vitoria_antes": 56.77001476173856,
+      "chance_vitoria_depois": 56.86035652810879,
+      "queda": -0.09034176637022995,
+      "classe": "aceitavel",
+      "melhor_lance": "e5",
+      "melhor_lance_uci": "e7e5",
+      "linha_motor": [
+        "e5",
+        "Nc3",
+        "Nf6",
+        "e3",
+        "d5",
+        "d4",
+        "Bd6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 3,
+      "numero": 2,
+      "cor": "white",
+      "san": "g4",
+      "uci": "g2g4",
+      "fen_antes": "rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2",
+      "fen_depois": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+      "perspectiva": "white",
+      "avaliacao_antes": {
+        "tipo": "cp",
+        "valor": -75
+      },
+      "avaliacao_depois": {
+        "tipo": "mate",
+        "valor": -1,
+        "a_favor": false
+      },
+      "cp_antes": -75,
+      "cp_depois": null,
+      "chance_vitoria_antes": 43.13964347189121,
+      "chance_vitoria_depois": 0.0,
+      "queda": 43.13964347189121,
+      "classe": "erro_grave",
+      "melhor_lance": "e3",
+      "melhor_lance_uci": "e2e3",
+      "linha_motor": [
+        "e3",
+        "d5",
+        "d4",
+        "Bd6",
+        "dxe5",
+        "Bxe5",
+        "f4",
+        "Bd6",
+        "Nc3",
+        "c6",
+        "Nf3",
+        "Nf6"
+      ],
+      "explicacao": null
+    },
+    {
+      "indice": 4,
+      "numero": 2,
+      "cor": "black",
+      "san": "Qh4#",
+      "uci": "d8h4",
+      "fen_antes": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+      "fen_depois": "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3",
+      "perspectiva": "black",
+      "avaliacao_antes": {
+        "tipo": "mate",
+        "valor": 1,
+        "a_favor": true
+      },
+      "avaliacao_depois": {
+        "tipo": "mate",
+        "valor": 0,
+        "a_favor": true
+      },
+      "cp_antes": null,
+      "cp_depois": null,
+      "chance_vitoria_antes": 100.0,
+      "chance_vitoria_depois": 100.0,
+      "queda": 0.0,
+      "classe": "aceitavel",
+      "melhor_lance": "Qh4#",
+      "melhor_lance_uci": "d8h4",
+      "linha_motor": [
+        "Qh4#"
+      ],
+      "explicacao": null
     }
   ],
   "curva_avaliacao": [
-    { "lance": 1, "cp": 30 },
-    { "lance": 2, "cp": 25 },
-    { "lance": 3, "cp": 30 },
-    { "lance": 4, "cp": 20 },
-    { "lance": 5, "cp": -250 }
+    {
+      "lance": 0,
+      "cp": 32,
+      "avaliacao": {
+        "tipo": "cp",
+        "valor": 32
+      },
+      "perspectiva": "white"
+    },
+    {
+      "lance": 1,
+      "cp": -74,
+      "avaliacao": {
+        "tipo": "cp",
+        "valor": -74
+      },
+      "perspectiva": "white"
+    },
+    {
+      "lance": 2,
+      "cp": -75,
+      "avaliacao": {
+        "tipo": "cp",
+        "valor": -75
+      },
+      "perspectiva": "white"
+    },
+    {
+      "lance": 3,
+      "cp": null,
+      "avaliacao": {
+        "tipo": "mate",
+        "valor": -1,
+        "a_favor": false
+      },
+      "perspectiva": "white"
+    },
+    {
+      "lance": 4,
+      "cp": null,
+      "avaliacao": {
+        "tipo": "mate",
+        "valor": 0,
+        "a_favor": false
+      },
+      "perspectiva": "white"
+    }
   ]
 }

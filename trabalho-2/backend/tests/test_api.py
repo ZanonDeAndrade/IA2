@@ -77,6 +77,10 @@ def test_pgn_mcp_stockfish_cache_e_relatorio(cliente):
     assert "validar_lances" in explicacao["ferramentas_usadas"]
     chat = cliente.post("/api/chat", json={"fen": chess.STARTING_FEN, "pergunta": "Qual o melhor lance?"}).json()
     assert not chat["validada"] and chat["status"] == "indisponivel"
+    referencia = {"partida_id": id_, "indice": lance["indice"]}
+    pergunta = {"pergunta": "Por que esse movimento foi ruim?", "lance_selecionado": referencia}
+    assert cliente.post("/api/chat", json={**pergunta, "fen": chess.STARTING_FEN}).status_code == 422
+    assert cliente.post("/api/chat", json={**pergunta, "fen": lance["fen_depois"]}).status_code == 200
     antes = cliente.get("/api/relatorio/alice").json()
     assert antes["partidas_analisadas"] == 1 and antes["erros_sem_tema"] >= 1 and antes["puzzles_recomendados"]
     # Exercita a agregação com uma explicação persistida em fixture. O fluxo
@@ -124,8 +128,9 @@ def test_api_grafos_com_modelo_fixture_e_ferramentas_reais(cliente, tmp_path, mo
                 return AIMessage(content="As pretas têm a vez.")
             dados = json.loads(mensagens[-1].content)
             if "ficha" in dados:
-                assert dados["ficha"]["arquivo"] == f"knowledge_base/{dados['ficha']['id']}.md"
-                assert dados["tema"] == graph.TEMAS[dados["ficha"]["id"]]
+                ficha = dados["ficha"]
+                assert dados["tema"] == graph.TEMAS[ficha["id"]]
+                assert ficha["arquivo"] == f"knowledge_base/{ficha['id']}.md"
                 assert "torre das pretas" in dados["frases_permitidas"]["aconteceu"][0]
                 return AIMessage(content=json.dumps({k: v[0] for k, v in dados["frases_permitidas"].items()}))
             return AIMessage(content="", tool_calls=[

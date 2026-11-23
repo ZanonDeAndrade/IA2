@@ -36,7 +36,7 @@ def _cliente() -> MultiServerMCPClient:
     else:
         variaveis = (
             "STOCKFISH_PATH", "CHESSCOM_USER_AGENT", "CHROMA_PATH", "EMBEDDING_MODEL", "HF_HOME", "HF_HUB_OFFLINE",
-            "SQLITE_PATH", "PUZZLES_DB", "ANALISE_PROFUNDIDADE", "ANALISE_REVISAO_MOTOR",
+            "SQLITE_PATH", "PUZZLES_DB", "ANALISE_PROFUNDIDADE", "ANALISE_REVISAO_MOTOR", "OMP_NUM_THREADS",
         )
         conexao = {
             "transport": "stdio", "command": sys.executable,
@@ -70,9 +70,10 @@ class Ferramentas:
         LOGGER.info("Chamando ferramenta MCP %s", nome)
         try:
             ferramenta = self.disponiveis[nome]
+            prazo = {"analisar_partida": 180, "buscar_partidas": 40, "buscar_conceitos": 45}.get(nome, 20)
             resposta = await asyncio.wait_for(ferramenta.ainvoke({
                 "type": "tool_call", "name": nome, "args": argumentos, "id": str(uuid4()),
-            }), timeout=180 if nome == "analisar_partida" else 40 if nome == "buscar_partidas" else 20)
+            }), timeout=prazo)
             if not isinstance(resposta, ToolMessage):
                 raise ValueError("Ferramenta MCP retornou erro.")
             if resposta.status == "error":

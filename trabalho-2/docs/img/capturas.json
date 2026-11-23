@@ -1,0 +1,10 @@
+{
+  "modo": "Demonstração offline com dados didáticos; não representa inferência real.",
+  "telas": [
+    "inicio.png",
+    "analise-demo.png",
+    "relatorio-demo.png"
+  ],
+  "responsivo": "390 × 844",
+  "desktop": "1440 × 1000"
+}

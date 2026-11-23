@@ -123,6 +123,12 @@ def obter_lance_analisado(conn, fen: str, lance: str, assinatura: str) -> dict |
     return json.loads(item["dados"]) if item else None
 
 
+def obter_lance_da_partida(conn, partida_id: str, indice: int) -> dict | None:
+    item = conn.execute("SELECT dados FROM lances WHERE partida_id=? AND indice=?",
+                        (partida_id, indice)).fetchone()
+    return json.loads(item["dados"]) if item else None
+
+
 def iniciar_tarefa(conn, id_partida: str, assinatura: str) -> tuple[str, bool]:
     conn.execute("BEGIN IMMEDIATE")
     with conn:

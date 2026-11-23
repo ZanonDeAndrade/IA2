@@ -1,11 +1,8 @@
 {
-  "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6",
-  "pergunta": "Por que o cavalo em d5 está em perigo?",
-  "resposta": "O cavalo em d5 está defendido apenas pela dama em d8. Depois de 6.Nxf7 Kxf7 7.Qf3+, a dama branca ataca o cavalo e dá xeque ao mesmo tempo, então as pretas não conseguem salvar as duas coisas.",
-  "ferramentas_usadas": [
-    { "nome": "descrever_posicao", "argumentos": { "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6" } },
-    { "nome": "analisar_posicao", "argumentos": { "fen": "r1bqkb1r/ppp2ppp/2n5/3np1N1/2B5/8/PPPP1PPP/RNBQK2R w KQkq - 0 6", "profundidade": 18, "multipv": 3 } },
-    { "nome": "validar_lances", "argumentos": { "lances": ["Nxf7", "Kxf7", "Qf3+"] } }
-  ],
-  "validada": true
+  "fen": "rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2",
+  "pergunta": "Por que g4 perde?",
+  "resposta": "Não foi possível confirmar uma resposta para esta posição.",
+  "ferramentas_usadas": [],
+  "validada": false,
+  "status": "indisponivel"
 }

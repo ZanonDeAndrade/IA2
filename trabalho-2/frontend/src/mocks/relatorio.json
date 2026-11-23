@@ -1,27 +1,153 @@
 {
-  "usuario": "jogador_exemplo",
-  "partidas_analisadas": 10,
-  "rating_estimado": 1250,
-  "temas_fracos": [
-    { "tema": "hangingPiece", "tema_label": "Peça pendurada", "erros": 7 },
-    { "tema": "fork", "tema_label": "Garfo", "erros": 5 },
-    { "tema": "pin", "tema_label": "Cravada", "erros": 3 },
-    { "tema": "discoveredAttack", "tema_label": "Ataque descoberto", "erros": 2 }
-  ],
+  "usuario": "alice",
+  "partidas_analisadas": 1,
+  "rating_estimado": 1200,
+  "temas_fracos": [],
+  "erros_sem_tema": 1,
   "evolucao": [
-    { "partida_id": "x1", "data": "2026-10-20", "precisao": 71.0, "erros_graves": 3 },
-    { "partida_id": "x2", "data": "2026-10-25", "precisao": 76.5, "erros_graves": 2 },
-    { "partida_id": "a1b2c3", "data": "2026-11-02", "precisao": 82.5, "erros_graves": 0 }
+    {
+      "imprecisoes": 0,
+      "erros": 0,
+      "erros_graves": 1,
+      "precisao": 73.6,
+      "lances_do_jogador_analisados": 2,
+      "partida_id": "7339c59c2643773a8312b857",
+      "data": "2026-11-20"
+    }
   ],
   "puzzles_recomendados": [
     {
-      "id": "00sHx",
-      "fen": "q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2 b k - 0 17",
-      "solucao": ["e8d7", "a2e6", "d7d8", "f7f8"],
-      "rating": 1760,
-      "temas": ["mate", "mateIn2", "middlegame", "short"],
-      "temas_label": ["Mate", "Mate em 2"],
-      "url": "https://lichess.org/training/00sHx"
+      "id": "04GtP",
+      "fen": "r4rk1/pp6/4p1pp/3b2p1/7n/3PN3/PB2QP1P/5RK1 b - - 5 25",
+      "fen_origem": "r4rk1/pp6/4p1pp/3b2p1/7n/3P4/PBN1QP1P/5RK1 w - - 4 25",
+      "lance_preparatorio": "c2e3",
+      "solucao": [
+        "h4f3",
+        "g1h1",
+        "f3d4",
+        "e3d5",
+        "d4e2"
+      ],
+      "rating": 1206,
+      "temas": [
+        "advantage",
+        "discoveredAttack",
+        "discoveredCheck",
+        "kingsideAttack",
+        "long",
+        "middlegame"
+      ],
+      "temas_label": [
+        "advantage",
+        "Ataque descoberto",
+        "discoveredCheck",
+        "kingsideAttack",
+        "long",
+        "Meio-jogo"
+      ],
+      "url": "https://lichess.org/training/04GtP"
+    },
+    {
+      "id": "08OYU",
+      "fen": "r3k2r/1bp1b1pp/1p2pp2/pP1q4/4B3/2P5/PB3PPP/RN1QR1K1 b kq - 3 16",
+      "fen_origem": "r3k2r/1bp1b1pp/1p2pp2/pP1q4/8/2PB4/PB3PPP/RN1QR1K1 w kq - 2 16",
+      "lance_preparatorio": "d3e4",
+      "solucao": [
+        "d5d1",
+        "e1d1",
+        "b7e4"
+      ],
+      "rating": 1206,
+      "temas": [
+        "advantage",
+        "discoveredAttack",
+        "middlegame",
+        "short"
+      ],
+      "temas_label": [
+        "advantage",
+        "Ataque descoberto",
+        "Meio-jogo",
+        "short"
+      ],
+      "url": "https://lichess.org/training/08OYU"
+    },
+    {
+      "id": "013h1",
+      "fen": "r1bqk1nr/1p3ppp/p3p3/4P3/1b1Pp3/2N5/PP4PP/R1BQKB1R w KQkq - 0 10",
+      "fen_origem": "r1bqk1nr/1p3ppp/p3p3/3pP3/1b1PP3/2N5/PP4PP/R1BQKB1R b KQkq - 0 9",
+      "lance_preparatorio": "d5e4",
+      "solucao": [
+        "d1a4",
+        "c8d7",
+        "a4b4"
+      ],
+      "rating": 1218,
+      "temas": [
+        "advantage",
+        "fork",
+        "opening",
+        "short"
+      ],
+      "temas_label": [
+        "advantage",
+        "Garfo",
+        "Abertura",
+        "short"
+      ],
+      "url": "https://lichess.org/training/013h1"
+    },
+    {
+      "id": "074ux",
+      "fen": "5rk1/6p1/p3p1Qp/8/4NPn1/P5Pq/1P3P1P/2R3K1 b - - 10 28",
+      "fen_origem": "5rk1/6p1/p2Np1Qp/8/5Pn1/P5Pq/1P3P1P/2R3K1 w - - 9 28",
+      "lance_preparatorio": "d6e4",
+      "solucao": [
+        "h3h2",
+        "g1f1",
+        "h2h1",
+        "f1e2",
+        "h1c1"
+      ],
+      "rating": 1182,
+      "temas": [
+        "crushing",
+        "endgame",
+        "long",
+        "skewer"
+      ],
+      "temas_label": [
+        "crushing",
+        "Final",
+        "long",
+        "Espeto"
+      ],
+      "url": "https://lichess.org/training/074ux"
+    },
+    {
+      "id": "09bU0",
+      "fen": "r4rk1/pp3pb1/5qp1/2P5/7Q/1P1B4/P1P2PP1/2Kb2NR w - - 0 20",
+      "fen_origem": "r2q1rk1/pp3pb1/5Bp1/2P5/7Q/1P1B4/P1P2PP1/2Kb2NR b - - 0 19",
+      "lance_preparatorio": "d8f6",
+      "solucao": [
+        "h4h7"
+      ],
+      "rating": 1181,
+      "temas": [
+        "mate",
+        "mateIn1",
+        "middlegame",
+        "oneMove"
+      ],
+      "temas_label": [
+        "Mate",
+        "Mate em 1",
+        "Meio-jogo",
+        "oneMove"
+      ],
+      "url": "https://lichess.org/training/09bU0"
     }
-  ]
+  ],
+  "puzzles_personalizados_por_tema": false,
+  "aviso_puzzles": null
 }
