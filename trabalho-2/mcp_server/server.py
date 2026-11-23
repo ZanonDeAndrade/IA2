@@ -1,9 +1,7 @@
 """Servidor MCP do Lance a Lance.
 
-Instância FastMCP que registra as sete ferramentas determinísticas usadas pelo
-agente. Todas devolvem JSON e são a única fonte de fatos sobre o tabuleiro que
-o LLM pode usar: ele nunca calcula lances, só interpreta o que as ferramentas
-devolvem.
+Instância FastMCP para as consultas do agente e as jogadas do Stockfish.
+As ferramentas devolvem JSON. O LLM interpreta os fatos recebidos.
 
 Ferramentas registradas:
     - analisar_posicao(fen, profundidade=18, multipv=3)
@@ -13,6 +11,7 @@ Ferramentas registradas:
     - buscar_partidas(usuario, max=10, ritmo=None)
     - buscar_puzzles(temas, rating_min, rating_max, quantidade=5)
     - buscar_conceitos(pergunta, k=4)
+    - jogar_stockfish(fen_inicial, lances, dificuldade)
 
 Execução (a partir de ``trabalho-2/``):
     python -m mcp_server.server          # transporte stdio
@@ -30,6 +29,7 @@ from mcp_server.tools.board import descrever_posicao, validar_lances
 from mcp_server.tools.chesscom import buscar_partidas
 from mcp_server.tools.concepts import buscar_conceitos
 from mcp_server.tools.engine import analisar_partida, analisar_posicao
+from mcp_server.tools.jogo import jogar_stockfish
 from mcp_server.tools.puzzles import buscar_puzzles
 
 mcp = FastMCP("lance-a-lance")
@@ -42,6 +42,7 @@ FERRAMENTAS = (
     buscar_partidas,
     buscar_puzzles,
     buscar_conceitos,
+    jogar_stockfish,
 )
 
 for ferramenta in FERRAMENTAS:

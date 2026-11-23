@@ -92,6 +92,29 @@ para a API porque as portas padrão já estavam ocupadas. No Vite, use
 para apontar o proxy de desenvolvimento para essa API. O Playwright aceita
 `LANCE_E2E_BASE_URL` para testar um serviço já em execução.
 
+### Vite e erro 404 ao iniciar uma partida
+
+Na porta 5173, o Vite encaminha `/api` para `127.0.0.1:8000` por padrão.
+Consulte o OpenAPI na porta publicada para conferir `POST /api/jogo/iniciar`.
+
+```bash
+curl -fsS http://127.0.0.1:8000/openapi.json | jq -e '.paths["/api/jogo/iniciar"].post'
+docker compose ps
+```
+
+Se a rota estiver ausente em uma instalação Docker após atualizar os arquivos,
+reconstrua os dois serviços Python na pasta `trabalho-2`. O Compose mantém os
+volumes SQLite, Chroma e embeddings. Execute o comando com o Vite já aberto
+na porta 5173 ou antes de iniciá-lo.
+
+```bash
+docker compose up -d --build --wait backend mcp_server
+```
+
+Se o Vite ainda estiver parado, inicie-o na pasta `frontend` com `npm run dev`.
+Informe `VITE_API_PROXY_TARGET` somente se a porta publicada pela API for
+diferente de 8000.
+
 ## Demonstrar em até sete minutos
 
 A amostra é a partida pública **kopano2019 × Stonewall_BoyRivers**, com 81
@@ -120,6 +143,40 @@ mantenha o mesmo perfil de `.env`, abra a explicação validada previamente e
 mostre o status de indisponibilidade do chat. A rota **Demonstração offline**
 oferece um exemplo didático independente. [Evidências do ensaio real](verificacao-integracao.md)
 
+## Jogar contra IA com o treinador
+
+1. Abra **Jogar contra IA** no menu lateral.
+2. Escolha a cor (brancas, pretas ou aleatória) e a dificuldade: Iniciante,
+   Intermediário, Avançado ou Mestre. A dificuldade controla a força do
+   adversário e orienta a linguagem do treinador. O avaliador usa o mesmo
+   perfil em todas as dificuldades.
+3. Escolha a assistência: **Livre**, **Treinador** ou **Aprendizado intensivo**.
+   Ela pode mudar durante a partida no painel **Partida**.
+4. Clique em **Iniciar partida** e mova clicando, tocando ou arrastando as
+   peças. A classificação aparece logo após a resposta do Stockfish. A
+   explicação chega depois, no painel **Treinador inteligente**, sem travar
+   o tabuleiro.
+5. Use **Preciso de uma dica** para receber o objetivo, depois a peça ou
+   casa e, se confirmar, o lance sugerido.
+6. Em **Pergunte ao treinador**, use **Posição da pergunta** para escolher a
+   posição atual ou aquela após um lance seu. **Histórico de dicas** mostra as
+   pistas já usadas em posições anteriores.
+   Cada resposta mostra a posição a que se refere.
+7. A partida fica salva no SQLite e é retomada ao recarregar a página ou em
+   **Retomar partida**. Ao terminar, o relatório mostra lances críticos,
+   explicações, dicas usadas e puzzles. **Analisar partida** abre a revisão
+   completa, e a partida passa a contar no perfil de treino em **Meu progresso**.
+
+Sem o Ollama, os passos 1 a 7 continuam funcionando. O painel do treinador
+mostra a indisponibilidade e as mensagens se limitam aos dados do Stockfish.
+[Detalhes do treinador](TREINADOR.md)
+
+Para medir os tempos com a API em execução:
+
+```bash
+python -m data.scripts.benchmark_treinador http://127.0.0.1:8000 --partidas 3 --lances 8
+```
+
 ## Repetir testes e encerrar
 
 Com o serviço já em execução e os comandos na raiz de `trabalho-2`:
@@ -128,7 +185,7 @@ Com o serviço já em execução e os comandos na raiz de `trabalho-2`:
 cd frontend
 npm ci
 npm run build
-LANCE_E2E_BASE_URL=http://127.0.0.1:5173 npm test -- tests/app.spec.js
+LANCE_E2E_BASE_URL=http://127.0.0.1:5173 npm test -- tests/app.spec.js tests/play.spec.js
 LANCE_E2E_BASE_URL=http://127.0.0.1:5173 LANCE_E2E_REAL=1 npm run test:real
 cd ..
 docker compose restart
@@ -140,6 +197,18 @@ navegador exigido pelo pacote. Se houver Chromium compatível já instalado, use
 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` com o caminho do executável. O ensaio usou
 essa opção para reutilizar o Chromium disponível. `LANCE_E2E_SEM_LLM=1` permite
 executar o cenário de disponibilidade com a configuração sem provedor.
+
+Para o modo de jogo e o treinador, com o Compose e o Ollama em execução:
+
+```bash
+cd frontend
+LANCE_E2E_BASE_URL=http://127.0.0.1:5173 LANCE_E2E_JOGO_REAL=1 npx playwright test tests/play-real-api.spec.js tests/jogo-real.spec.js
+LANCE_E2E_BASE_URL=http://127.0.0.1:5173 LANCE_E2E_TREINADOR=1 npx playwright test tests/treinador-real.spec.js
+cd ..
+```
+
+O cenário sem Ollama precisa de uma pilha com `LLM_BASE_URL` inacessível,
+indicada em `LANCE_E2E_SEM_LLM_URL`. [Comandos e resultados](verificacao-treinador.md)
 
 Para testar o Python no ambiente local, com dependências e Stockfish instalados:
 
