@@ -36,7 +36,10 @@ npm ci
 npm run dev
 ```
 
-O Vite encaminha `/api` e `/healthz` para a API. Para outro servidor, use `VITE_API_URL` no `.env.local` desta pasta e autorize a origem em `CORS_ORIGENS` no backend. Chaves de IA ficam apenas no backend.
+O Vite encaminha `/api` e `/healthz` para a API. Defina `VITE_API_PROXY_TARGET`
+no `.env.local` desta pasta para alterar o destino do proxy. Se optar por
+`VITE_API_URL` diretamente no navegador, autorize a origem em `CORS_ORIGENS`
+no backend. Chaves de IA ficam apenas no backend.
 
 ## Docker
 
@@ -49,7 +52,7 @@ Na raiz de `trabalho-2`, execute `docker compose up --build`. O serviço `fronte
 - `/#/relatorio/<usuario>`: temas, evolução e puzzles.
 - `/#/demo/analise/demo` e `/#/demo/relatorio`: exemplos didáticos offline, identificados na tela.
 
-Os botões de lance, os controles do tabuleiro e as setas esquerda/direita navegam pela partida. O painel do erro abre a posição **antes** do lance para desenhar corretamente as setas. É possível alternar para **depois**. O chat sempre recebe o FEN exibido e reinicia ao mudar de posição. Mensagens anteriores não contaminam o histórico de outra posição.
+Os botões de lance, os controles do tabuleiro e as setas esquerda/direita navegam pela partida. O painel do erro abre a posição **antes** do lance para desenhar corretamente as setas. É possível alternar para **depois**. O chat recebe o FEN exibido e a referência ao lance selecionado. A conversa reinicia quando esse contexto muda.
 
 A análise consulta a tarefa a cada dois segundos, permite explorar resultados parciais e apresenta erros da tarefa mesmo quando o HTTP retorna 200. A explicação é solicitada sob demanda. Textos com `validada:false` não aparecem como orientação ao jogador. `fallback:true` recebe indicação de explicação de apoio. No relatório, erros sem tema e recomendações gerais ficam identificados.
 
@@ -67,14 +70,17 @@ npm test -- tests/app.spec.js
 npm run build
 ```
 
-Os 12 cenários executados cobrem desktop/celular, contratos HTTP simulados, demo, importação, polling, falha do motor, validação, FEN do chat, cache offline, relatório vazio e puzzles indisponíveis. Para testar a API local com Stockfish/MCP reais e sem LLM configurado:
+Os testes de contrato cobrem desktop e celular, demo, importação, polling, falha do motor, validação, FEN do chat, cache offline, relatório vazio e puzzles indisponíveis. Com o Compose em execução e o Ollama configurado:
 
-```powershell
-$env:LANCE_E2E_REAL='1'
-npm run test:real
+```bash
+LANCE_E2E_BASE_URL=http://127.0.0.1:5173 LANCE_E2E_REAL=1 npm run test:real
 ```
 
-O teste real importa uma partida sintética de quatro meios-lances, processa com o motor, pede explicação validada, confirma indisponibilidade do chat sem LLM e consulta puzzles. O teste de contrato da interface não comprova inferência com um modelo real.
+O teste real usa o Chess.com e o PGN público da Lichess para verificar o motor,
+as posições do tabuleiro, a geração, a ficha RAG, o chat, os puzzles e os
+dados após recarregar a página. Em um ambiente sem modelo, use também
+`LANCE_E2E_SEM_LLM=1` para testar o apoio do motor e a mensagem do chat.
+[Condições e resultados do ensaio](../docs/verificacao-integracao.md)
 
 ## Prints e GIF
 

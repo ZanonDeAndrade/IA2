@@ -60,8 +60,11 @@ def main() -> None:
     parser.add_argument("--http", action="store_true")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8001)
+    parser.add_argument("--aquecer-rag", action="store_true", help="Carrega os embeddings no início do servidor HTTP.")
     args = parser.parse_args()
     if args.http:
+        if args.aquecer_rag:
+            buscar_conceitos("garfo", k=1, tema="garfo")
         mcp.run(transport="streamable-http", host=args.host, port=args.port, stateless_http=True, json_response=True)
     else:
         mcp.run()

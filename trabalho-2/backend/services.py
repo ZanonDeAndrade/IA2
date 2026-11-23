@@ -36,6 +36,22 @@ def tabuleiro_valido(fen: str):
         raise HTTPException(422, "Posição FEN inválida.") from erro
 
 
+def contexto_chat(fen: str, partida_id: str, indice: int) -> dict:
+    with closing(db.conectar()) as conn:
+        lance = db.obter_lance_da_partida(conn, partida_id, indice)
+        if lance is None or fen not in (lance["fen_antes"], lance["fen_depois"]):
+            raise HTTPException(422, "O lance informado não corresponde à posição atual da partida.")
+        explicacao = db.obter_explicacao(conn, lance["fen_antes"], lance["san"], perfil_explicacao())
+    retorno = {
+        "jogada_da_partida": lance["san"], "classe": lance["classe"],
+        "momento": "antes" if fen == lance["fen_antes"] else "depois",
+        "fen_apos_lance": lance["fen_depois"],
+    }
+    if explicacao and explicacao.get("validada") and explicacao["tema"] != "outro":
+        retorno.update(tema=explicacao["tema"], tema_label=explicacao["tema_label"])
+    return retorno
+
+
 async def mcp(nome: str, **argumentos) -> Any:
     try:
         async with sessao_mcp() as disponiveis:
@@ -184,6 +200,9 @@ async def relatorio(usuario: str) -> dict:
             minimo, maximo = (max(0, rating - 250), min(4000, rating + 250)) if rating else (800, 1800)
             tags = [tema["tema"] for tema in ranking[:3]]
             puzzles = await mcp("buscar_puzzles", temas=tags, rating_min=minimo, rating_max=maximo)
+            if not puzzles:
+                aviso = (f"Nenhum puzzle do recorte corresponde aos temas na faixa de rating {minimo}–{maximo}."
+                         if tags else f"Nenhum puzzle do recorte está na faixa de rating {minimo}–{maximo}.")
         except HTTPException as erro:
             aviso = erro.detail
     return {"usuario": usuario, "partidas_analisadas": len(partidas), "rating_estimado": rating,

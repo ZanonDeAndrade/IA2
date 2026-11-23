@@ -223,6 +223,17 @@ def test_chat_nao_publica_sem_evidencias(configurar):
     assert not resultado["validada"] and resultado["resposta"] == graph._SEM_RESPOSTA
 
 
+def test_chat_consulta_posicao_se_o_modelo_responder_so_com_historico(configurar):
+    modelo = ModeloDeTeste("Já informei o turno.", "É a vez das brancas.")
+    configurar(modelo, descrever=descrever_posicao)
+    historico = [{"role": "assistant", "content": "É a vez das pretas."}]
+    resultado = graph.responder_chat(FEN, "De quem é a vez?", historico)
+    assert resultado["validada"] and resultado["resposta"] == "É a vez das brancas."
+    assert resultado["ferramentas_usadas"] == [{"nome": "descrever_posicao", "argumentos": {"fen": FEN}}]
+    assert json.loads(modelo.chamadas[0][-1].content)["historico"] == historico
+    assert len(modelo.chamadas[0]) == 2
+
+
 def test_chat_trata_falha_do_modelo(configurar):
     configurar(ModeloDeTeste(RuntimeError("Timeout")))
     assert not graph.responder_chat(FEN, "E agora?")["validada"]
@@ -252,7 +263,7 @@ def test_chat_usa_fallback_do_motor_apos_tres_rascunhos(configurar):
     )
     configurar(modelo)
     resultado = graph.responder_chat(FEN, "Que lance devo jogar?")
-    assert resultado["validada"]
+    assert resultado["validada"] and resultado["fallback"]
     assert resultado["resposta"] == "O Stockfish indicou a variante `e4 e5 Nf3`."
     assert len(modelo.chamadas) == 4
 
