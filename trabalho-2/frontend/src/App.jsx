@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import {
   Area,
   AreaChart,
   CartesianGrid,
+  ReferenceDot,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -116,7 +118,8 @@ function Loading({ children = "Carregando…" }) {
   );
 }
 function ClassBadge({ value }) {
-  const c = CLASSES[value] || CLASSES.aceitavel;
+  const c = CLASSES[value];
+  if (!c) return <span className="badge">Sem classificação</span>;
   return (
     <span className={`badge class-${value}`}>
       <b>{c.symbol}</b>
@@ -162,6 +165,7 @@ export default function App() {
     document.documentElement.dataset.theme = theme;
     writeCache("theme", theme);
   }, [theme]);
+  useEffect(() => writeCache("games", games), [games]);
   useEffect(() => {
     const c = new AbortController();
     const check = () =>
@@ -179,12 +183,16 @@ export default function App() {
   }, []);
   function saveGames(items, usuario) {
     setGames(items);
-    writeCache("games", items);
     if (usuario) {
       setUser(usuario);
       writeCache("user", usuario);
     }
   }
+  const updateGame = useCallback((game) => {
+    setGames((current) => current.map((g) => g.id === game.id ? {
+      ...g, status_analise: game.status_analise, erros_graves: game.resumo?.erros_graves ?? 0,
+    } : g));
+  }, []);
   const reportPath = isDemo
     ? "/demo/relatorio"
     : `/relatorio/${encodeURIComponent(user)}`;
@@ -312,19 +320,7 @@ export default function App() {
               key={`${isDemo}:${route}`}
               id={decode(route.split("/").at(-1))}
               demo={isDemo}
-              onGameUpdate={(game) => {
-                const updated = games.map((g) =>
-                  g.id === game.id
-                    ? {
-                        ...g,
-                        status_analise: game.status_analise,
-                        erros_graves: game.resumo?.erros_graves || 0,
-                      }
-                    : g,
-                );
-                setGames(updated);
-                writeCache("games", updated);
-              }}
+              onGameUpdate={updateGame}
             />
           )}
           {page === "relatorio" && (
@@ -358,11 +354,13 @@ function Home({ games, user, onImport, health }) {
   const [color, setColor] = useState("white");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [empty, setEmpty] = useState(false);
   const controller = useRef(null);
   useEffect(() => () => controller.current?.abort(), []);
   async function submit(event) {
     event.preventDefault();
     setError("");
+    setEmpty(false);
     setBusy(true);
     controller.current?.abort();
     const c = new AbortController();
@@ -381,6 +379,8 @@ function Home({ games, user, onImport, health }) {
               ...(username.trim() ? { usuario: username.trim() } : {}),
             };
       const result = await api.importar(body, c.signal);
+      if (c.signal.aborted) return;
+      setEmpty(!result.partidas.length);
       const merged = [
         ...result.partidas,
         ...games.filter((g) => !result.partidas.some((p) => p.id === g.id)),
@@ -447,7 +447,7 @@ function Home({ games, user, onImport, health }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Ex.: seu_nome_de_usuario"
-              pattern="[a-zA-Z0-9_-]{1,50}"
+              pattern={"[a-zA-Z0-9_\\-]{1,50}"}
               maxLength={50}
               required={mode === "usuario"}
               autoComplete="username"
@@ -509,6 +509,7 @@ function Home({ games, user, onImport, health }) {
               </>
             )}
             {error && <ErrorNotice>{error}</ErrorNotice>}
+            {empty && <p className="field-hint" role="status">Nenhuma partida encontrada para este usuário e ritmo.</p>}
             <button className="button primary full-width" disabled={busy}>
               {busy ? (
                 <LoaderCircle className="spin" size={18} />
@@ -586,6 +587,9 @@ function Home({ games, user, onImport, health }) {
                 <div className="game-info">
                   <h3>vs. {game.adversario || "Adversário"}</h3>
                   <p>{game.abertura || "Abertura não informada"}</p>
+                  <p>{game.jogadores?.white?.nome || "Brancas"} · {game.jogadores?.black?.nome || "Pretas"}</p>
+                  <p>Você jogou de {game.cor_do_jogador === "black" ? "pretas" : "brancas"}.</p>
+                  <span className="field-hint">ID {game.id}</span>
                   <span className="mobile-meta">
                     {dateLabel(game.data)} · {game.resultado}
                   </span>
@@ -634,51 +638,87 @@ function Analysis({ id, demo, onGameUpdate }) {
   const [task, setTask] = useState(null);
   const [offline, setOffline] = useState(false);
   const [retry, setRetry] = useState(0);
-  const [index, setIndex] = useState(demo ? 3 : 0);
-  const [before, setBefore] = useState(true);
+  const [index, setIndex] = useState(() => demo ? 3 : readCache(`position:${id}`)?.index || 0);
+  const [before, setBefore] = useState(() => demo || (readCache(`position:${id}`)?.before ?? true));
   const [flipped, setFlipped] = useState(false);
   const [onlyErrors, setOnlyErrors] = useState(false);
   const [copied, setCopied] = useState(false);
   const controller = useRef(null);
   const polling = useRef(null);
-  const gameUpdate = useRef(onGameUpdate);
-  gameUpdate.current = onGameUpdate;
-  function saveGame(data) {
+  const saveGame = useCallback((data) => {
     setGame(data);
     writeCache(`game:${id}`, { data, savedAt: new Date().toISOString() });
-    gameUpdate.current(data);
+    onGameUpdate(data);
+  }, [id, onGameUpdate]);
+  const pollAnalysis = useCallback(async function poll(taskId, c, lastPly = -1) {
+    try {
+      const progress = await api.tarefa(taskId, c.signal);
+      if (c.signal.aborted) return;
+      setTask(progress);
+      const ply = progress.progresso.lance_atual;
+      if (progress.status === "erro") {
+        writeCache(`task:${id}`, null);
+        throw new Error(progress.erro || "A análise foi interrompida. Tente novamente.");
+      }
+      if (ply !== lastPly || progress.status === "concluida") {
+        const data = await api.partida(id, c.signal);
+        if (c.signal.aborted) return;
+        saveGame(data);
+      }
+      if (progress.status === "concluida") {
+        writeCache(`task:${id}`, null);
+        setBusy(false);
+        return;
+      }
+      polling.current = setTimeout(() => poll(taskId, c, ply), 2000);
+    } catch (e) {
+      if (!c.signal.aborted) {
+        if (e.status === 404) writeCache(`task:${id}`, null);
+        setError(e.message);
+        setBusy(false);
+      }
+    }
+  }, [id, saveGame]);
+  function reloadGame() {
+    setBusy(true);
+    setTask(null);
+    setError("");
+    setOffline(false);
+    setRetry((n) => n + 1);
   }
   useEffect(() => {
     if (demo) return;
     const c = new AbortController();
     controller.current = c;
-    setBusy(true);
-    setError("");
-    setOffline(false);
     api
       .partida(id, c.signal)
       .then((data) => {
-        if (!c.signal.aborted) saveGame(data);
+        if (c.signal.aborted) return;
+        saveGame(data);
+        const taskId = readCache(`task:${id}`);
+        if (taskId && data.status_analise !== "concluida") {
+          return pollAnalysis(taskId, c, data.lances.length);
+        }
+        if (data.status_analise === "concluida") writeCache(`task:${id}`, null);
+        setBusy(false);
       })
       .catch((e) => {
         if (!c.signal.aborted) {
           setError(e.message);
           const cached = readCache(`game:${id}`);
-          if (cached?.data) {
+          if (cached?.data && e.status !== 404) {
             setGame(cached.data);
             setOffline(cached.savedAt);
           }
+          setBusy(false);
         }
-      })
-      .finally(() => {
-        if (!c.signal.aborted) setBusy(false);
       });
     return () => {
       c.abort();
       controller.current?.abort();
       clearTimeout(polling.current);
     };
-  }, [id, demo, retry]); // Cada rota mantém seu próprio controlador de requisições.
+  }, [id, demo, retry, pollAnalysis, saveGame]);
   async function startAnalysis() {
     setBusy(true);
     setError("");
@@ -690,32 +730,9 @@ function Analysis({ id, demo, onGameUpdate }) {
     controller.current = c;
     try {
       const started = await api.analisar(id, c.signal);
-      async function poll() {
-        try {
-          const progress = await api.tarefa(started.tarefa_id, c.signal);
-          if (c.signal.aborted) return;
-          setTask(progress);
-          if (progress.status === "erro")
-            throw new Error(
-              progress.erro || "A análise foi interrompida. Tente novamente.",
-            );
-          const data = await api.partida(id, c.signal);
-          if (c.signal.aborted) return;
-          saveGame(data);
-          if (progress.status === "concluida") {
-            setBusy(false);
-            setIndex(0);
-            return;
-          }
-          polling.current = setTimeout(poll, 2000);
-        } catch (e) {
-          if (!c.signal.aborted) {
-            setError(e.message);
-            setBusy(false);
-          }
-        }
-      }
-      await poll();
+      if (c.signal.aborted) return;
+      writeCache(`task:${id}`, started.tarefa_id);
+      await pollAnalysis(started.tarefa_id, c);
     } catch (e) {
       if (!c.signal.aborted) {
         setError(e.message);
@@ -725,6 +742,8 @@ function Analysis({ id, demo, onGameUpdate }) {
   }
   const moves = game?.lances || [];
   const move = moves.find((m) => m.indice === index);
+  const lastIndex = moves.at(-1)?.indice || 0;
+  const positionIndex = move ? index - Number(before) : 0;
   const fen = move
     ? before
       ? move.fen_antes
@@ -735,10 +754,13 @@ function Analysis({ id, demo, onGameUpdate }) {
       ? "white"
       : "black"
     : game?.cor_do_jogador || "white";
-  function selectMove(value) {
-    setIndex(Math.max(0, Math.min(moves.at(-1)?.indice || 0, value)));
-    setBefore(true);
-  }
+  const selectMove = useCallback((value, beforeMove = true) => {
+    setIndex(Math.max(0, Math.min(lastIndex, value)));
+    setBefore(beforeMove);
+  }, [lastIndex]);
+  useEffect(() => {
+    if (!demo && game && (index === 0 || move)) writeCache(`position:${id}`, { index, before });
+  }, [id, demo, game, index, before, move]);
   useEffect(() => {
     const handler = (event) => {
       if (
@@ -752,12 +774,12 @@ function Analysis({ id, demo, onGameUpdate }) {
         return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
-        selectMove(index + (event.key === "ArrowRight" ? 1 : -1));
+        selectMove(positionIndex + (event.key === "ArrowRight" ? 1 : -1), false);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [index, moves]);
+  }, [positionIndex, selectMove]);
   if (!game)
     return (
       <>
@@ -770,7 +792,7 @@ function Analysis({ id, demo, onGameUpdate }) {
         {busy ? (
           <Loading>Buscando sua partida…</Loading>
         ) : (
-          <ErrorNotice onRetry={() => setRetry((n) => n + 1)}>
+          <ErrorNotice onRetry={reloadGame}>
             {error || "Partida não encontrada."}
           </ErrorNotice>
         )}
@@ -816,7 +838,7 @@ function Analysis({ id, demo, onGameUpdate }) {
         </button>
       </div>
       {error && (
-        <ErrorNotice onRetry={() => setRetry((n) => n + 1)}>
+        <ErrorNotice onRetry={reloadGame}>
           {error}
         </ErrorNotice>
       )}
@@ -839,7 +861,7 @@ function Analysis({ id, demo, onGameUpdate }) {
               para cada posição.
             </p>
           </div>
-          <button className="button primary" onClick={startAnalysis}>
+          <button className="button primary" onClick={startAnalysis} disabled={!!offline}>
             <Play size={17} />
             {moves.length ? "Retomar análise" : "Analisar partida"}
           </button>
@@ -865,7 +887,7 @@ function Analysis({ id, demo, onGameUpdate }) {
       <div className="analysis-grid">
         <section className="board-column" aria-label="Tabuleiro e avaliação">
           <Player player={game.jogadores?.[topColor]} color={topColor} />
-          <div className="board-frame">
+          <div className="board-frame" data-fen={fen}>
             <Chessboard
               options={{
                 id: "analysis-board",
@@ -892,8 +914,8 @@ function Analysis({ id, demo, onGameUpdate }) {
               </IconButton>
               <IconButton
                 label="Lance anterior"
-                onClick={() => selectMove(index - 1)}
-                disabled={index === 0}
+                onClick={() => selectMove(positionIndex - 1, false)}
+                disabled={positionIndex === 0}
               >
                 <ChevronLeft size={21} />
               </IconButton>
@@ -904,15 +926,15 @@ function Analysis({ id, demo, onGameUpdate }) {
               </span>
               <IconButton
                 label="Próximo lance"
-                onClick={() => selectMove(index + 1)}
-                disabled={index >= (moves.at(-1)?.indice || 0)}
+                onClick={() => selectMove(positionIndex + 1, false)}
+                disabled={positionIndex >= lastIndex}
               >
                 <ChevronRight size={21} />
               </IconButton>
               <IconButton
                 label="Último lance"
-                onClick={() => selectMove(moves.at(-1)?.indice || 0)}
-                disabled={index >= (moves.at(-1)?.indice || 0)}
+                onClick={() => selectMove(lastIndex, false)}
+                disabled={positionIndex >= lastIndex}
               >
                 <ChevronsRight size={19} />
               </IconButton>
@@ -968,13 +990,14 @@ function Analysis({ id, demo, onGameUpdate }) {
             </div>
             <EvaluationChart
               points={game.curva_avaliacao || []}
-              onSelect={selectMove}
+              moves={moves}
+              onSelect={(ply) => selectMove(ply, false)}
             />
             <div className="chart-caption">
               <span>Vantagem das brancas ↑ · pretas ↓</span>
               <span>
                 {evaluation(
-                  game.curva_avaliacao?.find((p) => p.lance === index),
+                  game.curva_avaliacao?.find((p) => p.lance === positionIndex),
                 )}
               </span>
             </div>
@@ -1033,7 +1056,7 @@ function Analysis({ id, demo, onGameUpdate }) {
                     className={`move class-${m.classe} ${index === m.indice ? "selected" : ""}`}
                     onClick={() => selectMove(m.indice)}
                     aria-pressed={index === m.indice}
-                    aria-label={`${m.numero}${m.cor === "black" ? " pretas" : " brancas"}, ${m.san}, ${CLASSES[m.classe]?.label}`}
+                    aria-label={`${m.numero}${m.cor === "black" ? " pretas" : " brancas"}, ${m.san}, ${CLASSES[m.classe]?.label || "Sem classificação"}`}
                   >
                     <span>
                       {m.numero}
@@ -1052,7 +1075,7 @@ function Analysis({ id, demo, onGameUpdate }) {
             key={`${id}:${move?.indice || 0}`}
             move={move}
             demo={demo}
-            disabled={!!offline}
+            disabled={!!offline || busy || game.status_analise !== "concluida"}
             onSave={(exp) => {
               const data = {
                 ...game,
@@ -1064,7 +1087,13 @@ function Analysis({ id, demo, onGameUpdate }) {
               else saveGame(data);
             }}
           />
-          <Chat key={fen} fen={fen} demo={demo} disabled={!!offline} />
+          <Chat
+            key={`${fen}:${move?.indice ?? 0}`}
+            fen={fen}
+            selectedMove={move ? { partida_id: id, indice: move.indice } : null}
+            demo={demo}
+            disabled={!!offline}
+          />
         </div>
       </div>
       <div className="analysis-bottom">
@@ -1102,7 +1131,7 @@ function Player({ player, color }) {
   );
 }
 
-function EvaluationChart({ points, onSelect }) {
+function EvaluationChart({ points, moves, onSelect }) {
   if (!points.length)
     return (
       <div className="small-empty">
@@ -1111,13 +1140,15 @@ function EvaluationChart({ points, onSelect }) {
     );
   const data = points.map((p) => ({
     ...p,
-    value:
-      p.avaliacao?.tipo === "mate"
-        ? p.avaliacao.a_favor
-          ? 10
-          : -10
-        : Math.max(-10, Math.min(10, (p.cp ?? p.avaliacao?.valor ?? 0) / 100)),
+    value: p.avaliacao?.tipo === "mate" ? null : (p.cp ?? p.avaliacao?.valor) / 100,
   }));
+  const mates = data.filter((p) => p.avaliacao?.tipo === "mate");
+  const criticalMoves = new Map(moves
+    .filter((m) => m.classe === "erro" || m.classe === "erro_grave")
+    .map((m) => [m.indice, CLASSES[m.classe]]));
+  const centipeoes = data.map((p) => p.value).filter(Number.isFinite);
+  const minimo = Math.min(0, ...centipeoes);
+  const maximo = Math.max(0, ...centipeoes);
   return (
     <>
       <div
@@ -1125,7 +1156,7 @@ function EvaluationChart({ points, onSelect }) {
         role="img"
         aria-label="Avaliação ao longo da partida; use também os botões de lance abaixo"
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 640, height: 200 }}>
           <AreaChart
             data={data}
             onClick={(state) => {
@@ -1133,7 +1164,7 @@ function EvaluationChart({ points, onSelect }) {
               if (state?.activeTooltipIndex != null && point && onSelect)
                 onSelect(point.lance);
             }}
-            margin={{ top: 8, right: 12, bottom: 0, left: -28 }}
+            margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
           >
             <defs>
               <linearGradient id="evaluation-fill" x1="0" y1="0" x2="0" y2="1">
@@ -1150,18 +1181,26 @@ function EvaluationChart({ points, onSelect }) {
               minTickGap={25}
             />
             <YAxis
-              domain={[-10, 10]}
-              ticks={[-10, 0, 10]}
+              width={40}
+              domain={minimo === maximo ? [-1, 1] : [minimo, maximo]}
               tick={{ fill: "var(--muted)", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
             />
+            {mates.map((p) => (
+              <ReferenceLine key={p.lance} x={p.lance} stroke={p.avaliacao.a_favor ? "#42ba9a" : "#ed626d"} strokeDasharray="4 3" />
+            ))}
+            {data.filter((p) => Number.isFinite(p.value) && criticalMoves.has(p.lance)).map((p) => (
+              <ReferenceDot key={p.lance} x={p.lance} y={p.value} r={4} fill={criticalMoves.get(p.lance).color} stroke="var(--surface-solid)" />
+            ))}
             <Tooltip
+              filterNull={false}
               content={({ active, payload }) =>
                 active && payload?.length ? (
                   <div className="chart-tooltip">
                     Meio-lance {payload[0].payload.lance} ·{" "}
                     {evaluation(payload[0].payload)}
+                    {criticalMoves.has(payload[0].payload.lance) && ` · ${criticalMoves.get(payload[0].payload.lance).label}`}
                   </div>
                 ) : null
               }
@@ -1177,6 +1216,7 @@ function EvaluationChart({ points, onSelect }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      {mates.length > 0 && <p className="field-hint">Traços verticais indicam posições de mate.</p>}
       {onSelect && (
         <details className="chart-access">
           <summary>Navegar pelos pontos do gráfico</summary>
@@ -1184,6 +1224,7 @@ function EvaluationChart({ points, onSelect }) {
             {points.map((p) => (
               <button key={p.lance} onClick={() => onSelect(p.lance)}>
                 Lance {p.lance}: {evaluation(p)}
+                {criticalMoves.has(p.lance) && ` · ${criticalMoves.get(p.lance).label}`}
               </button>
             ))}
           </div>
@@ -1194,13 +1235,14 @@ function EvaluationChart({ points, onSelect }) {
 }
 
 function Explanation({ move, demo, disabled, onSave }) {
-  const [explanation, setExplanation] = useState(move?.explicacao);
+  const [generated, setGenerated] = useState(null);
+  const explanation = generated ?? move?.explicacao;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const controller = useRef(null);
   useEffect(() => () => controller.current?.abort(), []);
   async function explain() {
-    if (!move || demo) return;
+    if (!move || demo || disabled) return;
     controller.current?.abort();
     const c = new AbortController();
     controller.current = c;
@@ -1212,8 +1254,10 @@ function Explanation({ move, demo, disabled, onSave }) {
         c.signal,
       );
       if (!c.signal.aborted) {
-        setExplanation(result);
-        onSave(result);
+        if (result.fen && result.fen !== move.fen_antes)
+          throw new Error("A explicação devolvida pertence a outra posição.");
+        setGenerated(result);
+        if (result.validada && !result.fallback) onSave(result);
       }
     } catch (e) {
       if (!c.signal.aborted) setError(e.message);
@@ -1241,7 +1285,7 @@ function Explanation({ move, demo, disabled, onSave }) {
         <>
           <div className="move-comparison">
             <div>
-              <span>Você jogou</span>
+              <span>Lance jogado</span>
               <b>{move.san}</b>
             </div>
             <div className="best-move">
@@ -1269,13 +1313,19 @@ function Explanation({ move, demo, disabled, onSave }) {
                   <BookOpen size={16} />
                   <span>
                     Conceito consultado:{" "}
-                    <strong>{explanation.ficha.titulo}</strong>
+                    <strong title={explanation.ficha.arquivo}>{explanation.ficha.titulo}</strong>
                   </span>
                 </div>
               )}
               {explanation.fallback && (
+                <>
+                  <p className="field-hint">Explicação de apoio baseada nos dados do motor.</p>
+                  {!demo && <button className="text-button" onClick={explain} disabled={disabled}>Tentar gerar com IA</button>}
+                </>
+              )}
+              {!demo && (
                 <p className="field-hint">
-                  Explicação de apoio baseada nos dados do motor.
+                  Lances validados{explanation.cache ? " · Explicação em cache" : move.explicacao ? " · Explicação salva" : ""}.
                 </p>
               )}
               <ToolList tools={explanation.ferramentas_usadas} />
@@ -1316,7 +1366,7 @@ function Explanation({ move, demo, disabled, onSave }) {
   );
 }
 
-function Chat({ fen, demo, disabled }) {
+function Chat({ fen, selectedMove, demo, disabled }) {
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1344,6 +1394,7 @@ function Chat({ fen, demo, disabled }) {
             {
               fen,
               pergunta: text,
+              ...(selectedMove && { lance_selecionado: selectedMove }),
               historico: messages
                 .filter((m) => m.validada !== false)
                 .slice(-12)
@@ -1355,16 +1406,20 @@ function Chat({ fen, demo, disabled }) {
             c.signal,
           );
       if (!c.signal.aborted) {
+        if (result.fen && result.fen !== fen)
+          throw new Error("O treinador respondeu sobre outra posição.");
+        const validada = result.validada && result.status !== "indisponivel";
         setMessages((items) => [
           ...items,
           { role: "user", content: text },
           {
             role: "assistant",
-            content: result.validada
+            content: validada
               ? result.resposta
               : "O treinador está indisponível para esta posição. Tente novamente em instantes.",
-            validada: result.validada,
+            validada,
             tools: result.ferramentas_usadas,
+            fallback: validada && result.fallback,
           },
         ]);
         setQuestion("");
@@ -1387,14 +1442,15 @@ function Chat({ fen, demo, disabled }) {
       <div className="chat-messages" aria-live="polite" role="log">
         {!messages.length && (
           <p className="chat-intro">
-            Ficou alguma dúvida? Pergunte sobre o tabuleiro. Ao mudar de
-            posição, você começa uma nova conversa.
+            Pergunte sobre o tabuleiro ou o lance selecionado. Ao mudar o
+            contexto, você começa uma nova conversa.
           </p>
         )}
         {messages.map((m, i) => (
           <div key={i} className={`chat-message ${m.role}`}>
             <strong>{m.role === "user" ? "Você" : "Treinador"}</strong>
             <p>{m.content}</p>
+            {m.fallback && <small>Resposta de apoio do Stockfish.</small>}
             {m.tools && <ToolList tools={m.tools} />}
           </div>
         ))}
@@ -1434,12 +1490,16 @@ function Report({ user, demo, onUser }) {
   const [offline, setOffline] = useState(false);
   const [retry, setRetry] = useState(0);
   const [puzzle, setPuzzle] = useState(null);
-  useEffect(() => {
-    if (demo || !user) return;
-    const c = new AbortController();
+  function refreshReport() {
+    if (!user) return;
     setBusy(true);
     setError("");
     setOffline(false);
+    setRetry((n) => n + 1);
+  }
+  useEffect(() => {
+    if (demo || !user) return;
+    const c = new AbortController();
     api
       .relatorio(user, c.signal)
       .then((result) => {
@@ -1463,6 +1523,11 @@ function Report({ user, demo, onUser }) {
       });
     return () => c.abort();
   }, [user, demo, retry]);
+  const totals = data?.evolucao.reduce((sum, row) => ({
+    imprecisoes: sum.imprecisoes + (row.imprecisoes ?? 0),
+    erros: sum.erros + (row.erros ?? 0),
+    erros_graves: sum.erros_graves + row.erros_graves,
+  }), { imprecisoes: 0, erros: 0, erros_graves: 0 });
   return (
     <>
       <div className="page-heading">
@@ -1479,8 +1544,9 @@ function Report({ user, demo, onUser }) {
           className="report-search"
           onSubmit={(e) => {
             e.preventDefault();
-            onUser(name.trim());
-            setRetry((n) => n + 1);
+            const player = name.trim();
+            if (player === user) refreshReport();
+            else if (player) onUser(player);
           }}
         >
           <label htmlFor="report-user">Jogador</label>
@@ -1499,7 +1565,7 @@ function Report({ user, demo, onUser }) {
         </form>
       )}
       {error && (
-        <ErrorNotice onRetry={() => setRetry((n) => n + 1)}>
+        <ErrorNotice onRetry={refreshReport}>
           {error}
         </ErrorNotice>
       )}
@@ -1603,15 +1669,20 @@ function Report({ user, demo, onUser }) {
                 <div>
                   <span className="eyebrow">UMA PARTIDA DE CADA VEZ</span>
                   <h2>Sua evolução</h2>
+                  <p className="field-hint">
+                    Imprecisões {totals.imprecisoes} · Erros {totals.erros} · Erros graves {totals.erros_graves}
+                  </p>
                 </div>
                 <Activity size={21} />
               </div>
-              <div className="table-wrap">
+              <div className="table-wrap" role="region" tabIndex={0} aria-label="Evolução por partida">
                 <table>
                   <thead>
                     <tr>
                       <th>Data</th>
                       <th>Precisão</th>
+                      <th>Imprecisões</th>
+                      <th>Erros</th>
                       <th>Erros graves</th>
                       <th>
                         <span className="sr-only">Abrir</span>
@@ -1627,6 +1698,8 @@ function Report({ user, demo, onUser }) {
                             ? "—"
                             : `${item.precisao.toFixed(1)}%`}
                         </td>
+                        <td>{item.imprecisoes ?? "—"}</td>
+                        <td>{item.erros ?? "—"}</td>
                         <td>{item.erros_graves}</td>
                         <td>
                           <a
@@ -1696,10 +1769,10 @@ function Report({ user, demo, onUser }) {
                     </div>
                     <div className="puzzle-body">
                       <span className="eyebrow">
-                        EXERCÍCIO {String(i + 1).padStart(2, "0")}
+                        {demo ? `EXERCÍCIO ${String(i + 1).padStart(2, "0")}` : `PUZZLE ${p.id}`}
                       </span>
                       <h3>
-                        {p.temas_label?.slice(0, 2).join(" · ") ||
+                        {p.temas_label?.join(" · ") ||
                           "Treino de tática"}
                       </h3>
                       <p>

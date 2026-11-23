@@ -11,6 +11,8 @@ consome a API real para importar, analisar, explicar lances, conversar sobre a
 posição e consultar o relatório.
 
 [Guia da interface](frontend/README.md) ·
+[Guia de execução e demonstração](docs/EXECUCAO_COMPLETA.md) ·
+[Verificação da integração real](docs/verificacao-integracao.md) ·
 [Tarefas restantes do Milton](docs/pendencias-milton.md) ·
 [Registro do teste SUS](docs/sus.html) ·
 [Roteiro do pitch](docs/roteiro-pitch.md)
@@ -40,11 +42,11 @@ Há modos claro e escuro e layout para celular. O teste de usabilidade SUS com
 cinco participantes ainda precisa ser aplicado. O formulário em `docs/sus.html`
 registra as respostas e calcula as notas, sem resultados fictícios.
 
-A [verificação local da interface](docs/verificacao-interface.md) registrou 12
-testes de desktop/celular e um fluxo real com Stockfish/MCP aprovados. A suíte
-de backend, ferramentas e agente registrou 102 aprovados e três ignorados por
-dependências opcionais. A inferência com LLM e a execução Docker ainda dependem
-da configuração do ambiente da equipe.
+A integração em Linux foi verificada no navegador contra o Compose com Stockfish,
+MCP, SQLite, ChromaDB e o Qwen3 1.7B já instalado no Ollama. Para abrir a
+demonstração real, execute os serviços e importe o PGN público da Lichess
+incluído no projeto. [PGN da demonstração](data/demos/xdFXCpYF.pgn) ·
+[Verificação inicial no Windows](docs/verificacao-interface.md)
 
 [Documentação acadêmica](docs/lance-a-lance-documentacao-do-projeto.pdf) ·
 [Integração com o frontend e contratos HTTP](docs/integracao-frontend.md) ·
@@ -99,7 +101,8 @@ MultiPV 3. Ao abrir um erro, a interface pode pedir `POST /api/explicar`.
 A explicação usa a análise gravada quando disponível. O LangGraph recupera
 fatos e ficha, gera texto e confere versões SAN na variante antes de publicá-lo.
 Um fallback determinístico também passa pelo validador. Explicações completas
-validadas são persistidas. O chat mantém o vínculo com o FEN e as ferramentas do grafo.
+validadas são persistidas. O chat mantém o vínculo com o FEN e o lance
+selecionado e consulta as ferramentas do grafo para a pergunta atual.
 
 O adaptador de LLM é compartilhado pela API e pelo executor experimental. Ele
 usa Chat Completions no Ollama e aceita provedores OpenAI compatíveis. O
@@ -119,13 +122,18 @@ docker compose up --build
 
 A interface fica em `http://localhost:5173`. A API fica em `http://localhost:8000`, o Swagger em
 `http://localhost:8000/docs` e o OpenAPI em `http://localhost:8000/openapi.json`.
-O backend e o MCP têm health checks. A API aguarda o MCP também após
+Frontend, backend e MCP têm health checks. O navegador usa a própria origem
+para `/api`, via proxy Nginx. A API aguarda o MCP também após
 reinício. Entre contêineres, o MCP usa Streamable HTTP com respostas JSON
 no endereço interno `http://mcp_server:8001/mcp`. A imagem instala
 Stockfish 15.1 do Debian. Na primeira inicialização, o MCP baixa o modelo de
 embeddings e indexa as 30 fichas. Os volumes `dados`, `chroma` e `modelos`
 preservam SQLite, o índice e os pesos. `docker compose down` preserva os
 volumes. Use um worker de API por banco para a recuperação das tarefas.
+
+Configure `CHESSCOM_USER_AGENT` com o contato da equipe e habilite Ollama
+local com `qwen3:1.7b` para geração e chat. O guia traz o perfil do modelo,
+o acesso a partir da bridge Docker e a sequência da demonstração. [Configurar o Ollama](docs/EXECUCAO_COMPLETA.md#habilitar-ollama-local)
 
 O Compose prepara automaticamente um recorte inicial de 73 puzzles rastreados
 na base oficial. Para preparar um recorte maior dentro do volume:
@@ -149,9 +157,37 @@ python -m knowledge_base.index
 python -m uvicorn backend.main:app --port 8000
 ```
 
+Em outro terminal, com Node.js 22.12+:
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+O Vite encaminha `/api` e `/healthz` para `127.0.0.1:8000` por padrão. Se a API
+usar outra porta, defina `VITE_API_PROXY_TARGET` com o endereço do backend.
+
 Sem `MCP_URL`, o cliente abre um processo stdio. Para manter um servidor
 local compartilhado, rode em outro terminal `python -m mcp_server.server --http`
 e configure `MCP_URL=http://127.0.0.1:8001/mcp` na API.
+
+## Fluxo de uso e contratos
+
+| Tela | Ação | API |
+| --- | --- | --- |
+| Início | Buscar usuário, quantidade e ritmo ou colar um PGN | `POST /api/partidas/importar` |
+| Análise | Abrir a partida, iniciar ou recuperar a análise e acompanhar seus meios-lances | `GET /api/partidas/{id}`, `POST /api/partidas/{id}/analisar`, `GET /api/tarefas/{id}` |
+| Análise | Navegar no tabuleiro e no gráfico e pedir a explicação de um erro | `POST /api/explicar` |
+| Análise | Perguntar sobre a posição atual ou a consequência do lance selecionado | `POST /api/chat` |
+| Meu progresso | Ver erros, temas, evolução e puzzles da Lichess | `GET /api/relatorio/{usuario}` |
+
+O gráfico mostra avaliações das brancas e trata mates como marcações separadas.
+Cada puzzle exibe o rating do recorte, os temas e o endereço público na Lichess.
+Se o recorte atual ficar sem resultados, o relatório mantém as estatísticas e
+informa a faixa ou temas sem correspondência. [Contratos HTTP e códigos de erro](docs/integracao-frontend.md)
+
+## Configuração
 
 | Configuração | Uso |
 | --- | --- |

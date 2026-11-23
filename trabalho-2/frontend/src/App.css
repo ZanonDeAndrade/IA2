@@ -1299,11 +1299,12 @@ progress::-webkit-progress-value {
 }
 .report-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
 }
 .weakness-panel,
 .evolution-panel {
+  min-width: 0;
   padding: 25px;
 }
 .report-grid .section-heading > svg {
@@ -1619,7 +1620,7 @@ tr:last-child td {
     align-self: start;
   }
   .report-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .puzzle-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

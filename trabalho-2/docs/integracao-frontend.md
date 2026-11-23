@@ -39,7 +39,7 @@ quando `MCP_URL` está vazio. Para um processo separado, execute
 | `GET /api/partidas/{id}` | ID da partida | 200, partida e análise disponível | 404 partida ausente |
 | `GET /api/tarefas/{id}` | ID da tarefa | 200, progresso e referência do resultado | 404 tarefa ausente |
 | `POST /api/explicar` | FEN e lance jogado | 200, explicação ou fallback com status de validação | 422 FEN/lance inválido, 503 motor, 504 prazo |
-| `POST /api/chat` | FEN, pergunta e histórico opcional | 200, resposta e status | 422 corpo/FEN inválido, 504 prazo |
+| `POST /api/chat` | FEN, pergunta, histórico e referência opcional ao lance | 200, resposta e status | 422 corpo, FEN ou referência inválida, 504 prazo |
 | `GET /api/relatorio/{usuario}` | Usuário importado ou associado ao PGN | 200, contagens, evolução e puzzles | 422 identificador inválido |
 
 Erros operacionais retornam `{"detail":"mensagem"}`. Em validações de esquema,
@@ -180,7 +180,7 @@ Content-Type: application/json
 ```
 
 ```json
-{"fen":"3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31","pergunta":"Por que Rd2 foi um erro?","resposta":"Não foi possível confirmar uma resposta para esta posição.","ferramentas_usadas":[],"validada":false,"status":"indisponivel"}
+{"fen":"3r1r2/pp3pk1/2p1pRp1/6Qp/2P5/P7/1q4PP/5R1K b - - 1 31","pergunta":"Por que Rd2 foi um erro?","resposta":"Não foi possível confirmar uma resposta para esta posição.","ferramentas_usadas":[],"validada":false,"status":"indisponivel","fallback":false}
 ```
 
 Envie o FEN exibido e, se houver, até 12 mensagens com `role` `user`
@@ -188,6 +188,15 @@ ou `assistant` e `content`. A API registra a lista de ferramentas como
 objetos `{"nome":"descrever_posicao","argumentos":{"fen":"..."}}`.
 Mostre o status `indisponivel` junto do texto de serviço. Perguntas podem
 ter até 2.000 caracteres.
+
+Durante a revisão de um lance, envie `lance_selecionado` com `partida_id`
+e `indice` para contextualizar perguntas como “Por que esse movimento foi
+ruim?”. A API verifica se o FEN é o de antes ou depois desse lance na base
+persistida. Uma pergunta sobre a consequência pode consultar a posição
+resultante, e as consultas sobre o tabuleiro partem do FEN exibido. O chat
+reinicia o histórico quando muda o FEN ou o lance referenciado. Exiba
+`fallback:true` como resposta de apoio do Stockfish, mesmo quando os lances
+da variante foram confirmados.
 
 ## Relatório e puzzles
 
@@ -219,5 +228,6 @@ tema mapeado. `erros_sem_tema` cobre o restante. `rating_estimado` é
 a média dos ratings conhecidos de partidas analisadas. Sem histórico,
 as listas ficam vazias e o rating é `null`. Sem temas classificados,
 os puzzles são recomendações gerais por faixa. Se a base de puzzles falhar,
-o relatório ainda entrega as estatísticas e preenche `aviso_puzzles`.
+o relatório ainda entrega as estatísticas e preenche `aviso_puzzles`. O
+mesmo campo explica quando a faixa ou o tema fica vazio no recorte local.
 Use `fen` para abrir o puzzle pronto para resolver e `url` para o link público.

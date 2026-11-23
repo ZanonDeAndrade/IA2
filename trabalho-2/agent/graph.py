@@ -34,6 +34,10 @@ _AVALIACAO_NUMERICA = re.compile(
     re.IGNORECASE,
 )
 _RECOMENDACAO = re.compile(r"\b(?:melhor (?:lance|jogada)|eu jogaria|jogue|recomendo jogar)\b", re.IGNORECASE)
+_AMEACA = re.compile(r"ameaç|ataca|sob ataque", re.IGNORECASE)
+_SITUACAO = re.compile(r"situação.{0,20}posição", re.IGNORECASE)
+_MOTIVO_DO_LANCE = re.compile(r"\b(?:por qu[eê]|porque)\b.*\b(?:lance|movimento|jogada|erro)\b", re.IGNORECASE)
+_TEMA_DO_LANCE = re.compile(r"\b(?:tema|conceito|tática)\b.*\b(?:envolvid[oa]|desse lance|deste lance)\b", re.IGNORECASE)
 
 
 class Estado(TypedDict, total=False):
@@ -49,6 +53,7 @@ class Estado(TypedDict, total=False):
     respostas_fatuais_chat: list[str]
     pergunta: str
     historico: list[dict]
+    lance_selecionado: dict
     mensagens: list
     evidencias: set[str]
     rodadas: int
@@ -57,6 +62,7 @@ class Estado(TypedDict, total=False):
     erros: list[str]
     pronto: bool
     validada: bool
+    fallback_chat: bool
     bloqueio_mcp: str
 
 
@@ -165,7 +171,7 @@ def _resultado_para_chat(nome: str, dados) -> str:
     return json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
 
 
-def _respostas_da_descricao(dados: dict) -> list[str]:
+def _respostas_da_descricao(dados: dict, pergunta: str) -> list[str]:
     nomes_lados = {"white": "brancas", "black": "pretas"}
     lado = nomes_lados[dados["lado_a_jogar"]]
     material = dados["material"]
@@ -177,18 +183,36 @@ def _respostas_da_descricao(dados: dict) -> list[str]:
     for cor, nome in nomes_lados.items():
         damas, torres = (quantidade(material[cor][tipo], tipo) for tipo in ("dama", "torre"))
         pesadas.append(f"{damas} e {torres} das {nome}")
-    respostas = [f"{jogam} As peças pesadas são {' e '.join(pesadas)}.", jogam]
+    resumo = f"{jogam} As peças pesadas são {' e '.join(pesadas)}."
+    respostas = [resumo, jogam]
     pecas = {p["casa"]: p for p in dados["pecas"]}
 
     def identificar(peca: dict) -> str:
         tipo = "peão" if peca["tipo"] == "peao" else peca["tipo"]
         return f"{tipo} das {nomes_lados[peca['cor']]} na {_casa_por_extenso(peca['casa'])}"
 
-    for alvo in dados["pecas_atacadas"]:
+    atacadas = dados["pecas_atacadas"]
+    ameaca = _AMEACA.search(pergunta)
+    if ameaca:
+        respostas = []
+        if casa := re.search(r"\b[a-h][1-8]\b", pergunta.casefold()):
+            alvo = casa.group()
+            atacadas = [p for p in atacadas if p["casa"] == alvo]
+            if not atacadas:
+                if alvo in pecas:
+                    return [f"A peça identificada como {identificar(pecas[alvo])} está fora de ataque nesta posição."]
+                return [f"A {_casa_por_extenso(alvo)} está vazia nesta posição."]
+    if _SITUACAO.search(pergunta) and not ameaca:
+        if dados["xeque_mate"]:
+            return [f"As {lado} estão em xeque-mate."]
+        if dados["afogamento"]:
+            return [f"As {lado} estão afogadas e a partida está empatada."]
+        return [f"{jogam} O rei está em xeque." if dados["em_xeque"] else resumo]
+    for alvo in atacadas:
         quem = " e ".join(identificar(pecas[casa]) for casa in alvo["atacantes"])
         defesa = "tem defesa" if alvo["defensores"] else "está sem defesa"
         respostas.append(f"Na posição atual, {identificar(alvo)} está sob ataque de {quem} e {defesa}.")
-    if not dados["pecas_atacadas"]:
+    if not atacadas:
         respostas.append("A descrição do tabuleiro não registra peças sob ataque.")
     return respostas
 
@@ -345,21 +369,53 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
     modelo_chat = modelo.bind_tools(permitidas) if modelo is not None and permitidas else modelo
 
     async def iniciar(estado: Estado) -> dict:
-        mensagens = [SystemMessage(content=_prompt("sistema") + "\n" + _prompt("chat"))]
-        for item in (estado.get("historico") or [])[-12:]:
-            if not isinstance(item, dict):
-                continue
-            papel, texto = item.get("role"), item.get("content")
-            if papel in ("user", "assistant") and isinstance(texto, str):
-                tipo = HumanMessage if papel == "user" else AIMessage
-                mensagens.append(tipo(content=texto))
-        mensagens.append(_contexto({"fen": estado["fen"], "pergunta": estado["pergunta"]}))
+        historico = [item for item in (estado.get("historico") or [])[-12:]
+                     if isinstance(item, dict) and item.get("role") in {"user", "assistant"}
+                     and isinstance(item.get("content"), str)]
+        dados = {"fen": estado["fen"], "pergunta": estado["pergunta"]}
+        if historico:
+            dados["historico"] = historico
+        if contexto := estado.get("lance_selecionado"):
+            dados["lance_selecionado"] = {k: v for k, v in contexto.items() if k != "fen_apos_lance"}
+        mensagens = [SystemMessage(content=_prompt("sistema") + "\n" + _prompt("chat")), _contexto(dados)]
         return {"mensagens": mensagens, "rodadas": 0, "tentativas": 0, "evidencias": set()}
+
+    def consulta_explicita(pergunta: str) -> str | None:
+        pergunta = pergunta.casefold()
+        if re.search(r"buscar_conceitos|\bconceito\b|base de conhecimento", pergunta):
+            return "buscar_conceitos"
+        if re.search(r"analisar_posicao|stockfish|melhor (?:lance|movimento|jogada)|que lance devo", pergunta):
+            return "analisar_posicao"
+        if (_AMEACA.search(pergunta) or _SITUACAO.search(pergunta)
+                or re.search(r"descrever_posicao|descriç|descrev|(?:quem|cor).{0,20}vez", pergunta)):
+            return "descrever_posicao"
+        return None
 
     async def consultar_modelo(estado: Estado) -> dict:
         try:
+            pergunta = estado["pergunta"]
+            contexto = estado.get("lance_selecionado")
+            nome = consulta_explicita(pergunta) if estado["rodadas"] == 0 else None
+            consulta = None
+            if nome in ferramentas.disponiveis:
+                argumentos = {"pergunta": pergunta} if nome == "buscar_conceitos" else {"fen": estado["fen"]}
+                consulta = AIMessage(content="", tool_calls=[{"name": nome, "args": argumentos, "id": "consulta-atual"}])
+            if (modelo is not None and contexto and estado["rodadas"] == 0 and "analisar_posicao" in ferramentas.disponiveis
+                    and (_MOTIVO_DO_LANCE.search(pergunta) or _TEMA_DO_LANCE.search(pergunta))):
+                consulta = AIMessage(content="", tool_calls=[{
+                    "name": "analisar_posicao", "args": {"fen": contexto["fen_apos_lance"]}, "id": "consequencia-do-lance",
+                }])
+                return {"mensagens": [*estado["mensagens"], consulta], "texto": ""}
+            if modelo is not None and consulta and os.getenv("LLM_JSON_MODE") == "1":
+                return {"mensagens": [*estado["mensagens"], consulta], "texto": ""}
             opcoes = estado.get("respostas_fatuais_chat") or []
-            if opcoes and not estado.get("linha_motor") and "buscar_conceitos" not in estado["evidencias"]:
+            linha = estado.get("linha_motor")
+            conceito_consultado = "buscar_conceitos" in estado["evidencias"]
+            if linha and not conceito_consultado and os.getenv("LLM_JSON_MODE") == "1" and consulta_explicita(pergunta) == "analisar_posicao":
+                opcoes = [f"O Stockfish indica `{linha[0]}` como melhor lance."]
+            elif linha or conceito_consultado:
+                opcoes = []
+            if opcoes:
                 resposta = await _invocar(modelo, [
                     SystemMessage(content="Selecione a frase que responde mais diretamente à pergunta. Copie a frase integralmente."),
                     _contexto({"pergunta": estado["pergunta"], "respostas_verificadas": opcoes}),
@@ -369,6 +425,8 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
                     raise ValueError("Resposta fora das frases verificadas.")
                 return {"mensagens": [*estado["mensagens"], AIMessage(content=texto)], "texto": texto}
             resposta = await _invocar(modelo_chat, estado["mensagens"])
+            if not resposta.tool_calls and resposta.text and consulta:
+                resposta = consulta
             return {"mensagens": [*estado["mensagens"], resposta], "texto": resposta.text}
         except Exception as erro:
             LOGGER.warning("Modelo do chat indisponível (%s)", type(erro).__name__)
@@ -386,6 +444,23 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
             try:
                 if nome not in _CHAT_TOOLS or len(chamadas) > len(_CHAT_TOOLS):
                     raise ValueError("Chamada não permitida.")
+                if (estado["rodadas"] == 0 and chamada["id"] == "consequencia-do-lance"
+                        and (contexto := estado.get("lance_selecionado"))
+                        and (_MOTIVO_DO_LANCE.search(estado["pergunta"]) or _TEMA_DO_LANCE.search(estado["pergunta"]))):
+                    dados = await ferramentas.chamar("analisar_posicao", fen=contexto["fen_apos_lance"], profundidade=16, multipv=1)
+                    tabuleiro = ler_fen(contexto["fen_apos_lance"])
+                    motivos = candidatos_taticos(tabuleiro, dados)
+                    motivo = next((item for item in motivos if item.tema == contexto.get("tema")), motivos[0] if motivos else None)
+                    if tabuleiro.is_checkmate():
+                        respostas_fatuais = ["O lance encerrou a partida com xeque-mate."]
+                    elif motivo:
+                        respostas_fatuais = [f"O tema identificado é {TEMAS[motivo.tema].lower()}. {motivo.frase}"]
+                    else:
+                        respostas_fatuais = ["A variante analisada não confirma um tema tático específico para o lance."]
+                    evidencias.add(nome)
+                    mensagens.append(ToolMessage(content=json.dumps(respostas_fatuais, ensure_ascii=False),
+                                                 tool_call_id=chamada["id"], name=nome))
+                    continue
                 if nome != "buscar_conceitos":
                     argumentos["fen"] = estado["fen"]
                 if nome == "analisar_posicao":
@@ -403,7 +478,7 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
                     evidencias.add(nome)
                 if (nome == "descrever_posicao" and os.getenv("LLM_JSON_MODE") == "1"
                         and isinstance(dados, dict) and "pecas" in dados):
-                    respostas_fatuais = _respostas_da_descricao(dados)
+                    respostas_fatuais = _respostas_da_descricao(dados, estado["pergunta"])
             except (RuntimeError, ValueError):
                 dados = {"erro": "Ferramenta indisponível ou consulta inválida."}
             mensagens.append(ToolMessage(content=_resultado_para_chat(nome, dados),
@@ -440,7 +515,7 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
                 texto, estado["fen"], linha, validar_lances=ferramentas.validar,
             )
             if resultado["valida"]:
-                return {"texto": texto, "validada": True}
+                return {"texto": texto, "validada": True, "fallback_chat": True}
         return {"texto": _SEM_RESPOSTA, "validada": False}
 
     async def apos_modelo(estado: Estado) -> str:
@@ -492,7 +567,8 @@ async def explicar_erro_async(fen: str, lance_jogado: str, melhor_lance: str, li
         return _explicacao_resultado({}, ferramentas)
 
 
-async def responder_chat_async(fen: str, pergunta: str, historico: list[dict] | None = None) -> dict:
+async def responder_chat_async(fen: str, pergunta: str, historico: list[dict] | None = None,
+                              *, lance_selecionado: dict | None = None) -> dict:
     ferramentas = Ferramentas([])
     try:
         ler_fen(fen)
@@ -505,12 +581,12 @@ async def responder_chat_async(fen: str, pergunta: str, historico: list[dict] | 
         async with sessao_mcp() as disponiveis:
             ferramentas = Ferramentas(disponiveis)
             resultado = await construir_agente_chat(_modelo(), ferramentas).ainvoke({
-                "fen": fen, "pergunta": pergunta, "historico": historico or [],
+                "fen": fen, "pergunta": pergunta, "historico": historico or [], "lance_selecionado": lance_selecionado,
             })
     except Exception as erro:
         LOGGER.warning("Chat indisponível (%s)", type(erro).__name__)
     return {"resposta": resultado.get("texto", _SEM_RESPOSTA), "ferramentas_usadas": ferramentas.usadas,
-            "validada": resultado.get("validada", False)}
+            "validada": resultado.get("validada", False), "fallback": resultado.get("fallback_chat", False)}
 
 
 def explicar_erro(fen: str, lance_jogado: str, melhor_lance: str, linha_motor: list[str]) -> dict:

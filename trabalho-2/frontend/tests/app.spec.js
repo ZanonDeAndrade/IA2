@@ -225,3 +225,45 @@ test("relatório vazio e falha na base de puzzles preservam estatísticas", asyn
     ),
   ).toBe(true);
 });
+
+test("retoma a consulta da mesma tarefa depois de recarregar a partida", async ({ page }) => {
+  let chegouAoFim = false;
+  const captured = await mockApi(page, {
+    handle: async (route, path) => {
+      if (path.includes("/tarefas/")) {
+        await route.fulfill({ json: {
+          status: chegouAoFim ? "concluida" : "em_andamento",
+          progresso: { lance_atual: chegouAoFim ? 4 : 2, total_lances: 4, percentual: chegouAoFim ? 100 : 50 },
+        } });
+        return true;
+      }
+      if (path === "/api/partidas/real-contract" && !chegouAoFim) {
+        await route.fulfill({ json: { ...game, status_analise: "em_andamento", lances: game.lances.slice(0, 2), curva_avaliacao: game.curva_avaliacao.slice(0, 3) } });
+        return true;
+      }
+      return false;
+    },
+  });
+  await page.goto("/#/analise/real-contract");
+  await page.getByRole("button", { name: "Retomar análise", exact: true }).click();
+  await expect(page.getByText("50%", { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText("50%", { exact: true })).toBeVisible();
+  chegouAoFim = true;
+  await expect(page.getByRole("button", { name: "2 brancas, g4, Erro grave" })).toBeVisible();
+  expect(captured.filter((r) => r.path.endsWith("/analisar"))).toHaveLength(1);
+});
+
+test("trata resposta de importação sem a lista esperada", async ({ page }) => {
+  await mockApi(page, {
+    handle: async (route, path) => {
+      if (!path.endsWith("/importar")) return false;
+      await route.fulfill({ json: { partidas: null } });
+      return true;
+    },
+  });
+  await page.goto("/");
+  await page.getByLabel("Seu usuário no Chess.com").fill("lance-com-hifen");
+  await page.getByRole("button", { name: "Importar partidas", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("O servidor devolveu uma resposta inválida");
+});
