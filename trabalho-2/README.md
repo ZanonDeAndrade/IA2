@@ -50,6 +50,8 @@ incluído no projeto. [PGN da demonstração](data/demos/xdFXCpYF.pgn) ·
 
 [Documentação acadêmica](docs/lance-a-lance-documentacao-do-projeto.pdf) ·
 [Integração com o frontend e contratos HTTP](docs/integracao-frontend.md) ·
+[Modo Jogar contra IA](docs/JOGAR_CONTRA_IA.md) ·
+[Treinador em tempo real](docs/TREINADOR.md) ·
 [Protocolo experimental](evaluation/README.md)
 
 ## Arquitetura
@@ -81,6 +83,7 @@ React → FastAPI → cliente MCP → FastMCP
 | --- | --- | --- |
 | `analisar_posicao` | FEN, profundidade 18 e MultiPV 3 por padrão | Avaliação na perspectiva de quem joga, candidatos e variante em SAN |
 | `analisar_partida` | PGN, cor `white`, `black` ou `ambas`, intervalo opcional | Lances SAN/UCI, FENs, avaliações, classe e melhor alternativa |
+| `jogar_stockfish` | FEN inicial, histórico UCI e dificuldade | Jogada legal do adversário, nome do motor e opções UCI aplicadas |
 | `validar_lances` | FEN e lances SAN ou UCI | Legalidade e SAN normalizada |
 | `descrever_posicao` | FEN | Material, peças, ataques, defesas, cravadas, xeques e situação dos reis |
 | `buscar_partidas` | Usuário, máximo e ritmo opcional | Jogos públicos do Chess.com, ordenados por término, com PGN |
@@ -181,11 +184,41 @@ e configure `MCP_URL=http://127.0.0.1:8001/mcp` na API.
 | Análise | Navegar no tabuleiro e no gráfico e pedir a explicação de um erro | `POST /api/explicar` |
 | Análise | Perguntar sobre a posição atual ou a consequência do lance selecionado | `POST /api/chat` |
 | Meu progresso | Ver erros, temas, evolução e puzzles da Lichess | `GET /api/relatorio/{usuario}` |
+| Jogar contra IA | Escolher a cor e dificuldade, jogar com feedback e revisar a partida | `/api/jogo` |
 
 O gráfico mostra avaliações das brancas e trata mates como marcações separadas.
 Cada puzzle exibe o rating do recorte, os temas e o endereço público na Lichess.
 Se o recorte atual ficar sem resultados, o relatório mantém as estatísticas e
 informa a faixa ou temas sem correspondência. [Contratos HTTP e códigos de erro](docs/integracao-frontend.md)
+
+Em **Jogar contra IA**, o Stockfish responde e avalia seus lances com perfis
+independentes. O jogo fica salvo no SQLite e gera um PGN para revisão ao terminar.
+[Dificuldades, regras de empate e contrato do jogo](docs/JOGAR_CONTRA_IA.md)
+
+### Treinador inteligente durante a partida
+
+O Stockfish joga e avalia. O Qwen3, com LangGraph, MCP e RAG, explica. A
+classificação chega na resposta do turno. A explicação entra numa fila
+persistida no SQLite e é gerada em segundo plano, sem travar o tabuleiro. Cada
+explicação fica presa ao ID e aos FENs do lance de origem, então uma resposta
+atrasada nunca aparece no lance errado.
+
+- **Modos**: Livre (ajuda só sob pedido), Treinador (explica imprecisões e
+  erros) e Aprendizado intensivo (comenta todos os lances). O modo pode ser
+  trocado durante a partida.
+- **Dicas em etapas**: objetivo, depois peça ou casa e, só se pedido,
+  o lance do Stockfish. Usam apenas dados verificados.
+- **Chat da partida** responde sobre a posição atual ou a posição após um lance
+  selecionado, com histórico, regras, táticas e conceitos das fichas.
+- **Sem Ollama**: a partida segue. As mensagens se limitam aos dados do
+  Stockfish e o treinador aparece como indisponível.
+- **Relatório** com lances críticos, temas confirmados, evolução, dicas usadas,
+  recomendações e puzzles. A partida entra no perfil de treino da sessão do
+  navegador em **Meu progresso**.
+
+No ensaio com Compose, cada turno completo levou em média 443 ms. A explicação
+do Qwen3 1.7B levou em média 8,35 s, fora do turno. [Como o treinador funciona, API e medições](docs/TREINADOR.md) ·
+[Verificação do treinador](docs/verificacao-treinador.md)
 
 ## Configuração
 
@@ -198,7 +231,7 @@ informa a faixa ou temas sem correspondência. [Contratos HTTP e códigos de err
 | `CHESSCOM_USER_AGENT` | Nome da aplicação e contato real, exigidos para importar do Chess.com. |
 | `CORS_ORIGENS`, `BACKEND_PORT` | Origens permitidas separadas por vírgula e porta publicada no Compose. |
 | `MCP_URL`, `MCP_HEALTH_URL` | URLs do MCP remoto e da sua verificação de prontidão. O Compose já define ambas. |
-| `LLM_PROVIDER`, `LLM_MODEL` | `openai` para OpenAI e serviços compatíveis, ou `ollama` para modelo local. |
+| `LLM_PROVIDER`, `LLM_MODEL` | `openai` para OpenAI e serviços compatíveis, ou `ollama` para modelo local. Para o treinador, use um modelo Qwen3, como `qwen3:1.7b`. |
 | `LLM_API_KEY`, `OPENAI_API_KEY`, `LLM_BASE_URL` | Credencial em `.env` e endpoint opcional. Ollama local usa `http://localhost:11434/v1`; no Compose use `http://host.docker.internal:11434/v1` se o host aceitar conexões da bridge. |
 | `LLM_TEMPERATURA`, `LLM_REVISAO` | Temperatura padrão 0. Incremente a revisão se trocar os pesos mantendo o nome do modelo. |
 | `LLM_TIMEOUT`, `LLM_MAX_TOKENS`, `LLM_RACIOCINIO`, `LLM_JSON_MODE` | Prazo por chamada, teto de geração, modo de raciocínio e esquema estruturado. O [perfil local reproduzível](evaluation/README.md#perfil-local-usado-para-qwen3) usa 60 s, 384 tokens, `none` e `1`. |

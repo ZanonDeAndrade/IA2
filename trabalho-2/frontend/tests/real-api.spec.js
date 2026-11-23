@@ -10,6 +10,15 @@ function responseFrom(page, path, method = "GET") {
   return page.waitForResponse((r) => new URL(r.url()).pathname === path && r.request().method() === method, { timeout: 165000 });
 }
 
+async function abrirComServidor(page, info) {
+  const health = responseFrom(page, "/healthz");
+  await page.goto("/");
+  expect((await health).status()).toBe(200);
+  const status = page.getByText("Servidor conectado", { exact: true });
+  await expect(status).toHaveText("Servidor conectado");
+  if (info.project.name === "desktop") await expect(status).toBeVisible();
+}
+
 function diagnosticos(page) {
   const erros = [];
   page.on("pageerror", (e) => erros.push(e.message));
@@ -31,8 +40,7 @@ test.skip(process.env.LANCE_E2E_REAL !== "1", "Requer o Compose real com Stockfi
 test("API real: importa uma partida pública do Chess.com e abre a partida", async ({ page }, info) => {
   test.setTimeout(90000);
   const erros = diagnosticos(page);
-  await page.goto("/");
-  await expect(page.getByText("Servidor conectado")).toBeVisible();
+  await abrirComServidor(page, info);
   await page.getByLabel("Seu usuário no Chess.com").fill("hikaru");
   await page.getByLabel("Quantidade de partidas").selectOption("1");
   await page.getByLabel("Ritmo", { exact: true }).selectOption("blitz");
@@ -59,9 +67,8 @@ test("API real: PGN, motor, tabuleiro, gráfico, explicação, chat, relatório 
   const erros = diagnosticos(page);
   const evidencia = { origem: "https://lichess.org/game/xdFXCpYF", viewport: [], chat: [] };
   const tabuleiro = page.locator(".board-frame");
-  await page.goto("/");
+  await abrirComServidor(page, info);
   await expect(page.getByRole("heading", { name: "Importar partida" })).toBeVisible();
-  await expect(page.getByText("Servidor conectado")).toBeVisible();
   evidencia.frontend_ms = await page.evaluate(() => performance.getEntriesByType("navigation")[0].domContentLoadedEventEnd);
   await page.getByRole("button", { name: "Colar PGN", exact: true }).click();
   await page.getByLabel("Identificador do jogador (opcional)").fill(usuario);

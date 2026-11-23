@@ -21,7 +21,6 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  CircleAlert,
   Copy,
   ExternalLink,
   Flag,
@@ -44,6 +43,7 @@ import {
 import { api, readCache, request, writeCache } from "./lib/api";
 import {
   arrow,
+  BOARD_COLORS,
   CLASSES,
   dateLabel,
   evaluation,
@@ -52,8 +52,17 @@ import {
   safeTrainingUrl,
 } from "./lib/chess";
 import { demoGame, demoReport } from "./lib/demo";
+import { ClassBadge, ErrorNotice, Loading, Player } from "./components/ChessUi";
+import PlayPage from "./play/PlayPage";
 import "./App.css";
 import "./glass.css";
+
+const PAGE_TITLES = {
+  inicio: "Minhas partidas",
+  analise: "Análise da partida",
+  relatorio: "Meu progresso",
+  jogar: "Jogar contra IA",
+};
 
 const go = (path) => {
   window.location.hash = path;
@@ -96,37 +105,6 @@ function Empty({ icon: Icon = FolderOpen, title, children }) {
     </div>
   );
 }
-function ErrorNotice({ children, onRetry }) {
-  return (
-    <div className="notice error" role="alert">
-      <CircleAlert size={19} />
-      <div>{children}</div>
-      {onRetry && (
-        <button className="text-button" onClick={onRetry}>
-          Tentar novamente
-        </button>
-      )}
-    </div>
-  );
-}
-function Loading({ children = "Carregando…" }) {
-  return (
-    <div className="loading" role="status">
-      <LoaderCircle className="spin" size={20} />
-      {children}
-    </div>
-  );
-}
-function ClassBadge({ value }) {
-  const c = CLASSES[value];
-  if (!c) return <span className="badge">Sem classificação</span>;
-  return (
-    <span className={`badge class-${value}`}>
-      <b>{c.symbol}</b>
-      {c.label}
-    </span>
-  );
-}
 function ToolList({ tools = [] }) {
   return (
     tools.length > 0 && (
@@ -156,11 +134,11 @@ export default function App() {
   const [games, setGames] = useState(() => readCache("games", []));
   const [user, setUser] = useState(() => readCache("user", ""));
   const isDemo = route.startsWith("/demo");
-  const page = route.includes("/analise/")
-    ? "analise"
-    : route.includes("/relatorio")
-      ? "relatorio"
-      : "inicio";
+  const playRoute = /^\/jogar(?:\/([^/]+))?\/?$/.exec(route);
+  const page = playRoute ? "jogar"
+    : route.includes("/analise/") ? "analise"
+    : route.includes("/relatorio") ? "relatorio"
+    : "inicio";
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     writeCache("theme", theme);
@@ -195,10 +173,10 @@ export default function App() {
   }, []);
   const reportPath = isDemo
     ? "/demo/relatorio"
-    : `/relatorio/${encodeURIComponent(user)}`;
+    : `/relatorio/${encodeURIComponent(user || readCache("play:profile", ""))}`;
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = `${page === "inicio" ? "Minhas partidas" : page === "analise" ? "Análise da partida" : "Meu progresso"} · Lance a Lance`;
+    document.title = `${PAGE_TITLES[page]} · Lance a Lance`;
   }, [route, page]);
   return (
     <div className="app-shell">
@@ -223,22 +201,15 @@ export default function App() {
           </span>
         </a>
         <nav aria-label="Navegação principal">
-          <a className={page === "inicio" ? "active" : ""} href="#/">
+          <a className={["inicio", "analise"].includes(page) ? "active" : ""}
+            aria-current={page === "inicio" ? "page" : undefined} href="#/">
             <House size={19} />
-            Minhas partidas
+            Analisar partidas
           </a>
-          <a
-            className={page === "analise" ? "active" : ""}
-            href={
-              isDemo
-                ? "#/demo/analise/demo"
-                : games[0]
-                  ? `#/analise/${games[0].id}`
-                  : "#/"
-            }
-          >
+          <a className={page === "jogar" ? "active" : ""}
+            aria-current={page === "jogar" ? "page" : undefined} href="#/jogar">
             <Swords size={19} />
-            Análise da partida
+            Jogar contra IA
           </a>
           <a
             className={page === "relatorio" ? "active" : ""}
@@ -279,11 +250,7 @@ export default function App() {
           <div className="breadcrumb">
             Seu espaço de treino <span>/</span>{" "}
             <b>
-              {page === "inicio"
-                ? "Minhas partidas"
-                : page === "analise"
-                  ? "Análise"
-                  : "Meu progresso"}
+              {page === "analise" ? "Análise" : PAGE_TITLES[page]}
             </b>
           </div>
           <div className="topbar-right">
@@ -322,6 +289,9 @@ export default function App() {
               demo={isDemo}
               onGameUpdate={updateGame}
             />
+          )}
+          {page === "jogar" && (
+            <PlayPage key={route} id={decode(playRoute[1])} reportPath={reportPath} />
           )}
           {page === "relatorio" && (
             <Report
@@ -896,8 +866,7 @@ function Analysis({ id, demo, onGameUpdate }) {
                 allowDragging: false,
                 allowDrawingArrows: false,
                 arrows,
-                darkSquareStyle: { backgroundColor: "#52766a" },
-                lightSquareStyle: { backgroundColor: "#e0e7df" },
+                ...BOARD_COLORS,
                 animationDurationInMs: 180,
               }}
             />
@@ -1116,20 +1085,6 @@ function Analysis({ id, demo, onGameUpdate }) {
   );
 }
 
-function Player({ player, color }) {
-  return (
-    <div className="player">
-      <span className={`piece-avatar ${color}`}>
-        {color === "white" ? "♔" : "♚"}
-      </span>
-      <b>{player?.nome || (color === "white" ? "Brancas" : "Pretas")}</b>
-      <span>{player?.rating || "Sem rating"}</span>
-      <span className="player-color">
-        {color === "white" ? "Brancas" : "Pretas"}
-      </span>
-    </div>
-  );
-}
 
 function EvaluationChart({ points, moves, onSelect }) {
   if (!points.length)

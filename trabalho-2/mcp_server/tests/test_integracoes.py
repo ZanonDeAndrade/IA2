@@ -3,6 +3,7 @@ from pathlib import Path
 import sqlite3
 
 import chess
+import chess.pgn
 import httpx
 import pytest
 from fastmcp.exceptions import ToolError
@@ -44,6 +45,29 @@ def test_partida_real_perspectiva_e_cache(tmp_path, monkeypatch):
     assert todas[0]["avaliacao_depois"]["valor"] == -todas[1]["avaliacao_antes"]["valor"]
     with sqlite3.connect(tmp_path / "lance.sqlite") as conn:
         assert conn.execute("SELECT count(*) FROM cache_mcp").fetchone()[0] == 5
+
+
+@pytest.mark.parametrize(("ciclos", "cp_depois", "buscas"), [(2, -200, 2), (4, 0, 1)])
+def test_partida_distingue_empate_automatico_de_reivindicavel(tmp_path, monkeypatch, ciclos, cp_depois, buscas):
+    monkeypatch.setenv("SQLITE_PATH", str(tmp_path / "lance.sqlite"))
+    tabuleiro = chess.Board()
+    for uci in ["g1f3", "g8f6", "f3g1", "f6g8"] * ciclos:
+        tabuleiro.push_uci(uci)
+    pgn = str(chess.pgn.Game.from_board(tabuleiro))
+    fens = []
+
+    def avaliar(fen, _profundidade, _multipv):
+        fens.append(fen)
+        posicao = chess.Board(fen)
+        lance = next(iter(posicao.legal_moves))
+        return {"perspectiva": chess.COLOR_NAMES[posicao.turn], "avaliacao": {"tipo": "cp", "valor": 200},
+                "linha_principal": [posicao.san(lance)], "melhores_lances": [{"uci": lance.uci()}]}
+
+    monkeypatch.setattr(engine, "analisar_posicao", avaliar)
+    ultimo, = engine.analisar_partida(pgn, "black", inicio=4 * ciclos - 1)
+    assert ultimo["cp_depois"] == cp_depois
+    assert len(fens) == buscas
+    assert (tabuleiro.fen() in fens) is (ciclos == 2)
 
 
 def test_puzzles_reais_filtrados_e_solucao(tmp_path, monkeypatch):

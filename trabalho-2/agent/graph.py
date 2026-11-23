@@ -54,6 +54,7 @@ class Estado(TypedDict, total=False):
     pergunta: str
     historico: list[dict]
     lance_selecionado: dict
+    treino: dict
     mensagens: list
     evidencias: set[str]
     rodadas: int
@@ -285,11 +286,14 @@ def construir_grafo_explicacao(modelo=None, ferramentas: Ferramentas | None = No
         if estado.get("erros"):
             instrucoes += "\n" + _prompt("correcao")
         escolhas = estado["escolhas_fatuais"]
+        dados = {"tema": TEMAS[estado["tema"]], "ficha": estado["ficha"],
+                 "frases_permitidas": escolhas, "erros": estado.get("erros", [])}
+        if treino := estado.get("treino"):
+            dados["treino"] = treino
         try:
             resposta = await _invocar(modelo, [
                 SystemMessage(content=instrucoes),
-                _contexto({"tema": TEMAS[estado["tema"]], "ficha": estado["ficha"],
-                           "frases_permitidas": escolhas, "erros": estado.get("erros", [])}),
+                _contexto(dados),
             ], campos=("aconteceu", "motivo", "licao"), escolhas=escolhas)
             texto = resposta.text.strip()
         except Exception as erro:
@@ -377,6 +381,8 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
             dados["historico"] = historico
         if contexto := estado.get("lance_selecionado"):
             dados["lance_selecionado"] = {k: v for k, v in contexto.items() if k != "fen_apos_lance"}
+        if treino := estado.get("treino"):
+            dados["treino"] = treino
         mensagens = [SystemMessage(content=_prompt("sistema") + "\n" + _prompt("chat")), _contexto(dados)]
         return {"mensagens": mensagens, "rodadas": 0, "tentativas": 0, "evidencias": set()}
 
@@ -542,7 +548,8 @@ def construir_agente_chat(modelo=None, ferramentas: Ferramentas | None = None):
     return grafo.compile()
 
 
-async def explicar_erro_async(fen: str, lance_jogado: str, melhor_lance: str, linha_motor: list[str]) -> dict:
+async def explicar_erro_async(fen: str, lance_jogado: str, melhor_lance: str, linha_motor: list[str],
+                              *, treino: dict | None = None) -> dict:
     ferramentas = Ferramentas([])
     try:
         tabuleiro = ler_fen(fen)
@@ -560,6 +567,7 @@ async def explicar_erro_async(fen: str, lance_jogado: str, melhor_lance: str, li
             ferramentas = Ferramentas(disponiveis)
             resultado = await construir_grafo_explicacao(_modelo(), ferramentas).ainvoke({
                 "fen": fen, "lance_jogado": jogado_san, "melhor_lance": melhor_san, "linha_motor": linha_motor,
+                **({"treino": treino} if treino else {}),
             })
         return _explicacao_resultado(resultado, ferramentas)
     except Exception as erro:
@@ -568,7 +576,7 @@ async def explicar_erro_async(fen: str, lance_jogado: str, melhor_lance: str, li
 
 
 async def responder_chat_async(fen: str, pergunta: str, historico: list[dict] | None = None,
-                              *, lance_selecionado: dict | None = None) -> dict:
+                              *, lance_selecionado: dict | None = None, treino: dict | None = None) -> dict:
     ferramentas = Ferramentas([])
     try:
         ler_fen(fen)
@@ -582,6 +590,7 @@ async def responder_chat_async(fen: str, pergunta: str, historico: list[dict] | 
             ferramentas = Ferramentas(disponiveis)
             resultado = await construir_agente_chat(_modelo(), ferramentas).ainvoke({
                 "fen": fen, "pergunta": pergunta, "historico": historico or [], "lance_selecionado": lance_selecionado,
+                **({"treino": treino} if treino else {}),
             })
     except Exception as erro:
         LOGGER.warning("Chat indisponível (%s)", type(erro).__name__)

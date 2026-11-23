@@ -2,8 +2,9 @@
 
 import asyncio
 from collections import Counter
-from contextlib import closing
+from contextlib import AsyncExitStack, closing
 from hashlib import sha256
+from itertools import groupby
 import logging
 import os
 from pathlib import Path
@@ -108,18 +109,29 @@ def _avaliacao_brancas(lance: dict, momento: str) -> dict:
 async def analisar_em_segundo_plano(id_tarefa: str, partida: dict, assinatura: str, fila: asyncio.Lock) -> None:
     feita = 0
     try:
-        async with fila, sessao_mcp() as disponiveis:
-            ferramentas = Ferramentas(disponiveis)
+        async with fila, AsyncExitStack() as recursos:
             with closing(db.conectar()) as conn:
                 db.atualizar_tarefa(conn, id_tarefa, {"status": "em_andamento", "atual": feita})
+                reaproveitados = db.avaliacoes_do_treino(conn, partida["id"], assinatura)
+            ferramentas = None
             total = partida["total_lances"]
             for inicio in range(0, total, 4):
                 fim = min(inicio + 4, total)
-                lances = await ferramentas.chamar(
-                    "analisar_partida", pgn=partida["pgn"], cor_do_jogador="ambas", inicio=inicio, limite=fim - inicio,
-                )
-                if not isinstance(lances, list) or [lance["indice"] for lance in lances] != list(range(inicio + 1, fim + 1)):
-                    raise ValueError("Resposta incompleta de analisar_partida.")
+                lances = []
+                for ja_avaliados, trecho in groupby(range(inicio + 1, fim + 1), key=reaproveitados.__contains__):
+                    indices = list(trecho)
+                    if ja_avaliados:
+                        lances.extend(reaproveitados[indice] for indice in indices)
+                        continue
+                    if ferramentas is None:
+                        ferramentas = Ferramentas(await recursos.enter_async_context(sessao_mcp()))
+                    novos = await ferramentas.chamar(
+                        "analisar_partida", pgn=partida["pgn"], cor_do_jogador="ambas",
+                        inicio=indices[0] - 1, limite=len(indices),
+                    )
+                    if not isinstance(novos, list) or [lance["indice"] for lance in novos] != indices:
+                        raise ValueError("Resposta incompleta de analisar_partida.")
+                    lances.extend(novos)
                 with closing(db.conectar()) as conn:
                     concluida = fim == total
                     db.salvar_analise(conn, partida["id"], lances, assinatura if concluida else None, id_tarefa)
@@ -133,7 +145,8 @@ async def analisar_em_segundo_plano(id_tarefa: str, partida: dict, assinatura: s
             raise
 
 
-async def explicacao(fen: str, jogado: str, fila: asyncio.Semaphore) -> dict:
+async def explicacao(fen: str, jogado: str, fila: asyncio.Semaphore, *, analise: dict | None = None,
+                     forcar: bool = False, treino: dict | None = None) -> dict:
     tabuleiro = tabuleiro_valido(fen)
     try:
         movimento = tabuleiro.parse_san(jogado)
@@ -143,12 +156,17 @@ async def explicacao(fen: str, jogado: str, fila: asyncio.Semaphore) -> dict:
         raise HTTPException(422, "O lance não é legal no FEN informado.") from erro
     fen, san = tabuleiro.fen(), tabuleiro.san(movimento)
     perfil = perfil_explicacao()
+    if analise is not None:
+        # O treinador do jogo explica a avaliação exibida, mesmo que já exista
+        # uma explicação para outra variante da mesma posição.
+        perfil += ":jogo:" + sha256(repr((analise, treino)).encode()).hexdigest()
     async with fila:
         with closing(db.conectar()) as conn:
-            cache = db.obter_explicacao(conn, fen, san, perfil)
+            # forcar atende a um pedido explícito de nova geração.
+            cache = None if forcar else db.obter_explicacao(conn, fen, san, perfil)
             if cache is not None:
                 return {**cache, "cache": True}
-            dados = db.obter_lance_analisado(conn, fen, san, perfil_analise())
+            dados = analise if analise is not None else db.obter_lance_analisado(conn, fen, san, perfil_analise())
         ferramentas_motor = []
         if dados is None:
             cor = "white" if tabuleiro.turn else "black"
@@ -161,7 +179,7 @@ async def explicacao(fen: str, jogado: str, fila: asyncio.Semaphore) -> dict:
                      "melhor_lance_uci": antes["melhores_lances"][0]["uci"]}
             ferramentas_motor = ["analisar_posicao"]
         linha = dados["linha_motor"]
-        resposta = await explicar_erro_async(fen, san, linha[0], linha)
+        resposta = await explicar_erro_async(fen, san, linha[0], linha, **({"treino": treino} if treino else {}))
         resultado = {**resposta, "fen": fen, "lance_jogado": san, "melhor_lance": linha[0],
                      "melhor_lance_uci": dados["melhor_lance_uci"], "classe": dados["classe"],
                      "queda": dados["queda"], "cache": False,
@@ -175,6 +193,8 @@ async def explicacao(fen: str, jogado: str, fila: asyncio.Semaphore) -> dict:
 async def relatorio(usuario: str) -> dict:
     with closing(db.conectar()) as conn:
         partidas = db.partidas_analisadas(conn, usuario, perfil_explicacao())
+        # Partidas jogadas contra a IA aproveitam as explicações do treinador.
+        treino = {partida["id"]: db.explicacoes_do_treino(conn, partida["id"]) for partida in partidas}
     partidas.sort(key=lambda item: (item["data"] or "", item["id"]))
     ratings = [rating for item in partidas if isinstance(
         rating := item["jogadores"][item["cor_do_jogador"]].get("rating"), int)]
@@ -187,7 +207,7 @@ async def relatorio(usuario: str) -> dict:
         for lance in partida["lances"]:
             if lance["cor"] != partida["cor_do_jogador"] or lance["classe"] not in {"erro", "erro_grave"}:
                 continue
-            explicada = lance["explicacao"] or {}
+            explicada = lance["explicacao"] or treino[partida["id"]].get(lance["indice"]) or {}
             tag = TAGS.get(explicada.get("tema"))
             if explicada.get("validada") and tag:
                 temas[tag] += 1

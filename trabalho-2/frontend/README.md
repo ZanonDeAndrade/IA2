@@ -50,11 +50,38 @@ Na raiz de `trabalho-2`, execute `docker compose up --build`. O serviço `fronte
 - `/#/`: importação e lista de partidas deste navegador.
 - `/#/analise/<id>`: revisão da partida persistida na API.
 - `/#/relatorio/<usuario>`: temas, evolução e puzzles.
+- `/#/jogar`: configuração da partida contra o Stockfish. Define a cor, a
+  dificuldade, se o treinador está ativo e o modo de assistência (Livre,
+  Treinador ou Aprendizado intensivo). A página também abre as partidas
+  recentes vinculadas à sessão deste navegador.
+- `/#/jogar/<id>`: partida em andamento ou encerrada, com tabuleiro, histórico,
+  classificação, treinador, dicas, chat e, no fim, o relatório.
 - `/#/demo/analise/demo` e `/#/demo/relatorio`: exemplos didáticos offline, identificados na tela.
 
 Os botões de lance, os controles do tabuleiro e as setas esquerda/direita navegam pela partida. O painel do erro abre a posição **antes** do lance para desenhar corretamente as setas. É possível alternar para **depois**. O chat recebe o FEN exibido e a referência ao lance selecionado. A conversa reinicia quando esse contexto muda.
 
 A análise consulta a tarefa a cada dois segundos, permite explorar resultados parciais e apresenta erros da tarefa mesmo quando o HTTP retorna 200. A explicação é solicitada sob demanda. Textos com `validada:false` não aparecem como orientação ao jogador. `fallback:true` recebe indicação de explicação de apoio. No relatório, erros sem tema e recomendações gerais ficam identificados.
+
+### Componentes do modo de jogo
+
+`src/play/` reúne a página (`PlayPage.jsx`), o tabuleiro jogável
+(`GameBoard.jsx`), os painéis de partida, classificação, histórico e resultado
+(`GamePanels.jsx`), o treinador (`GameCoach.jsx`), as dicas em etapas
+(`GameHints.jsx`), o chat (`GameChat.jsx`) e o relatório (`GameReport.jsx`). O
+hook `useCoach` em `coach.js` consulta a fila a cada 2 s apenas quando há
+explicação pendente. `belongsTo` só aceita uma explicação cujo `lance_id` e
+FENs coincidam com o lance exibido. **Posição da pergunta** permite consultar um
+lance anterior e cada resposta de chat identifica a posição usada. O histórico
+de dicas exibe as etapas salvas por posição. No desktop, o tabuleiro e o histórico ficam
+à esquerda e os painéis de ajuda à direita. No celular, tudo vira uma coluna,
+com o tabuleiro primeiro.
+
+`playApi` envia `X-Sessao-Jogo` ao iniciar ou listar partidas recentes. A API
+deriva desse token o identificador de progresso do treino. Uma
+jogada envia o UCI e a última `versao` confirmada. O tabuleiro usa o `fen`
+retornado. Em caso de conflito ou falha de rede, o cliente busca o estado atual
+antes de aceitar outra jogada. O botão **Analisar partida** abre
+`/#/analise/{partida_analise_id}` ao fim. [Contratos HTTP](../docs/JOGAR_CONTRA_IA.md#api-http)
 
 ## Dados salvos e modo offline
 
@@ -66,7 +93,7 @@ O modo offline exige que a interface esteja servida localmente ou já aberta. N�
 
 ```sh
 npx playwright install chromium
-npm test -- tests/app.spec.js
+npm test -- tests/app.spec.js tests/play.spec.js
 npm run build
 ```
 
@@ -80,6 +107,13 @@ O teste real usa o Chess.com e o PGN público da Lichess para verificar o motor,
 as posições do tabuleiro, a geração, a ficha RAG, o chat, os puzzles e os
 dados após recarregar a página. Em um ambiente sem modelo, use também
 `LANCE_E2E_SEM_LLM=1` para testar o apoio do motor e a mensagem do chat.
+
+O modo de jogo tem `tests/play.spec.js` (contratos simulados), além de
+`tests/play-real-api.spec.js` e `tests/jogo-real.spec.js` (API real, com
+`LANCE_E2E_JOGO_REAL=1`). O treinador tem `tests/treinador-real.spec.js`
+(Compose e Ollama reais, com `LANCE_E2E_TREINADOR=1`). Esse teste joga de
+brancas no desktop e de pretas no celular. Com `LANCE_E2E_SEM_LLM_URL`, também
+joga numa pilha sem LLM. [Comandos e resultados](../docs/TREINADOR.md#testes)
 [Condições e resultados do ensaio](../docs/verificacao-integracao.md)
 
 ## Prints e GIF

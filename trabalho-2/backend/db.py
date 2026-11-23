@@ -52,19 +52,46 @@ def inicializar_banco(conn: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS cache_mcp (
             chave TEXT PRIMARY KEY, criado REAL NOT NULL, dados TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS jogos (
+            id TEXT PRIMARY KEY, versao INTEGER NOT NULL, dados TEXT NOT NULL,
+            reserva TEXT, reservada_ate REAL
+        );
+        CREATE TABLE IF NOT EXISTS jogos_sessoes (
+            jogo_id TEXT PRIMARY KEY REFERENCES jogos(id) ON DELETE CASCADE,
+            sessao_hash TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS jogos_por_sessao ON jogos_sessoes(sessao_hash);
+        CREATE TABLE IF NOT EXISTS explicacoes_jogo (
+            id TEXT PRIMARY KEY, jogo_id TEXT NOT NULL REFERENCES jogos(id) ON DELETE CASCADE,
+            indice INTEGER NOT NULL, lance_id TEXT NOT NULL, tipo TEXT NOT NULL, origem TEXT NOT NULL,
+            prioridade INTEGER NOT NULL, status TEXT NOT NULL, tentativas INTEGER NOT NULL DEFAULT 0,
+            contexto TEXT NOT NULL, dados TEXT, erro TEXT, criado_em TEXT NOT NULL,
+            iniciado_em TEXT, concluido_em TEXT, duracao_ms INTEGER, UNIQUE(jogo_id, indice)
+        );
+        CREATE INDEX IF NOT EXISTS explicacoes_jogo_fila ON explicacoes_jogo(status, prioridade, indice);
+        CREATE TABLE IF NOT EXISTS dicas_jogo (
+            jogo_id TEXT NOT NULL REFERENCES jogos(id) ON DELETE CASCADE, versao INTEGER NOT NULL,
+            nivel INTEGER NOT NULL, fen TEXT NOT NULL, dados TEXT NOT NULL, criado_em TEXT NOT NULL,
+            PRIMARY KEY(jogo_id, versao, nivel)
+        );
     """)
 
 
-def salvar_partida(conn, partida: dict) -> str:
+def registrar_partida(conn, partida: dict) -> str:
+    """Insere uma partida usando a transação do chamador."""
     origem = partida.get("url") or partida.get("chave_pgn") or partida["pgn"]
     usuario = (partida.get("usuario") or "").casefold()
     chave = (origem, usuario, partida["cor_do_jogador"])
     id_ = sha256(json.dumps(chave, ensure_ascii=False).encode()).hexdigest()[:24]
     dados = {k: v for k, v in partida.items() if k != "chave_pgn"}
-    with conn:
-        conn.execute("INSERT INTO partidas(id, usuario, dados) VALUES (?, ?, ?) ON CONFLICT(id) DO NOTHING",
-                     (id_, usuario, json.dumps(dados, ensure_ascii=False)))
+    conn.execute("INSERT INTO partidas(id, usuario, dados) VALUES (?, ?, ?) ON CONFLICT(id) DO NOTHING",
+                 (id_, usuario, json.dumps(dados, ensure_ascii=False)))
     return id_
+
+
+def salvar_partida(conn, partida: dict) -> str:
+    with conn:
+        return registrar_partida(conn, partida)
 
 
 def obter_partida(conn, partida_id: str, perfil: str = "") -> dict | None:
@@ -172,6 +199,26 @@ def interromper_tarefas(conn) -> None:
     with conn:
         conn.execute("""UPDATE tarefas SET status='erro', erro='Análise interrompida. Inicie novamente.'
                      WHERE status IN ('pendente','em_andamento')""")
+
+
+def explicacoes_do_treino(conn, partida_id: str) -> dict[int, dict]:
+    """Explicações concluídas no modo jogo para a partida de revisão correspondente."""
+    linhas = conn.execute("""
+        SELECT e.indice, e.dados FROM explicacoes_jogo e JOIN jogos j ON j.id=e.jogo_id
+        WHERE json_extract(j.dados,'$.partida_analise_id')=? AND e.status='concluida' AND e.dados IS NOT NULL
+        """, (partida_id,))
+    return {linha["indice"]: json.loads(linha["dados"]) for linha in linhas}
+
+
+def avaliacoes_do_treino(conn, partida_id: str, perfil: str) -> dict[int, dict]:
+    linhas = conn.execute("""
+        SELECT json_extract(l.value, '$.indice') AS indice, json_extract(l.value, '$.avaliacao') AS avaliacao
+        FROM jogos j, json_each(j.dados, '$.lances') l
+        WHERE json_extract(j.dados, '$.partida_analise_id')=?
+          AND json_extract(l.value, '$.perfil_avaliacao')=?
+          AND json_type(l.value, '$.avaliacao')='object'
+    """, (partida_id, perfil))
+    return {linha["indice"]: json.loads(linha["avaliacao"]) for linha in linhas}
 
 
 def partidas_analisadas(conn, usuario: str, perfil: str):

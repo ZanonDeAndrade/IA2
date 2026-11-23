@@ -8,6 +8,7 @@ de tempo por posição.
 import atexit
 import json
 from concurrent.futures import Future
+from contextlib import contextmanager
 import os
 from threading import Lock, Thread
 from time import time
@@ -61,7 +62,8 @@ def _encerrar_motor(*, aguardar: bool = False) -> None:
 atexit.register(_encerrar_motor, aguardar=True)
 
 
-def _consultar_motor(tabuleiro: chess.Board, profundidade: int, multipv: int) -> list[chess.engine.InfoDict]:
+@contextmanager
+def sessao_stockfish():
     global _motor_ativo
     caminho = os.getenv("STOCKFISH_PATH")
     if not caminho:
@@ -78,10 +80,7 @@ def _consultar_motor(tabuleiro: chess.Board, profundidade: int, multipv: int) ->
                 raise chess.engine.EngineError("O executável UCI não se identificou como Stockfish.")
         else:
             _, motor = _motor_ativo
-        return motor.analyse(
-            tabuleiro, chess.engine.Limit(depth=profundidade, time=_TEMPO_BUSCA), multipv=multipv,
-            game=object(), info=chess.engine.INFO_SCORE | chess.engine.INFO_PV,
-        )
+        yield motor
     except TimeoutError as erro:
         _encerrar_motor()
         raise TimeoutError("Tempo limite na comunicação UCI com o Stockfish.") from erro
@@ -90,6 +89,14 @@ def _consultar_motor(tabuleiro: chess.Board, profundidade: int, multipv: int) ->
         raise RuntimeError(f"Falha no Stockfish: {erro}") from erro
     finally:
         _acesso_motor.release()
+
+
+def _consultar_motor(tabuleiro: chess.Board, profundidade: int, multipv: int) -> list[chess.engine.InfoDict]:
+    with sessao_stockfish() as motor:
+        return motor.analyse(
+            tabuleiro, chess.engine.Limit(depth=profundidade, time=_TEMPO_BUSCA), multipv=multipv,
+            game=object(), info=chess.engine.INFO_SCORE | chess.engine.INFO_PV,
+        )
 
 
 def _pontuacao(info: chess.engine.InfoDict, turno: chess.Color) -> dict:
@@ -156,7 +163,7 @@ def analisar_posicao(fen: str, profundidade: int = 18, multipv: int = 3) -> dict
 
 def perfil_analise() -> str:
     """Assinatura do perfil de partida, separada da análise interativa."""
-    return f"v1:depth={_profundidade_partida()}:motor={os.getenv('ANALISE_REVISAO_MOTOR', '1')}"
+    return f"v2:depth={_profundidade_partida()}:motor={os.getenv('ANALISE_REVISAO_MOTOR', '1')}"
 
 
 def _profundidade_partida() -> int:
@@ -214,7 +221,8 @@ def analisar_partida(pgn: str, cor_do_jogador: str, inicio: int = 0, limite: int
         tabuleiro.push(lance)
     caminho = which(os.getenv("STOCKFISH_PATH") or "")
     motor = os.stat(caminho) if caminho else None
-    assinatura = f"posicao:{perfil_analise()}:{caminho}:{motor.st_mtime_ns if motor else 0}:"
+    perfil = perfil_analise()
+    assinatura = f"posicao:{perfil}:{caminho}:{motor.st_mtime_ns if motor else 0}:"
     profundidade = _profundidade_partida()
     with abrir_cache() as conn:
         def avaliar(fen: str) -> dict:
@@ -237,11 +245,20 @@ def analisar_partida(pgn: str, cor_do_jogador: str, inicio: int = 0, limite: int
             if cor_do_jogador != "ambas" and cor != cor_do_jogador:
                 continue
             fen_depois = tabuleiro.fen()
-            antes, depois = avaliar(fen_antes), avaliar(fen_depois)
+            antes = avaliar(fen_antes)
+            # O histórico completo está disponível no tabuleiro do PGN, mas não no FEN.
+            # Empates automáticos dependentes desse histórico ficam fora do cache de posições.
+            desfecho = tabuleiro.outcome(claim_draw=False)
+            if desfecho is not None and desfecho.winner is None:
+                depois = {"perspectiva": chess.COLOR_NAMES[tabuleiro.turn],
+                          "avaliacao": {"tipo": "cp", "valor": 0}}
+            else:
+                depois = avaliar(fen_depois)
             linha = antes["linha_principal"]
             resultado.append({
                 "indice": indice + 1, "numero": numero, "cor": cor, "san": san, "uci": uci,
                 "fen_antes": fen_antes, "fen_depois": fen_depois, **dados_classificacao(antes, depois, cor),
+                "perfil_analise": perfil,
                 "melhor_lance": linha[0], "melhor_lance_uci": antes["melhores_lances"][0]["uci"],
                 "linha_motor": linha,
             })
