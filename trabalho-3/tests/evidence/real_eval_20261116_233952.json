@@ -1,0 +1,132 @@
+{
+ "model": "qwen3:1.7b",
+ "retriever": "rag.wikibooks:retrieve",
+ "cases": [
+  {
+   "case": "C",
+   "name": "Café da manhã: busca receitas, não categorias",
+   "request": {
+    "question": "O que posso preparar para o café da manhã?",
+    "available_ingredients": [
+     "pão",
+     "manteiga",
+     "ovo",
+     "queijo"
+    ]
+   },
+   "passed": true,
+   "seconds": 94.9,
+   "status": "FOUND",
+   "intent": "recipes_by_ingredients",
+   "situation": "NEEDS_INGREDIENTS",
+   "origin": "llm",
+   "violations": [],
+   "mcp_tools_called": [
+    "search_knowledge",
+    "get_document",
+    "get_document",
+    "get_document",
+    "get_document",
+    "get_document"
+   ],
+   "answer": "Aqui estão algumas opções para o café da manhã com os ingredientes que você tem: \n1. Pão de ló pobre (versão 2) - precisa de açúcar, mas tem manteiga e ovo.\n2. Docinho de queijo - tipo ameixa - precisa de açúcar refinado, mas tem ovo e queijo.\n3. Torta de batata (versão 2) - precisa de batatas e farinha de trigo, mas tem queijo, manteiga e ovo.\n4. Nhoque (versão 4) - precisa de batatas e farinha de trigo, mas tem ovo e manteiga.\n5. Nhoque (versão 1) - precisa de batatas e farinha de trigo, mas tem ovo e manteiga.",
+   "invariant_problems": [],
+   "recipes": [
+    {
+     "title": "Pão de ló pobre (versão 2)",
+     "category": "Quitandas",
+     "compatibility": "PARTIAL",
+     "available": [
+      "gemas"
+     ],
+     "missing": [
+      "açúcar"
+     ],
+     "steps": 8,
+     "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/P%C3%A3o_de_l%C3%B3_pobre"
+    },
+    {
+     "title": "Docinho de queijo - tipo ameixa",
+     "category": "Doces",
+     "compatibility": "PARTIAL",
+     "available": [
+      "ovos"
+     ],
+     "missing": [
+      "açúcar refinado"
+     ],
+     "steps": 5,
+     "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Docinho_de_queijo_-_tipo_ameixa"
+    },
+    {
+     "title": "Torta de batata (versão 2)",
+     "category": "Salgados, Lanches e Sanduíches",
+     "compatibility": "PARTIAL",
+     "available": [
+      "queijo ralado",
+      "manteiga",
+      "ovos"
+     ],
+     "missing": [
+      "batatas",
+      "farinha de trigo"
+     ],
+     "steps": 6,
+     "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Torta_de_batata"
+    },
+    {
+     "title": "Nhoque (versão 4)",
+     "category": "Massas",
+     "compatibility": "PARTIAL",
+     "available": [
+      "ovo",
+      "manteiga"
+     ],
+     "missing": [
+      "batatas",
+      "farinha de trigo"
+     ],
+     "steps": 5,
+     "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Nhoque"
+    },
+    {
+     "title": "Nhoque (versão 1)",
+     "category": "Massas",
+     "compatibility": "PARTIAL",
+     "available": [
+      "ovos",
+      "manteiga"
+     ],
+     "missing": [
+      "batatas cozidas e passadas no espremedor",
+      "farinha de trigo"
+     ],
+     "steps": 4,
+     "source_url": "https://pt.wikibooks.org/wiki/Livro_de_receitas/Nhoque"
+    }
+   ]
+  },
+  {
+   "case": "G1",
+   "name": "Prato inexistente",
+   "request": {
+    "question": "Como preparar lagosta flambada com trufas negras?"
+   },
+   "passed": true,
+   "seconds": 51.9,
+   "status": "INSUFFICIENT",
+   "intent": "preparation",
+   "situation": "NONE",
+   "origin": "canonical_insufficient",
+   "violations": [
+    "NO_ELIGIBLE_RECIPE"
+   ],
+   "mcp_tools_called": [
+    "search_knowledge"
+   ],
+   "answer": "Não encontrei \"lagosta flambada com trufas negras\" na base documental de receitas. Tente outro prato ou informe os ingredientes que você tem.",
+   "invariant_problems": [],
+   "recipes": []
+  }
+ ]
+}

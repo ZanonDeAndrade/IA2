@@ -115,7 +115,8 @@ async def test_initialize_and_discover_three_tools():
         assert sk["required"] == ["query"]
         assert sk["properties"]["query"]["maxLength"] == 500
         assert sk["properties"]["top_k"]["maximum"] == 10
-        assert set(sk["properties"]) == {"query", "available_ingredients", "topic_key", "top_k"}
+        assert set(sk["properties"]) == {"query", "available_ingredients", "topic_key", "top_k", "ranking"}
+        assert sk["properties"]["ranking"]["anyOf"][0]["enum"] == ["compatibility", "relevance"]
         assert tools["get_document"].input_schema["required"] == ["recipe_id"]
         assert "include_counts" in tools["list_topics"].input_schema["properties"]
         assert set(tools["search_knowledge"].output_schema["properties"]) >= {

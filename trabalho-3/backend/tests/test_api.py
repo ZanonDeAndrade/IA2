@@ -13,7 +13,7 @@ from __future__ import annotations
 import anyio
 import httpx
 import pytest
-from conftest import FIXTURES, ROOT, ScriptedOllama, llm_final, llm_text, llm_tools, tool_call
+from conftest import FIXTURES, ROOT, ScriptedOllama, llm_final, llm_intent, llm_text, llm_tools, tool_call
 from fastapi.testclient import TestClient
 
 from app.integrations.mcp_client import MCPClient
@@ -24,7 +24,8 @@ from app.settings import Settings
 URL = "/api/v1/consultations"
 QUESTION = {"question": "O que posso fazer com ovos e queijo?", "available_ingredients": ["ovos", "queijo"]}
 CONTRACT_KEYS = {"request_id", "status", "answer", "recipes", "sources", "error"}
-CARD_KEYS = {"recipe_id", "document_id", "title", "topic_key", "compatibility", "available_ingredients",
+CARD_KEYS = {"recipe_id", "document_id", "title", "topic_key", "topic_label", "subcategory", "compatibility",
+             "available_ingredients",
              "missing_ingredients", "ingredients", "instructions", "portions", "preparation_time", "temperature",
              "source_url", "source_id"}
 
@@ -42,6 +43,7 @@ def found_script():
     return ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "ovos e queijo", "available_ingredients": ["ovos", "queijo"]})),
         llm_final("FOUND", "A Omelete de queijo usa ovos e queijo, que você informou ter.", ["fx-001-v1"]),
+        intent=llm_intent("receitas_por_ingredientes", ingredientes=["ovos", "queijo"], consulta="ovos e queijo"),
     )
 
 
@@ -69,6 +71,7 @@ def test_insufficient_200_without_cards(mcp_fixture_env):
     script = ScriptedOllama(
         llm_tools(tool_call("search_knowledge", {"query": "lagosta flambada"})),
         llm_final("INSUFFICIENT", "A base não tem receitas de lagosta.", []),
+        intent=llm_intent("receita_por_nome", prato="lagosta flambada", consulta="lagosta flambada"),
     )
     with client_for(script) as client:
         resp = client.post(URL, json={"question": "Receita de lagosta flambada?"})
@@ -135,7 +138,8 @@ def test_mcp_that_fails_to_start_503(mcp_fixture_env, monkeypatch):
 
 def test_corpus_empty_503(mcp_fixture_env, monkeypatch):
     monkeypatch.setenv("RECIPES_JSON", str(FIXTURES / "empty_recipes.json"))
-    script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})))
+    script = ScriptedOllama(llm_tools(tool_call("search_knowledge", {"query": "omelete"})),
+                            intent=llm_intent("receitas_por_ingredientes", ingredientes=["ovos", "queijo"]))
     with client_for(script) as client:
         resp = client.post(URL, json=QUESTION)
     assert resp.status_code == 503 and resp.json()["error"]["code"] == "CORPUS_EMPTY"

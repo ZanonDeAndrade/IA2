@@ -51,6 +51,8 @@ class RecipeCard(BaseModel):
     document_id: str
     title: str
     topic_key: str
+    topic_label: str | None = None  # categoria documentada na fonte (ex.: "Doces")
+    subcategory: str | None = None  # ex.: "Pudins"
     compatibility: Literal["COMPLETE", "PARTIAL", "NO_MATCH", "NOT_EVALUATED"]
     available_ingredients: list[str]
     missing_ingredients: list[str]

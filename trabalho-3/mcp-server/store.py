@@ -37,6 +37,7 @@ class Settings:
     retriever_ref: str
     normalizer_ref: str
     default_top_k: int
+    user_keys_ref: str = "rag.ingredients:user_ingredient_keys"
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -53,6 +54,7 @@ class Settings:
             retriever_ref=os.environ.get("RAG_RETRIEVER", "rag.retrieve:retrieve"),
             normalizer_ref=os.environ.get("RAG_NORMALIZER", "rag.ingredients:normalize_ingredient"),
             default_top_k=min(max(top_k, 1), 10),
+            user_keys_ref=os.environ.get("RAG_USER_KEYS", "rag.ingredients:user_ingredient_keys"),
         )
 
 
@@ -121,6 +123,37 @@ class IngredientNormalizer:
         return basic_normalize(name)
 
 
+class UserIngredientKeys:
+    """Chaves de receita satisfeitas por um ingrediente do usuário (`rag.ingredients.user_ingredient_keys`).
+
+    Sem o módulo do RAG, cai para a própria chave normalizada (igualdade estrita).
+    """
+
+    def __init__(self, ref: str, normalize: Callable[[str], str]) -> None:
+        self._ref = ref
+        self._normalize = normalize
+        self._fn: Callable[[str], Any] | None = None
+        self._resolved = False
+        self._lock = threading.Lock()
+
+    def __call__(self, name: str) -> frozenset[str]:
+        with self._lock:
+            if not self._resolved:
+                try:
+                    self._fn = load_callable(self._ref)
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("relação de ingredientes %s indisponível (%s); usando igualdade", self._ref, exc)
+                    self._fn = None
+                self._resolved = True
+        keys = {self._normalize(name)}
+        if self._fn is not None:
+            try:
+                keys |= {str(k) for k in self._fn(name) if k}
+            except Exception:  # noqa: BLE001
+                logger.exception("relação de ingredientes falhou; usando igualdade")
+        return frozenset(k for k in keys if k)
+
+
 # ---------------------------------------------------------------- receitas normalizadas
 
 _ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,127}$")
@@ -147,6 +180,7 @@ class RecipeRecord(BaseModel):
     title: str = Field(min_length=1)
     topic_key: str
     topic_label: str | None = None
+    subcategory: str | None = None
     ingredients: list[IngredientRecord]
     instructions: list[str] = Field(min_length=1)
     source_url: str

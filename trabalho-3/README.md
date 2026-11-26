@@ -22,17 +22,32 @@ cd trabalho-3
 ollama pull qwen3:1.7b
 
 # 2) corpus real (Wikilivros, CC BY-SA 4.0) -> data/normalized/recipes.json + Chroma em data/chroma_wikibooks/
-mcp-server/.venv/bin/python -m rag.wikibooks collect   # só se data/raw/wikibooks/ estiver vazio
-mcp-server/.venv/bin/python -m rag.wikibooks build
+#    312 páginas (sementes + amostra de 16 categorias "X, receitas com") -> 470 receitas, 940 chunks
+mcp-server/.venv/bin/python -m rag.wikibooks collect   # só se data/raw/wikibooks/ estiver vazio (respeita o limite da API)
+mcp-server/.venv/bin/python -m rag.wikibooks build     # obrigatório após atualizar o código (o índice é recriado)
 
 # 3) subir tudo (Ollama, backend :8000 com MCP, frontend :5173)
 scripts/start.sh
 ```
 
-Abra http://localhost:5173, informe ingredientes (pergunta opcional) e clique em **Buscar receitas**. Em CPU,
-cada consulta leva de 1 a 4 minutos.
+Abra http://localhost:5173, informe ingredientes (pergunta opcional) e clique em **Buscar receitas**. Os
+resultados vêm separados em "Você pode preparar agora" e "Com ingredientes adicionais". Em CPU, cada consulta
+leva de 1 a 3 minutos. Como a intenção, a compatibilidade e o ranking funcionam:
+[docs/recomendacao.md](docs/recomendacao.md).
 
-Testes reais (com a aplicação no ar): `backend/.venv/bin/python scripts/real_e2e.py`. Evidências em `tests/evidence/`.
+Testes:
+
+```sh
+(cd backend && .venv/bin/python -m pytest -q -m "not real_llm")      # backend (LLM roteirizado, MCP real)
+(cd mcp-server && .venv/bin/python -m pytest -q)                     # servidor MCP, compatibilidade e ranking
+HF_HUB_OFFLINE=1 mcp-server/.venv/bin/python -m pytest -q rag/tests  # RAG, parser e normalização
+(cd frontend && npm test && npm run build)
+backend/.venv/bin/python scripts/real_eval.py      # REAL: Ollama + MCP + Chroma, casos A–H (não precisa da app no ar)
+backend/.venv/bin/python scripts/real_e2e.py       # REAL via HTTP (app no ar)
+python3 scripts/real_frontend_check.py             # REAL no navegador (app no ar; requer Playwright)
+```
+
+Evidências em `tests/evidence/`.
 
 | Variável (definida em `scripts/start.sh`) | Valor | Motivo |
 |---|---|---|

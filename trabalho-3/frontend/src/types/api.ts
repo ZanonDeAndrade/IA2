@@ -37,6 +37,9 @@ export interface RecipeCard {
   document_id: string;
   title: string;
   topic_key: string;
+  /** Categoria documentada na fonte (campos opcionais: respostas antigas não os trazem). */
+  topic_label?: string | null;
+  subcategory?: string | null;
   compatibility: Compatibility;
   available_ingredients: string[];
   missing_ingredients: string[];

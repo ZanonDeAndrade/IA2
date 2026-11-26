@@ -2,12 +2,21 @@ import { useId, useState } from "react";
 import type { Compatibility, RecipeCard as RecipeCardData } from "../types/api";
 import { SourceLink } from "./SourceLink";
 
-const COMPATIBILITY_LABEL: Record<Compatibility, string> = {
-  COMPLETE: "Compatível",
-  PARTIAL: "Faltam ingredientes",
-  NO_MATCH: "Nenhum dos seus ingredientes",
-  NOT_EVALUATED: "Compatibilidade não avaliada",
-};
+function compatibilityLabel(compatibility: Compatibility, missing: number): string {
+  switch (compatibility) {
+    case "COMPLETE":
+      return "Tem todos os ingredientes";
+    case "PARTIAL":
+      return missing === 1 ? "Falta 1 ingrediente" : `Faltam ${missing} ingredientes`;
+    case "NO_MATCH":
+      return "Nenhum dos seus ingredientes";
+    case "NOT_EVALUATED":
+      return "Compatibilidade não avaliada";
+  }
+}
+
+/** "a gosto", "à vontade", "q.b." ficam depois do nome ("Sal a gosto"). */
+const TO_TASTE = /^(a gosto|à vontade|a vontade|q\.?b\.?|quanto baste)$/i;
 
 function listOrNone(items: string[]): string {
   return items.length ? items.join(", ") : "nenhum";
@@ -23,6 +32,11 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   const stepsId = useId();
   const titleId = useId();
   const evaluated = recipe.compatibility !== "NOT_EVALUATED";
+  const category = recipe.topic_label
+    ? recipe.subcategory
+      ? `${recipe.topic_label} › ${recipe.subcategory}`
+      : recipe.topic_label
+    : null;
   const details = [
     recipe.portions ? `Rendimento: ${recipe.portions}` : null,
     recipe.preparation_time ? `Tempo: ${recipe.preparation_time}` : null,
@@ -32,9 +46,12 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <article className="recipe-card" aria-labelledby={titleId}>
       <header className="recipe-card__header">
-        <h3 id={titleId}>{recipe.title}</h3>
+        <div>
+          {category ? <p className="recipe-card__category">{category}</p> : null}
+          <h3 id={titleId}>{recipe.title}</h3>
+        </div>
         <span className={`badge badge--${recipe.compatibility.toLowerCase()}`}>
-          {COMPATIBILITY_LABEL[recipe.compatibility]}
+          {compatibilityLabel(recipe.compatibility, recipe.missing_ingredients.length)}
         </span>
       </header>
 
@@ -61,12 +78,13 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
 
       {recipe.ingredients.length ? (
         <section>
-          <h4>Ingredientes</h4>
+          <h4>Ingredientes da receita</h4>
           <ul className="recipe-card__ingredients">
             {recipe.ingredients.map((ing, i) => (
               <li key={`${ing.name}-${i}`}>
-                {ing.quantity_text ? `${ing.quantity_text} ` : ""}
+                {ing.quantity_text && !TO_TASTE.test(ing.quantity_text) ? `${ing.quantity_text} ` : ""}
                 {ing.name}
+                {ing.quantity_text && TO_TASTE.test(ing.quantity_text) ? ` ${ing.quantity_text}` : ""}
                 {ing.required ? "" : " (opcional)"}
                 {ing.notes ? ` — ${ing.notes}` : ""}
               </li>

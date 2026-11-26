@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 from models import (
     Compatibility,
+    Ranking,
     GetDocumentOutput,
     IngredientOut,
     ListTopicsOutput,
@@ -31,7 +32,15 @@ from store import Hit, RecipeRecord, RecipeStore, RetrieverAdapter, RetrieverUna
 logger = logging.getLogger("mcp_server.tools")
 
 MAX_RESULTS = 5
+# No modo compatibilidade o LLM recebe mais candidatos para julgar a adequação ao pedido (ocasião, tipo de prato),
+# que não está nos metadados; quem garante a compatibilidade e a ordem final continua sendo o sistema.
+MAX_RESULTS_COMPATIBILITY = 8
 EXCERPT_CHARS = 500
+# Quantos chunks pedir ao índice antes de agrupar por receita e ordenar. O top_k do LLM (1..10) limitaria o
+# ranking a ~5 receitas; o conjunto maior permite que a compatibilidade escolha entre candidatos suficientes.
+CANDIDATE_CHUNKS = 60
+RELEVANCE_CHUNKS = 20
+COMPAT_ORDER = {"COMPLETE": 0, "PARTIAL": 1, "NOT_EVALUATED": 2, "NO_MATCH": 3}
 _CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
 
@@ -47,6 +56,8 @@ class ToolContext:
     store: RecipeStore
     retriever: RetrieverAdapter
     normalize: Callable[[str], str]
+    # chaves de receita satisfeitas por um ingrediente do usuário (partes e genéricos); None = igualdade
+    user_keys: Callable[[str], Iterable[str]] | None = None
 
 
 # ---------------------------------------------------------------- utilitários
@@ -97,12 +108,26 @@ class CompatibilityResult:
         return self.matched_required / self.total_required if self.total_required else 0.0
 
 
+def user_key_set(user_ingredients: Iterable[str], normalize: Callable[[str], str],
+                 user_keys: Callable[[str], Iterable[str]] | None = None) -> frozenset[str]:
+    keys: set[str] = set()
+    for u in user_ingredients:
+        keys |= {normalize(u), basic_normalize(u)}
+        if user_keys is not None:
+            keys |= set(user_keys(u))
+    return frozenset(k for k in keys if k)
+
+
 def compute_compatibility(
-    recipe: RecipeRecord, user_ingredients: list[str] | None, normalize: Callable[[str], str]
+    recipe: RecipeRecord,
+    user_ingredients: list[str] | None,
+    normalize: Callable[[str], str],
+    user_keys: Callable[[str], Iterable[str]] | None = None,
 ) -> CompatibilityResult:
     """Presença (não quantidade) dos ingredientes obrigatórios. Opcionais não entram no denominador (RN07).
 
-    Um ingrediente da receita coincide quando sua forma normalizada é igual à do usuário.
+    Um ingrediente da receita coincide quando sua chave culinária normalizada está entre as chaves satisfeitas
+    pelos ingredientes do usuário (mesma chave, parte do mesmo alimento ou genérico de uma variedade informada).
     Alternativas e substitutos NÃO contam como equivalentes (RN03).
     """
     required = [ing for ing in recipe.ingredients if ing.required]
@@ -110,15 +135,14 @@ def compute_compatibility(
     if not user_ingredients or total == 0:
         return CompatibilityResult([], [], 0, total, "NOT_EVALUATED")
 
-    user_keys = {normalize(u) for u in user_ingredients} | {basic_normalize(u) for u in user_ingredients}
+    supplied = user_key_set(user_ingredients, normalize, user_keys)
     available: list[str] = []
     missing: list[str] = []
     for ing in required:
-        keys = {basic_normalize(ing.name_original)}
+        keys = {normalize(ing.name_original), basic_normalize(ing.name_original)}
         if ing.name_normalized:
             keys.add(ing.name_normalized)
-            keys.add(basic_normalize(ing.name_normalized))
-        (available if keys & user_keys else missing).append(ing.name_original)
+        (available if keys & supplied else missing).append(ing.name_original)
 
     matched = len(available)
     if matched == total:
@@ -139,11 +163,23 @@ def search_knowledge(
     available_ingredients: list[str] | None,
     topic_key: str | None,
     top_k: int,
+    ranking: Ranking | None = None,
 ) -> SearchKnowledgeOutput:
+    """Recuperação híbrida + ranking.
+
+    - relevance: ordena pela distância semântica (melhor chunk da receita).
+    - compatibility (padrão quando há ingredientes): candidatos = receitas do conjunto semântico ampliado
+      + receitas do corpus que usam ao menos um ingrediente informado (critério estruturado). Só ficam
+      COMPLETE e PARTIAL, ordenadas por: COMPLETE antes de PARTIAL; menos faltantes; mais ingredientes do
+      usuário usados; menor distância semântica. Ordem lexicográfica, sem pesos arbitrários.
+    """
     query = _clean_text(query, "query")
     if len(query) < 3:
         raise ToolFailure("INVALID_TOOL_ARGUMENTS", "query deve ter ao menos 3 caracteres úteis")
     ingredients = _clean_ingredients(available_ingredients)
+    mode: Ranking = ranking or ("compatibility" if ingredients else "relevance")
+    if not ingredients:
+        mode = "relevance"  # sem ingredientes não há compatibilidade para ordenar
 
     snap = ctx.store.snapshot()
 
@@ -151,6 +187,7 @@ def search_knowledge(
         return SearchKnowledgeOutput(
             query=query,
             evidence_status="INSUFFICIENT",
+            ranking=mode,
             retrieved_count=0,
             chunks_retrieved=chunks,
             discarded_hits=discarded,
@@ -169,7 +206,8 @@ def search_knowledge(
             )
 
     try:
-        hits, malformed = ctx.retriever.search(query, top_k=top_k, topic_key=topic_key)
+        pool = max(top_k, CANDIDATE_CHUNKS if mode == "compatibility" else RELEVANCE_CHUNKS)
+        hits, malformed = ctx.retriever.search(query, top_k=pool, topic_key=topic_key)
     except RetrieverUnavailable as exc:
         raise ToolFailure("RAG_UNAVAILABLE", "O índice de busca não está disponível.") from exc
     except Exception as exc:
@@ -191,20 +229,36 @@ def search_knowledge(
     if discarded:
         logger.warning("search_knowledge: %d hits descartados por inconsistência com o corpus", discarded)
 
-    scored: list[tuple[tuple[float, float, int], SearchResult]] = []
+    # Critério estruturado: receitas que usam algum ingrediente informado, mesmo fora do conjunto semântico.
+    if mode == "compatibility":
+        for recipe in snap.recipes.values():
+            if recipe.recipe_id in grouped or (topic_key is not None and recipe.topic_key != topic_key):
+                continue
+            if compute_compatibility(recipe, ingredients, ctx.normalize, ctx.user_keys).matched_required:
+                grouped[recipe.recipe_id] = []
+
+    scored: list[tuple[tuple, SearchResult]] = []
     for order, (recipe_id, rhits) in enumerate(grouped.items()):
         recipe = snap.recipes[recipe_id]
-        compat = compute_compatibility(recipe, ingredients, ctx.normalize)
+        compat = compute_compatibility(recipe, ingredients, ctx.normalize, ctx.user_keys)
+        if mode == "compatibility" and compat.status not in ("COMPLETE", "PARTIAL"):
+            continue  # sem nenhum ingrediente em comum não é recomendação por ingredientes
         distances = [h.distance for h in rhits if h.distance is not None]
         best = min(distances) if distances else None
-        best_hit = min(rhits, key=lambda h: h.distance if h.distance is not None else math.inf)
+        if rhits:
+            best_hit = min(rhits, key=lambda h: h.distance if h.distance is not None else math.inf)
+            excerpt = best_hit.text
+        else:  # candidato estruturado: o trecho é o próprio registro do corpus
+            excerpt = f"{recipe.title}. Ingredientes: " + ", ".join(i.name_original for i in recipe.ingredients)
         result = SearchResult(
             recipe_id=recipe.recipe_id,
             document_id=recipe.document_id,
             title=recipe.title,
             topic_key=recipe.topic_key,
+            topic_label=recipe.topic_label,
+            subcategory=recipe.subcategory,
             source_url=recipe.source_url,
-            source_excerpt=_excerpt(best_hit.text),
+            source_excerpt=_excerpt(excerpt),
             available_ingredients=compat.available,
             missing_ingredients=compat.missing,
             matched_required=compat.matched_required,
@@ -213,15 +267,21 @@ def search_knowledge(
             distance=best,
             matched_chunks=[MatchedChunk(chunk_id=h.chunk_id, section=h.section, distance=h.distance) for h in rhits],
         )
-        # Ordem: proporção de ingredientes presentes, depois relevância semântica, depois ordem do índice.
-        scored.append(((-compat.ratio, best if best is not None else math.inf, order), result))
+        dist = best if best is not None else math.inf
+        if mode == "compatibility":
+            key = (COMPAT_ORDER[compat.status], len(compat.missing), -compat.matched_required, dist, order)
+        else:
+            key = (dist, order)
+        scored.append((key, result))
 
-    results = [r for _, r in sorted(scored, key=lambda x: x[0])][:MAX_RESULTS]
+    limit = MAX_RESULTS_COMPATIBILITY if mode == "compatibility" else MAX_RESULTS
+    results = [r for _, r in sorted(scored, key=lambda x: x[0])][:limit]
     if not results:
         return empty(chunks=len(hits) + malformed, discarded=discarded)
     return SearchKnowledgeOutput(
         query=query,
         evidence_status="FOUND",
+        ranking=mode,
         retrieved_count=len(results),
         chunks_retrieved=len(hits) + malformed,
         discarded_hits=discarded,
@@ -249,6 +309,8 @@ def get_document(ctx: ToolContext, recipe_id: str) -> GetDocumentOutput:
             variant_index=recipe.variant_index,
             title=recipe.title,
             topic_key=recipe.topic_key,
+            topic_label=recipe.topic_label,
+            subcategory=recipe.subcategory,
             ingredients=[
                 IngredientOut(
                     name_original=i.name_original,
